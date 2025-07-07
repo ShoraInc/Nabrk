@@ -1,0 +1,561 @@
+// Variables
+$primary-color: #d4af37;
+$primary-hover: darken($primary-color, 8%);
+$primary-light: lighten($primary-color, 45%);
+$text-color: #2c2c2c;
+$text-secondary: #6b7280;
+$text-placeholder: #9ca3af;
+$white: #ffffff;
+$light-gray: #f8fafc;
+$border-color: #e5e7eb;
+$input-border: #d1d5db;
+$input-focus: $primary-color;
+$disabled-color: #9ca3af;
+$warning-bg: #fef3c7;
+$warning-border: #fbbf24;
+$warning-text: #92400e;
+$forgot-password-color: #3b82f6;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+.login-form {
+  width: 100%;
+  max-width: 1200px;
+  background-color: $white;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $shadow-lg;
+  border: 1px solid rgba($border-color, 0.8);
+
+  &__layout {
+    display: flex;
+    min-height: 600px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      min-height: auto;
+    }
+  }
+
+  &__form-section {
+    flex: 1;
+    max-width: 45%;
+    padding: 48px 40px;
+    background: linear-gradient(
+      135deg,
+      rgba($white, 0.95) 0%,
+      rgba($light-gray, 0.98) 100%
+    );
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+      padding: 32px 24px;
+    }
+
+    @media (max-width: 480px) {
+      padding: 24px 20px;
+    }
+  }
+
+  &__image-section {
+    flex: 1;
+    max-width: 55%;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  &__image-placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__warning {
+    background: linear-gradient(
+      135deg,
+      $warning-bg 0%,
+      lighten($warning-bg, 3%) 100%
+    );
+    border: 1px solid $warning-border;
+    border-radius: 8px;
+    margin-bottom: 28px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    box-shadow: $shadow-sm;
+    backdrop-filter: blur(10px);
+
+    &-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    &-content {
+      flex: 1;
+
+      h3 {
+        color: $warning-text;
+        font-size: 15px;
+        font-weight: 600;
+        margin: 0 0 10px 0;
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        color: darken($warning-text, 5%);
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0;
+      }
+    }
+  }
+
+  &__main {
+    text-align: center;
+    flex: 1;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    padding: 40px 32px;
+    background: $white;
+    box-shadow: $shadow-sm;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: $shadow-md;
+    }
+  }
+
+  &__header {
+    margin-bottom: 36px;
+  }
+
+  &__title {
+    color: $text-color;
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    background: linear-gradient(
+      135deg,
+      $text-color 0%,
+      lighten($text-color, 15%) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  &__description {
+    color: $text-secondary;
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    text-align: left;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__label {
+    color: $text-color;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    letter-spacing: -0.01em;
+  }
+
+  &__input {
+    padding: 16px 18px;
+    border: 2px solid $input-border;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: $white;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    font-weight: 400;
+
+    &:focus {
+      outline: none;
+      border-color: $input-focus;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.12);
+      transform: translateY(-1px);
+    }
+
+    &:hover:not(:focus) {
+      border-color: darken($input-border, 15%);
+      box-shadow: $shadow-sm;
+    }
+
+    &::placeholder {
+      color: $text-placeholder;
+      font-weight: 400;
+    }
+
+    &:disabled {
+      background-color: darken($light-gray, 2%);
+      color: $disabled-color;
+      cursor: not-allowed;
+      opacity: 0.7;
+      border-color: lighten($input-border, 5%);
+    }
+  }
+
+  &__password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    .login-form__input {
+      padding-right: 52px;
+      flex: 1;
+    }
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 18px;
+    color: $text-secondary;
+    transition: all 0.2s ease;
+    border-radius: 6px;
+
+    &:hover {
+      color: $text-color;
+      background-color: rgba($primary-color, 0.08);
+    }
+
+    &:focus {
+      outline: none;
+      background-color: rgba($primary-color, 0.12);
+    }
+  }
+
+  &__forgot-password {
+    background: none;
+    border: none;
+    color: $forgot-password-color;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    text-align: left;
+    margin-top: 8px;
+    padding: 4px 0;
+    transition: all 0.2s ease;
+    border-radius: 4px;
+    position: relative;
+
+    &:hover {
+      color: darken($forgot-password-color, 10%);
+      transform: translateX(2px);
+    }
+
+    &:focus {
+      outline: none;
+      color: darken($forgot-password-color, 10%);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: currentColor;
+      transition: width 0.2s ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
+  }
+
+  &__submit {
+    background: linear-gradient(
+      135deg,
+      $primary-color 0%,
+      darken($primary-color, 5%) 100%
+    );
+    color: $white;
+    border: none;
+    padding: 18px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    min-height: 56px;
+    margin-top: 16px;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: -0.01em;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(
+        135deg,
+        $primary-hover 0%,
+        darken($primary-hover, 5%) 100%
+      );
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba($primary-color, 0.3);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.3);
+    }
+
+    &:disabled {
+      background: linear-gradient(
+        135deg,
+        $disabled-color 0%,
+        darken($disabled-color, 5%) 100%
+      );
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      opacity: 0.6;
+    }
+  }
+
+  &__switch {
+    text-align: center;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba($border-color, 0.6);
+
+    p {
+      margin: 0 0 12px 0;
+      font-size: 14px;
+      color: $text-secondary;
+      font-weight: 400;
+    }
+  }
+
+  &__switch-btn {
+    background: none;
+    border: none;
+    color: $primary-color;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    padding: 8px 16px;
+    border-radius: 6px;
+    position: relative;
+
+    &:hover {
+      color: $primary-hover;
+      background-color: rgba($primary-color, 0.08);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:focus {
+      outline: none;
+      background-color: rgba($primary-color, 0.12);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .login-form {
+    max-width: 95vw;
+    border-radius: 8px;
+
+    &__form-section {
+      padding: 28px 20px;
+    }
+
+    &__warning {
+      margin-bottom: 24px;
+      padding: 16px;
+
+      &-content {
+        h3 {
+          font-size: 14px;
+        }
+
+        p {
+          font-size: 12px;
+        }
+      }
+    }
+
+    &__main {
+      padding: 32px 24px;
+    }
+
+    &__title {
+      font-size: 24px;
+    }
+
+    &__description {
+      font-size: 14px;
+    }
+
+    &__input {
+      padding: 14px 16px;
+      font-size: 14px;
+    }
+
+    &__submit {
+      padding: 16px 24px;
+      font-size: 15px;
+      min-height: 50px;
+    }
+
+    &__forgot-password {
+      font-size: 12px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .login-form {
+    &__form-section {
+      padding: 20px 16px;
+    }
+
+    &__warning {
+      margin-bottom: 20px;
+      padding: 14px;
+      flex-direction: column;
+      text-align: center;
+      gap: 12px;
+
+      &-icon {
+        margin-top: 0;
+      }
+    }
+
+    &__main {
+      padding: 24px 20px;
+    }
+
+    &__title {
+      font-size: 22px;
+    }
+
+    &__form {
+      gap: 20px;
+    }
+
+    &__input {
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+
+    &__submit {
+      padding: 14px 20px;
+      font-size: 14px;
+      min-height: 46px;
+    }
+
+    &__forgot-password {
+      font-size: 11px;
+    }
+  }
+}
+
+// Анимации
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.login-form__form-section {
+  animation: slideInLeft 0.5s ease-out;
+}
+
+
+
+// Улучшенная доступность
+@media (prefers-reduced-motion: reduce) {
+  .login-form {
+    &__submit,
+    &__password-toggle,
+    &__forgot-password,
+    &__switch-btn,
+    &__input,
+    &__main,
+    &__form-section,
+    &__image-section {
+      transition: none;
+      animation: none;
+    }
+  }
+}
+
+// Темная тема поддержка
+@media (prefers-color-scheme: dark) {
+  .login-form {
+    // Можно добавить темную тему если понадобится
+  }
+}

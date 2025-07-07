@@ -1,0 +1,121 @@
+/* Добавьте в home.scss */
+
+.home__modal-trigger {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  margin: 40px 0;
+}
+
+.home__modal-btn {
+  background-color: #d4af37;
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+
+  &:hover {
+    background-color: darken(#d4af37, 10%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideInModal 0.4s ease-out;
+}
+
+/* Анимации для модального окна */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInModal {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .home__modal-trigger {
+    padding: 40px 15px;
+    margin: 20px 0;
+  }
+
+  .home__modal-btn {
+    padding: 14px 30px;
+    font-size: 16px;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-container {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .home__modal-trigger {
+    padding: 30px 10px;
+  }
+
+  .home__modal-btn {
+    padding: 12px 25px;
+    font-size: 15px;
+  }
+
+  .modal-overlay {
+    padding: 5px;
+  }
+
+  .modal-container {
+    max-width: 98vw;
+    max-height: 98vh;
+  }
+}

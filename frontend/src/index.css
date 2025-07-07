@@ -1,0 +1,77 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+
+}
+:root {
+  --main-color: #d2ac2d;
+}
+/* 
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url(../src/assets/fonts/);
+  font-weight: 700;
+} */
+
+body {
+  font-family: "Inter";
+  background-color: #fff;
+  color: #333;
+  font-weight: 400;
+}
+
+.no-scroll {
+  overflow: hidden;
+  height: 100vh; /* Фиксируем высоту */
+}
+
+.App {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  position: relative;
+  flex: 1;
+} 

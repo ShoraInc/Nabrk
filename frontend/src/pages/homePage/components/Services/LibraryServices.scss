@@ -1,0 +1,128 @@
+$background-light: #F5F5F5;
+$card-background: #FFFFFF;
+$text-dark: #333333;
+$border-radius: 2px;
+$shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  color: #FFFFFF;
+}
+
+.library-services {
+  background: $background-light;
+  padding: 62px 94px 96px 94px;
+
+  @media (max-width: 768px) {
+    padding: 0 24px;
+  }
+
+  &__container {
+    max-width: 1200px;
+    height: 126px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 207px);
+    gap: 48px;
+    justify-content: center;
+
+    @media (max-width: 768px) {
+      max-width: 375px;
+      height: 704px;
+      grid-template-columns: 327px;
+      gap: 24px;
+      padding: 0;
+    }
+  }
+}
+
+// Service Card
+.service-card {
+  background: $card-background;
+  border-radius: $border-radius;
+  width: 207px;
+  height: 126px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: $shadow;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 327px;
+    height: 126px;
+    padding: 20px 24px;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  &__icon {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+
+    @media (max-width: 768px) {
+      margin-bottom: 8px;
+
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+
+  &__title {
+    font-size: 14px;
+    font-weight: 600;
+    color: $text-dark;
+    line-height: 1.2;
+    margin: 0;
+
+    @media (max-width: 768px) {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .library-services {
+    padding: 0 20px;
+
+    &__container {
+      max-width: 100%;
+    }
+  }
+}
+
+@supports not (display: grid) {
+  .library-services__container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .service-card {
+    @media (max-width: 768px) {
+      width: 327px;
+      margin-bottom: 24px;
+    }
+  }
+}

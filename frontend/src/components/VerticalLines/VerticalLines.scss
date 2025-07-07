@@ -1,0 +1,42 @@
+.vertical-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99999999;
+
+  &__left,
+  &__right {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background-color: #c5a63f;
+    opacity: 0.6;
+  }
+
+  &__left {
+    left: 32px;
+
+    @media (max-width: 1200px) {
+      left: 32px;
+    }
+
+    @media (max-width: 768px) {
+      left: 32px;
+    }
+
+    @media (max-width: 480px) {
+      left: 24px;
+    }
+  }
+
+  &__right {
+    right: 32px; // Отступ справа 32px
+  }
+  @media (max-width: 1200px) {
+    display: none;
+  }
+}

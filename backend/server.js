@@ -1,0 +1,51 @@
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const sequelize = require("./db");
+
+// Import models with associations
+require("./models");
+
+// Import routes
+const newsRoutes = require("./routes/newsRoutes");
+const eventsRoutes = require("./routes/eventsRoutes");
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files (uploaded images)
+app.use('/uploads', express.static('uploads'));
+
+// Routes
+app.use("/api/news", newsRoutes);
+app.use("/api/events", eventsRoutes);
+
+// Health check
+app.get("/", (req, res) => {
+    res.json({ message: "Library API is running" });
+});
+
+// Start server
+const start = async () => {
+    try {
+        await sequelize.authenticate();
+        console.log("Database connected successfully");
+        
+        // Sync database
+        await sequelize.sync({ alter: true });
+        console.log("Database synchronized");
+        
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    } catch (error) {
+        console.error("Unable to start server:", error);
+    }
+};
+
+start();
