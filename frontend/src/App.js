@@ -13,6 +13,9 @@ import StaticRoutes from "./routes/StaticRoutes";
 import LoginRoutes from "./routes/LoginRoutes";
 import { Provider } from "react-redux";
 import { store } from "./store";
+import NewsDetail from "./pages/NewsDetailPage/NewsDetail";
+import LoginHeader from "./components/LoginHeader/LoginHeader";
+import News from "./pages/NewsPage/News";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -29,14 +32,17 @@ function AppContent() {
 
   return (
     <div className="App">
-      {!isLoginPage && !isHomePage && <Header />}
+      {/* {!isLoginPage && !isHomePage && <Header />} */}
+      {!isLoginPage && !isHomePage && <LoginHeader />}
       <ScrollToTop />
-
+      
       <div className="main-content">
         {!isLoginPage && <VerticalLines />}
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/news" element={<News />} />
+          <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/auth/*" element={<LoginRoutes />} />
           <Route path="/*" element={<StaticRoutes />} />
         </Routes>
