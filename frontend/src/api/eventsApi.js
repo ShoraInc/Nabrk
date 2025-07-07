@@ -1,5 +1,5 @@
 // API base URL - измените на ваш сервер
-const API_BASE_URL = 'http://localhost:4000/api';
+const API_BASE_URL = `${process.env.REACT_APP_API_URL}/api`;
 
 class EventsApi {
   // Получить предстоящие события
@@ -71,7 +71,14 @@ class EventsApi {
     const grouped = {};
     
     events.forEach(event => {
-      const eventDate = new Date(event.eventDate);
+      // Используем локальное время вместо UTC
+      const eventDateParts = event.eventDate.split('-');
+      const eventDate = new Date(
+        parseInt(eventDateParts[0]), 
+        parseInt(eventDateParts[1]) - 1, 
+        parseInt(eventDateParts[2])
+      );
+      
       const dateKey = this.formatDateKey(eventDate);
       
       if (!grouped[dateKey]) {
@@ -95,7 +102,7 @@ class EventsApi {
   }
 
   // Получить следующие 5-7 дней с событиями
-  static getUpcomingDatesWithEvents(events, daysCount = 7) {
+  static getUpcomingDatesWithEvents(groupedEvents, daysCount = 7) {
     const today = new Date();
     const dates = [];
     
@@ -104,7 +111,9 @@ class EventsApi {
       date.setDate(today.getDate() + i);
       
       const dateKey = this.formatDateKey(date);
-      const eventsForDate = events[dateKey] || {
+      
+      // Используем данные из groupedEvents если есть, иначе создаем пустые
+      const eventsForDate = groupedEvents[dateKey] || {
         date: this.formatDate(date),
         day: this.formatDay(date),
         events: []
@@ -120,9 +129,12 @@ class EventsApi {
     return dates;
   }
 
-  // Форматирование даты для ключа (YYYY-MM-DD)
+  // Форматирование даты для ключа (YYYY-MM-DD) - исправлено для локального времени
   static formatDateKey(date) {
-    return date.toISOString().split('T')[0];
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   // Форматирование даты для отображения (DD.MM)
