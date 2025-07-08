@@ -4,11 +4,13 @@ const cors = require("cors");
 const sequelize = require("./db");
 
 // Import models with associations
-require("./models");
+require("./models/index");
 
 // Import routes
 const newsRoutes = require("./routes/newsRoutes");
 const eventsRoutes = require("./routes/eventsRoutes");
+const pagesRoutes = require("./routes/pagesRoutes");
+const blocksRoutes = require("./routes/blocksRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,6 +26,8 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 app.use("/api/news", newsRoutes);
 app.use("/api/events", eventsRoutes);
+app.use("/api/pages", pagesRoutes);
+app.use("/api/blocks", blocksRoutes);
 
 // Health check
 app.get("/", (req, res) => {
