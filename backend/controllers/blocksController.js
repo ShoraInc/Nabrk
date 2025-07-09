@@ -1,5 +1,5 @@
 const sequelize = require("../db");
-const { Blocks, Texts, TextTranslations, TitleData } = require("../models");
+const { Blocks, TitleData, TextTranslations, Texts } = require("../models");
 
 const blocksController = {
   // Получить все блоки страницы
@@ -35,15 +35,17 @@ const blocksController = {
     const transaction = await sequelize.transaction();
 
     try {
-      // Сначала находим блок
-      const block = await Blocks.findByPk(req.params.id);
+      // Сначала находим блок чтобы проверить его тип
+      const block = await Blocks.findByPk(req.params.id, {
+        transaction,
+      });
 
       if (!block) {
         await transaction.rollback();
         return res.status(404).json({ error: "Block not found" });
       }
 
-      // Если это title блок, сначала очищаем связанные данные
+      // Если блок типа "title", находим связанные данные
       if (block.type === "title") {
         const titleData = await TitleData.findOne({
           where: { blockId: req.params.id },
@@ -51,47 +53,36 @@ const blocksController = {
         });
 
         if (titleData) {
-          console.log(`Найден TitleData с textId: ${titleData.textId}`);
-
-          // Удаляем переводы
-          const deletedTranslations = await TextTranslations.destroy({
-            where: { textId: titleData.textId },
-            transaction,
-          });
-          console.log(`Удалено переводов: ${deletedTranslations}`);
-
-          // Удаляем текст
-          const deletedTexts = await Texts.destroy({
-            where: { id: titleData.textId },
-            transaction,
-          });
-          console.log(`Удалено текстов: ${deletedTexts}`);
-
           // Удаляем TitleData
           await TitleData.destroy({
             where: { blockId: req.params.id },
             transaction,
           });
-          console.log(`TitleData удален`);
+
+          // Удаляем переводы связанные с текстом
+          await TextTranslations.destroy({
+            where: { textId: titleData.textId },
+            transaction,
+          });
+
+          // Удаляем сам текст
+          await Texts.destroy({
+            where: { id: titleData.textId },
+            transaction,
+          });
         }
       }
 
       // Удаляем сам блок
-      const deleted = await Blocks.destroy({
+      await Blocks.destroy({
         where: { id: req.params.id },
         transaction,
       });
-
-      if (!deleted) {
-        await transaction.rollback();
-        return res.status(404).json({ error: "Block not found" });
-      }
 
       await transaction.commit();
       res.json({ message: "Block deleted successfully" });
     } catch (error) {
       await transaction.rollback();
-      console.error("Ошибка при удалении блока:", error);
       res.status(500).json({ error: error.message });
     }
   },
