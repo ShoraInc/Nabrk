@@ -126,6 +126,27 @@ class NewsApi {
     }
   }
 
+  // NEW: Обновить новость (включая изображение)
+  static async updateNews(id, formData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/news/${id}`, {
+        method: 'PUT',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error updating news:', error);
+      throw error;
+    }
+  }
+
   // Получить все переводы новости
   static async getNewsTranslations(id) {
     try {

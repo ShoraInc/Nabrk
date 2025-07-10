@@ -3,7 +3,6 @@ const TextTranslations = require("./TextTranslations");
 const Pages = require("./Pages");
 const Blocks = require("./Blocks");
 
-// Связки между Texts и TextTranslations с CASCADE
 Texts.hasMany(TextTranslations, {
   foreignKey: "textId",
   as: "translations",

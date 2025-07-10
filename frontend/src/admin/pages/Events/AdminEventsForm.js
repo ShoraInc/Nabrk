@@ -17,6 +17,7 @@ const AdminEventsForm = () => {
     eventTime: '',
     language: 'kz'
   });
+  const [dateTimeChanged, setDateTimeChanged] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [translations, setTranslations] = useState({});
@@ -25,7 +26,8 @@ const AdminEventsForm = () => {
   const languages = [
     { code: 'kz', name: 'Қазақша' },
     { code: 'ru', name: 'Русский' },
-    { code: 'en', name: 'English' }
+    { code: 'en', name: 'English' },
+    { code: 'qaz', name: 'Qazaqsha (Latin)' },
   ];
 
   useEffect(() => {
@@ -71,6 +73,12 @@ const AdminEventsForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Отслеживаем изменения даты и времени
+    if (name === 'eventDate' || name === 'eventTime') {
+      setDateTimeChanged(true);
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -100,6 +108,22 @@ const AdminEventsForm = () => {
     }));
   };
 
+  const updateEventDateTime = async () => {
+    if (!dateTimeChanged) return;
+
+    try {
+      const result = await EventsApi.updateEvent(id, {
+        eventDate: formData.eventDate,
+        eventTime: formData.eventTime || null
+      });
+      setDateTimeChanged(false);
+      return result;
+    } catch (err) {
+      console.error('Error updating event date/time:', err);
+      throw err;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -113,12 +137,19 @@ const AdminEventsForm = () => {
       setError(null);
 
       if (isEdit) {
+        // Update date/time first if changed
+        if (dateTimeChanged) {
+          await updateEventDateTime();
+        }
+
+        // Update current language translation
         await EventsApi.updateEventTranslation(id, currentLang, {
           name: formData.name,
           description: formData.description,
           place: formData.place
         });
         
+        // Update other language translations
         for (const [lang, data] of Object.entries(translations)) {
           if (lang !== currentLang && (data.name || data.description || data.place)) {
             try {
@@ -213,6 +244,9 @@ const AdminEventsForm = () => {
                     }`}
                   >
                     {lang.name}
+                    {lang.code === 'qaz' && (
+                      <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-0.5 text-xs rounded">Новый</span>
+                    )}
                     {translations[lang.code] && (translations[lang.code].name || translations[lang.code].description) && (
                       <span className="ml-2 bg-green-500 text-white rounded-full px-2 py-0.5 text-xs">✓</span>
                     )}
@@ -311,8 +345,18 @@ const AdminEventsForm = () => {
                     onChange={handleInputChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
+                  
+                  {isEdit && dateTimeChanged && (
+                    <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-sm text-yellow-800">
+                        ⚠️ Дата и время будут обновлены при сохранении формы
+                      </p>
+                    </div>
+                  )}
+                  
                   <p className="mt-2 text-sm text-gray-500">
                     Оставьте время пустым для событий на весь день
+                    {isEdit && <span> • При редактировании можно изменить дату и время</span>}
                   </p>
                 </div>
 
@@ -324,6 +368,9 @@ const AdminEventsForm = () => {
                       <div key={lang.code} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center">
                           <span className="text-sm font-medium text-gray-700">{lang.name}</span>
+                          {lang.code === 'qaz' && (
+                            <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-0.5 text-xs rounded">Новый</span>
+                          )}
                         </div>
                         <div className="text-sm">
                           {translations[lang.code] && (translations[lang.code].name || translations[lang.code].description) ? (
@@ -353,6 +400,7 @@ const AdminEventsForm = () => {
                     <li>• Добавьте подробное описание</li>
                     <li>• Проверьте дату и время</li>
                     <li>• Заполните переводы на все языки</li>
+                    {isEdit && <li>• При редактировании можно изменить дату и время</li>}
                   </ul>
                 </div>
               </div>

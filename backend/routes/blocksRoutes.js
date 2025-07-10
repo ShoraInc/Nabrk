@@ -1,13 +1,61 @@
 const express = require("express");
 const router = express.Router();
 const blocksController = require("../controllers/blocksController");
-const titleBlockRouter = require("./blocks/titleRoutes");
-// Общие роуты для блоков
+
+// Подключаем отдельные роутеры для каждого типа блока
+const titleRoutes = require("./blocks/titleRoutes");
+const lineRoutes = require("./blocks/lineRoutes");
+
+// ВАЖНО: /options должен быть ПЕРЕД /:id чтобы избежать конфликта роутов
+/**
+ * @route GET /api/blocks/options
+ * @desc Get available options for all block types
+ */
+router.get("/options", blocksController.getBlockOptions);
+
+// Общие роуты для всех блоков
+/**
+ * @route GET /api/blocks/page/:pageId
+ * @desc Get all blocks for a page with texts
+ * @query {string} [lang=kz] - Language for translations
+ */
 router.get("/page/:pageId", blocksController.getBlocksByPageId);
+
+/**
+ * @route GET /api/blocks/:id
+ * @desc Get any block by ID with texts (universal)
+ * @query {string} [lang=kz] - Language for translations
+ */
 router.get("/:id", blocksController.getBlockById);
+
+/**
+ * @route DELETE /api/blocks/:id
+ * @desc Delete any block by ID (universal)
+ */
 router.delete("/:id", blocksController.deleteBlock);
 
 // Роуты для конкретных типов блоков
-router.use("/title", titleBlockRouter);
+/**
+ * Title block routes:
+ * POST   /api/blocks/title          - Create title block
+ * GET    /api/blocks/title/:id      - Get title block
+ * PUT    /api/blocks/title/:id      - Update title block
+ * DELETE /api/blocks/title/:id      - Delete title block
+ * PUT    /api/blocks/title/:id/translations/:lang - Manage translations
+ */
+router.use("/title", titleRoutes);
+
+/**
+ * Line block routes:
+ * POST   /api/blocks/line           - Create line block
+ * GET    /api/blocks/line/:id       - Get line block
+ * PUT    /api/blocks/line/:id       - Update line block
+ * DELETE /api/blocks/line/:id       - Delete line block
+ */
+router.use("/line", lineRoutes);
+
+// Здесь будем добавлять новые типы блоков:
+// router.use("/card", cardRoutes);
+// router.use("/image", imageRoutes);
 
 module.exports = router;

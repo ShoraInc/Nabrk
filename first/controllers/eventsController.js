@@ -1,6 +1,6 @@
-const Events = require("../models/Events");
-const Texts = require("../models/Texts");
-const TextTranslations = require("../models/TextTranslations");
+const Events = require("../models/content/Events");
+const Texts = require("../models/core/Texts");
+const TextTranslations = require("../models/core/TextTranslations");
 const { Op } = require("sequelize");
 
 // Get all events with translations
@@ -204,40 +204,6 @@ const createEventDraft = async (req, res) => {
       id: event.id,
       message: "Event draft created successfully",
       primaryLanguage: language,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// NEW: Update event (including date and time)
-const updateEvent = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { eventDate, eventTime } = req.body;
-
-    const event = await Events.findByPk(id);
-    if (!event) {
-      return res.status(404).json({ error: "Event not found" });
-    }
-
-    // Update event with new date/time if provided
-    const updateData = {};
-    if (eventDate) {
-      updateData.eventDate = eventDate;
-    }
-    if (eventTime !== undefined) { // Allow setting time to null
-      updateData.eventTime = eventTime || null;
-    }
-
-    if (Object.keys(updateData).length > 0) {
-      await Events.update(updateData, { where: { id } });
-    }
-
-    res.json({
-      message: "Event updated successfully",
-      eventDate: eventDate || event.eventDate,
-      eventTime: eventTime !== undefined ? (eventTime || null) : event.eventTime,
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -572,7 +538,6 @@ module.exports = {
   getEventById,
   getUpcomingEvents,
   createEventDraft,
-  updateEvent, // NEW FUNCTION
   getEventTranslations,
   addEventTranslation,
   updateEventTranslation,

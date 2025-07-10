@@ -5,7 +5,6 @@ const {
     getEventById,
     getUpcomingEvents,
     createEventDraft,
-    updateEvent,
     getEventTranslations,
     addEventTranslation,
     updateEventTranslation,
@@ -64,14 +63,6 @@ router.get("/:id/translations", getEventTranslations);
  * @body {string} [language=ru] - Primary language
  */
 router.post("/draft", createEventDraft);
-
-/**
- * @route PUT /api/events/:id
- * @desc Update event (including date and time)
- * @body {string} [eventDate] - New event date (YYYY-MM-DD)
- * @body {string} [eventTime] - New event time (HH:MM:SS)
- */
-router.put("/:id", updateEvent);
 
 /**
  * @route POST /api/events/:id/translations/:lang

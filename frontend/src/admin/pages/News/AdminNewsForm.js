@@ -18,6 +18,7 @@ const AdminNewsForm = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
+  const [imageChanged, setImageChanged] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [translations, setTranslations] = useState({});
@@ -26,7 +27,8 @@ const AdminNewsForm = () => {
   const languages = [
     { code: 'kz', name: 'Қазақша' },
     { code: 'ru', name: 'Русский' },
-    { code: 'en', name: 'English' }
+    { code: 'en', name: 'English' },
+    { code: 'qaz', name: 'Qazaqsha (Latin)' }
   ];
 
   useEffect(() => {
@@ -70,9 +72,21 @@ const AdminNewsForm = () => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
+      setImageChanged(true);
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+    setImageChanged(true);
+    // Reset file input
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) {
+      fileInput.value = '';
     }
   };
 
@@ -97,6 +111,26 @@ const AdminNewsForm = () => {
     });
   };
 
+  const updateNewsImage = async () => {
+    if (!imageChanged) return;
+
+    const imageFormData = new FormData();
+    if (imageFile) {
+      imageFormData.append('image', imageFile);
+    }
+
+    try {
+      const result = await NewsApi.updateNews(id, imageFormData);
+      setCurrentImageUrl(result.imageUrl);
+      setImageChanged(false);
+      setImagePreview(null);
+      return result.imageUrl;
+    } catch (err) {
+      console.error('Error updating image:', err);
+      throw err;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -110,12 +144,19 @@ const AdminNewsForm = () => {
       setError(null);
 
       if (isEdit) {
+        // Update image first if it was changed
+        if (imageChanged) {
+          await updateNewsImage();
+        }
+
+        // Update current language translation
         await NewsApi.updateNewsTranslation(id, currentLang, {
           title: formData.title,
           content: formData.content,
           shortDescription: formData.shortDescription
         });
         
+        // Update other language translations
         for (const [lang, data] of Object.entries(translations)) {
           if (lang !== currentLang && (data.title || data.content)) {
             try {
@@ -289,12 +330,23 @@ const AdminNewsForm = () => {
                   </label>
                   
                   {(currentImageUrl || imagePreview) && (
-                    <div className="mb-4">
+                    <div className="mb-4 relative group">
                       <img
                         src={imagePreview || currentImageUrl}
                         alt="Preview"
                         className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
                       />
+                      {isEdit && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={handleRemoveImage}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                          >
+                            🗑️ Удалить изображение
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
                   
@@ -306,10 +358,20 @@ const AdminNewsForm = () => {
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     />
                   </div>
+                  
+                  {isEdit && imageChanged && (
+                    <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-sm text-yellow-800">
+                        ⚠️ Изображение будет обновлено при сохранении формы
+                      </p>
+                    </div>
+                  )}
+                  
                   <div className="mt-3 text-sm text-gray-500">
                     <p>• Поддерживаемые форматы: JPG, PNG, WebP, GIF</p>
                     <p>• Максимальный размер: 5MB</p>
                     <p>• Рекомендуемое разрешение: 1200x600px</p>
+                    {isEdit && <p>• Выберите новое изображение для замены текущего</p>}
                   </div>
                 </div>
 
@@ -321,6 +383,9 @@ const AdminNewsForm = () => {
                       <div key={lang.code} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center">
                           <span className="text-sm font-medium text-gray-700">{lang.name}</span>
+                          {lang.code === 'qaz' && (
+                            <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-0.5 text-xs rounded">Новый</span>
+                          )}
                         </div>
                         <div className="text-sm">
                           {translations[lang.code] && (translations[lang.code].title || translations[lang.code].content) ? (
@@ -349,6 +414,7 @@ const AdminNewsForm = () => {
                     <li>• Добавьте качественное изображение</li>
                     <li>• Проверьте переводы на всех языках</li>
                     <li>• Сохраните как черновик для предварительного просмотра</li>
+                    {isEdit && <li>• При редактировании можно обновить изображение</li>}
                   </ul>
                 </div>
               </div>

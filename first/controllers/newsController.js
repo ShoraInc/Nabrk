@@ -1,6 +1,6 @@
-const News = require("../models/News");
-const Texts = require("../models/Texts");
-const TextTranslations = require("../models/TextTranslations");
+const News = require("../models/content/News");
+const Texts = require("../models//core/Texts");
+const TextTranslations = require("../models/core/TextTranslations");
 const { Op } = require("sequelize");
 
 // Get all news with translations
@@ -168,72 +168,6 @@ const createNewsDraft = async (req, res) => {
   }
 };
 
-// NEW: Update news (including image and basic info)
-const updateNews = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const imageUrl = req.body.imageUrl; // Set by processUploadedImage middleware
-
-    const news = await News.findByPk(id);
-    if (!news) {
-      return res.status(404).json({ error: "News not found" });
-    }
-
-    // Store old image URL for deletion
-    const oldImageUrl = news.imageUrl;
-
-    // Update news with new image if provided
-    const updateData = {};
-    if (imageUrl) {
-      updateData.imageUrl = imageUrl;
-    }
-
-    if (Object.keys(updateData).length > 0) {
-      await News.update(updateData, { where: { id } });
-    }
-
-    // Delete old image file if a new image was uploaded
-    if (imageUrl && oldImageUrl && oldImageUrl !== imageUrl) {
-      try {
-        const fs = require("fs");
-        const path = require("path");
-
-        // Extract filename from URL
-        const urlParts = oldImageUrl.split("/");
-        const filename = urlParts[urlParts.length - 1];
-
-        // Construct file path
-        const filePath = path.join(__dirname, "../uploads/news", filename);
-
-        // Check if file exists and delete it
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-          console.log(`Deleted old image file: ${filename}`);
-        }
-      } catch (fileError) {
-        console.error("Error deleting old image file:", fileError);
-        // Continue even if file deletion fails
-      }
-    }
-
-    res.json({
-      message: "News updated successfully",
-      imageUrl: imageUrl || oldImageUrl,
-    });
-  } catch (error) {
-    // If error occurs, delete uploaded file if it exists
-    if (req.file && req.file.path) {
-      const fs = require("fs");
-      try {
-        fs.unlinkSync(req.file.path);
-      } catch (deleteError) {
-        console.error("Error deleting uploaded file:", deleteError);
-      }
-    }
-    res.status(500).json({ error: error.message });
-  }
-};
-
 // Get all translations for news
 const getNewsTranslations = async (req, res) => {
   try {
@@ -359,6 +293,7 @@ const addNewsTranslation = async (req, res) => {
   }
 };
 
+// Update translation for specific language
 // Update translation for specific language
 const updateNewsTranslation = async (req, res) => {
   try {
@@ -649,7 +584,6 @@ module.exports = {
   getAllNews,
   getNewsById,
   createNewsDraft,
-  updateNews, // NEW FUNCTION
   getNewsTranslations,
   addNewsTranslation,
   updateNewsTranslation,

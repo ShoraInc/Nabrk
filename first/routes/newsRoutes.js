@@ -5,7 +5,6 @@ const {
     getAllNews,
     getNewsById,
     createNewsDraft,
-    updateNews,
     getNewsTranslations,
     addNewsTranslation,
     updateNewsTranslation,
@@ -59,18 +58,6 @@ router.post("/draft",
     handleUploadError, 
     processUploadedImage, 
     createNewsDraft
-);
-
-/**
- * @route PUT /api/news/:id
- * @desc Update news (including image)
- * @body {File} [image] - New image file (max 5MB, formats: JPG, PNG, WebP, GIF)
- */
-router.put("/:id", 
-    uploadContentImage, 
-    handleUploadError, 
-    processUploadedImage, 
-    updateNews
 );
 
 /**

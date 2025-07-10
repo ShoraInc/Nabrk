@@ -141,6 +141,30 @@ class EventsApi {
     }
   }
 
+  // NEW: Обновить событие (включая дату и время)
+  static async updateEvent(id, eventData) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/events/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(eventData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error updating event:", error);
+      throw error;
+    }
+  }
+
   // Получить все переводы события
   static async getEventTranslations(id) {
     try {
