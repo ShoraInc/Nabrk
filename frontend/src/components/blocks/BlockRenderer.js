@@ -3,6 +3,7 @@
 import React from 'react';
 import TitleBlock from './TitleBlock';
 import LineBlock from './LineBlock';
+import ContactInfoBlock from './ContactInfoBlock';
 
 const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
   const renderBlock = () => {
@@ -20,6 +21,15 @@ const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
         return (
           <LineBlock 
             block={block}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'contact-info':
+        return (
+          <ContactInfoBlock 
+            block={block}
+            currentLanguage={currentLanguage}
             isMobile={isMobile}
           />
         );

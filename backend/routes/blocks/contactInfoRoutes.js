@@ -29,6 +29,8 @@ router.get("/:id", contactInfoController.getBlock);
  */
 router.put("/:id", contactInfoController.updateBlock);
 
+router.put("/:id/order", contactInfoController.updateBlockOrder);
+
 /**
  * @route DELETE /api/blocks/contact-info/:id
  * @desc Delete contact info block
@@ -48,13 +50,21 @@ router.delete("/:id", contactInfoController.deleteBlock);
  * @body {boolean} [downloadable] - Можно ли скачать (для файлов)
  * @body {object} [settings] - Дополнительные настройки
  */
-router.post("/:blockId/items", uploads.contactInfo.single('file'), contactInfoController.createItem);
+router.post(
+  "/:blockId/items",
+  uploads.contactInfo.single("file"),
+  contactInfoController.createItem
+);
 
 /**
  * @route PUT /api/blocks/contact-info/items/:id
  * @desc Update contact info item
  */
-router.put("/items/:id", uploads.contactInfo.single('file'), contactInfoController.updateItem);
+router.put(
+  "/items/:id",
+  uploads.contactInfo.single("file"),
+  contactInfoController.updateItem
+);
 
 /**
  * @route DELETE /api/blocks/contact-info/items/:id

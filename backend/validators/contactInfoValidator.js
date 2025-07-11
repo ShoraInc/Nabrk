@@ -16,7 +16,7 @@ const validateContactInfoBlock = (data) => {
 
   // Валидируем структуру title если он есть
   if (data.title) {
-    const validLanguages = ['kz', 'ru', 'en'];
+    const validLanguages = ['kz', 'ru', 'en', 'qaz'];
     const titleKeys = Object.keys(data.title);
     
     if (titleKeys.length === 0) {

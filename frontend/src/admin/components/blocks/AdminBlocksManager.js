@@ -90,6 +90,7 @@ const AdminBlocksManager = () => {
   };
 
   // Обновление порядка блоков на сервере
+  // Обновление порядка блоков на сервере
   const updateBlocksOrder = async (reorderedBlocks) => {
     try {
       setReorderLoading(true);
@@ -103,6 +104,10 @@ const AdminBlocksManager = () => {
             return blocksApi.updateTitleBlock(block.id, { order: newOrder });
           } else if (block.type === "line") {
             return blocksApi.updateLineBlock(block.id, { order: newOrder });
+          } else if (block.type === "contact-info") {
+            return blocksApi.updateContactInfoBlock(block.id, {
+              order: newOrder,
+            });
           }
           // Добавьте другие типы блоков здесь
         }

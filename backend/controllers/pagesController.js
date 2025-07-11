@@ -9,12 +9,20 @@ const pagesController = {
           {
             model: Blocks,
             as: "blocks",
-            order: [["order", "ASC"]],
+            include: [
+              {
+                model: ContactInfoItems,
+                as: "contactInfoItems",
+                required: false,
+              },
+            ],
           },
         ],
-        order: [["updatedAt", "DESC"]],
+        order: [
+          ["updatedAt", "DESC"],
+          [{ model: Blocks, as: "blocks" }, "order", "ASC"],
+        ],
       });
-
       res.json(pages);
     } catch (error) {
       console.error("Ошибка при получении страниц:", error);
@@ -33,12 +41,20 @@ const pagesController = {
           {
             model: Blocks,
             as: "blocks",
-            order: [["order", "ASC"]],
+            include: [
+              {
+                model: ContactInfoItems,
+                as: "contactInfoItems",
+                required: false,
+              },
+            ],
           },
         ],
-        order: [["updatedAt", "DESC"]],
+        order: [
+          ["updatedAt", "DESC"],
+          [{ model: Blocks, as: "blocks" }, "order", "ASC"],
+        ],
       });
-
       res.json(pages);
     } catch (error) {
       console.error("Ошибка при получении опубликованных страниц:", error);
@@ -47,6 +63,8 @@ const pagesController = {
       });
     }
   },
+
+  // ПУБЛИЧНЫЙ: Получить страницу по slug
 
   // АДМИН: Получить страницу по ID (любой статус)
   getPageByIdAdmin: async (req, res) => {
@@ -88,10 +106,29 @@ const pagesController = {
           {
             model: Blocks,
             as: "blocks",
+            include: [
+              {
+                model: ContactInfoItems,
+                as: "contactInfoItems",
+                required: false, // Необязательно, если блоки могут быть без элементов
+                where: {
+                  isActive: true, // Показываем только активные элементы
+                },
+                required: false, // Важно: чтобы блоки без элементов тоже показывались
+              },
+            ],
           },
         ],
         order: [
-          [{ model: Blocks, as: "blocks" }, "order", "ASC"], // ← ВОТ ЗДЕСЬ!
+          // Сортировка блоков по их порядку
+          [{ model: Blocks, as: "blocks" }, "order", "ASC"],
+          // КРИТИЧЕСКИ ВАЖНО: Сортировка элементов контактной информации по их порядку
+          [
+            { model: Blocks, as: "blocks" },
+            { model: ContactInfoItems, as: "contactInfoItems" },
+            "order",
+            "ASC",
+          ],
         ],
       });
 
@@ -100,6 +137,27 @@ const pagesController = {
           error: "Страница не найдена",
         });
       }
+
+      // Добавляем отладочную информацию
+      console.log("Found page:", page.title);
+      console.log("Blocks count:", page.blocks?.length);
+      page.blocks?.forEach((block, index) => {
+        console.log(
+          `Block ${index}: type=${block.type}, contactInfoItems=${
+            block.contactInfoItems?.length || 0
+          }`
+        );
+
+        // Выводим порядок элементов для отладки
+        if (block.contactInfoItems && block.contactInfoItems.length > 0) {
+          console.log(
+            `  Contact items order:`,
+            block.contactInfoItems
+              .map((item) => `id:${item.id}, order:${item.order}`)
+              .join(", ")
+          );
+        }
+      });
 
       res.json(page);
     } catch (error) {
@@ -358,8 +416,8 @@ const pagesController = {
 
       // ВАЖНО: Сначала удаляем элементы contact-info блоков (включая файлы)
       const contactInfoBlocks = await Blocks.findAll({
-        where: { pageId: page.id, type: 'contact-info' },
-        transaction
+        where: { pageId: page.id, type: "contact-info" },
+        transaction,
       });
 
       for (const block of contactInfoBlocks) {
@@ -368,7 +426,7 @@ const pagesController = {
         await ContactInfoItems.destroy({
           where: { blockId: block.id },
           individualHooks: true,
-          transaction
+          transaction,
         });
       }
 

@@ -1,141 +1,95 @@
 // config/blockTypesConfig.js
-import React from 'react';
+import TitleBlockForm from '..//admin/components/blocks/forms/TitleBlockForm';
+import LineBlockForm from '../admin/components/blocks/forms/LineBlockForm';
+import ContactInfoBlockForm from '../admin/components/blocks/forms/ContactInfoBlockForm';
 
-// Компоненты для отображения блоков в админке
-import AdminTitleBlock from '../admin/components/blocks/admin/AdminTitleBlock';
-import AdminLineBlock from '../admin/components/blocks/admin/AdminLineBlock';
-
-// Формы для создания/редактирования блоков
-import TitleBlockForm from '../admin/components/blocks/forms/TitleBlockForm';
-import LineBlockForm from '../admin/components/blocks//forms/LineBlockForm';
-
-// Конфигурация всех типов блоков
 export const BLOCK_TYPES_CONFIG = {
   title: {
     name: 'Заголовок',
     description: 'Текстовый заголовок с поддержкой переводов',
     icon: '📝',
-    category: 'text',
-    hasTranslations: true,
-    // Компонент для отображения в админке
-    AdminComponent: AdminTitleBlock,
-    // Форма для создания/редактирования
-    FormComponent: TitleBlockForm,
-    // Поля по умолчанию при создании
-    defaultData: {
-      fontSize: '24px',
-      fontWeight: '600',
-      color: '#333333',
-      textAlign: 'left',
-      marginTop: 0,
-      marginBottom: 16,
-    },
-    // Валидация
-    validation: {
-      required: ['text'],
-      rules: {
-        text: { minLength: 1, maxLength: 500 }
-      }
-    }
-  },
-
-  line: {
-    name: 'Линия',
-    description: 'Горизонтальная разделительная линия',
-    icon: '➖',
-    category: 'separator',
-    hasTranslations: false,
-    AdminComponent: AdminLineBlock,
-    FormComponent: LineBlockForm,
-    defaultData: {
-      color: '#000000',
-      height: 1,
-      width: '100%',
-      style: 'solid',
-      marginTop: 10,
-      marginBottom: 10,
-    },
-    validation: {
-      required: [],
-      rules: {
-        height: { min: 1, max: 20 },
-        marginTop: { min: 0, max: 200 },
-        marginBottom: { min: 0, max: 200 }
-      }
-    }
-  },
-
-  // Здесь в будущем добавим новые типы блоков:
-  /*
-  image: {
-    name: 'Изображение',
-    description: 'Блок с изображением',
-    icon: '🖼️',
-    category: 'media',
-    hasTranslations: false,
-    AdminComponent: AdminImageBlock,
-    FormComponent: ImageBlockForm,
-    defaultData: {
-      alt: '',
-      width: '100%',
-      alignment: 'center'
-    }
-  },
-  
-  card: {
-    name: 'Карточка',
-    description: 'Карточка с заголовком и описанием',
-    icon: '🃏',
     category: 'content',
     hasTranslations: true,
-    AdminComponent: AdminCardBlock,
-    FormComponent: CardBlockForm,
-    defaultData: {
-      backgroundColor: '#ffffff',
-      borderRadius: '8px',
-      padding: '20px'
-    }
-  }
-  */
+    FormComponent: TitleBlockForm,
+  },
+  line: {
+    name: 'Разделительная линия',
+    description: 'Горизонтальная линия для разделения контента',
+    icon: '📏',
+    category: 'layout',
+    hasTranslations: false,
+    FormComponent: LineBlockForm,
+  },
+  'contact-info': {
+    name: 'Контактная информация',
+    description: 'Блок с контактными данными: телефоны, email, файлы',
+    icon: '📞',
+    category: 'content',
+    hasTranslations: true,
+    FormComponent: ContactInfoBlockForm,
+  },
 };
 
-// Категории блоков для группировки в UI
 export const BLOCK_CATEGORIES = {
-  text: {
-    name: 'Текст',
-    icon: '📝',
-    color: '#3b82f6'
-  },
-  media: {
-    name: 'Медиа',
-    icon: '🖼️',
-    color: '#10b981'
-  },
   content: {
     name: 'Контент',
-    icon: '📄',
-    color: '#8b5cf6'
-  },
-  separator: {
-    name: 'Разделители',
-    icon: '➖',
-    color: '#6b7280'
+    icon: '📝',
+    description: 'Текстовый и медиа контент'
   },
   layout: {
     name: 'Макет',
-    icon: '📐',
-    color: '#f59e0b'
+    icon: '🏗️',
+    description: 'Элементы макета и структуры'
+  },
+  media: {
+    name: 'Медиа',
+    icon: '🎨',
+    description: 'Изображения, видео, галереи'
+  },
+  interactive: {
+    name: 'Интерактивные',
+    icon: '⚡',
+    description: 'Формы, кнопки, интерактивные элементы'
   }
 };
 
-// Утилиты для работы с конфигурацией
 export const blockUtils = {
-  // Получить конфигурацию типа блока
+  // Получить все блоки по категориям
+  getCategoriesWithBlocks: () => {
+    const categoriesWithBlocks = {};
+    
+    Object.entries(BLOCK_CATEGORIES).forEach(([categoryKey, category]) => {
+      const blocksInCategory = Object.entries(BLOCK_TYPES_CONFIG)
+        .filter(([_, blockConfig]) => blockConfig.category === categoryKey)
+        .map(([type, config]) => ({
+          type,
+          name: config.name,
+          description: config.description,
+          icon: config.icon
+        }));
+      
+      if (blocksInCategory.length > 0) {
+        categoriesWithBlocks[categoryKey] = {
+          ...category,
+          blocks: blocksInCategory
+        };
+      }
+    });
+    
+    return categoriesWithBlocks;
+  },
+
+  // Получить конфигурацию блока по типу
   getBlockConfig: (type) => {
     return BLOCK_TYPES_CONFIG[type] || null;
   },
 
-  // Получить все доступные типы блоков
+  // Проверить есть ли переводы у блока
+  hasTranslations: (type) => {
+    return BLOCK_TYPES_CONFIG[type]?.hasTranslations || false;
+  },
+
+  // Получить все типы блоков
   getAllBlockTypes: () => {
     return Object.keys(BLOCK_TYPES_CONFIG);
   },
@@ -143,62 +97,7 @@ export const blockUtils = {
   // Получить блоки по категории
   getBlocksByCategory: (category) => {
     return Object.entries(BLOCK_TYPES_CONFIG)
-      .filter(([type, config]) => config.category === category)
+      .filter(([_, config]) => config.category === category)
       .map(([type, config]) => ({ type, ...config }));
-  },
-
-  // Получить все категории с блоками
-  getCategoriesWithBlocks: () => {
-    const result = {};
-    Object.entries(BLOCK_CATEGORIES).forEach(([categoryKey, categoryInfo]) => {
-      const blocks = blockUtils.getBlocksByCategory(categoryKey);
-      if (blocks.length > 0) {
-        result[categoryKey] = {
-          ...categoryInfo,
-          blocks
-        };
-      }
-    });
-    return result;
-  },
-
-  // Валидация данных блока
-  validateBlockData: (type, data) => {
-    const config = blockUtils.getBlockConfig(type);
-    if (!config) return { valid: false, errors: ['Unknown block type'] };
-
-    const errors = [];
-    const { required = [], rules = {} } = config.validation;
-
-    // Проверка обязательных полей
-    required.forEach(field => {
-      if (!data[field] || (typeof data[field] === 'string' && !data[field].trim())) {
-        errors.push(`Field '${field}' is required`);
-      }
-    });
-
-    // Проверка правил валидации
-    Object.entries(rules).forEach(([field, rule]) => {
-      const value = data[field];
-      if (value !== undefined && value !== null) {
-        if (rule.minLength && value.length < rule.minLength) {
-          errors.push(`Field '${field}' must be at least ${rule.minLength} characters`);
-        }
-        if (rule.maxLength && value.length > rule.maxLength) {
-          errors.push(`Field '${field}' must be no more than ${rule.maxLength} characters`);
-        }
-        if (rule.min && value < rule.min) {
-          errors.push(`Field '${field}' must be at least ${rule.min}`);
-        }
-        if (rule.max && value > rule.max) {
-          errors.push(`Field '${field}' must be no more than ${rule.max}`);
-        }
-      }
-    });
-
-    return {
-      valid: errors.length === 0,
-      errors
-    };
   }
 };

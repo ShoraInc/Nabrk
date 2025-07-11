@@ -206,6 +206,26 @@ const blocksApi = {
       throw error;
     }
   },
+
+  updateContactInfoBlock: async (id, blockData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/contact-info/${id}/order`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blockData),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating line block:", error);
+      throw error;
+    }
+  },
 };
 
 export default blocksApi;
