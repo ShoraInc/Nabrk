@@ -40,7 +40,7 @@ const start = async () => {
         console.log("Database connected successfully");
         
         // Sync database
-        await sequelize.sync({ for: true });
+        await sequelize.sync({ alter: true });
         console.log("Database synchronized");
         
         app.listen(PORT, () => {

@@ -1,6 +1,6 @@
 const { Blocks, ContactInfoItems, Pages, sequelize } = require("../../models");
 const { AVAILABLE_ICONS, ICON_CATEGORIES, RECOMMENDED_ICONS } = require("../../constants/iconConstants");
-const { getRelativePath, deleteFile } = require("../../middleware/contactsFilesUploadMiddleware");
+const { deleteFile } = require("../../middleware/contactsFilesUploadMiddleware");
 
 const contactInfoController = {
   // Создать блок контактной информации
@@ -48,12 +48,12 @@ const contactInfoController = {
           const item = items[i];
           
           // Проверяем обязательные поля для элемента
-          if (!item.type) {
-            throw new Error(`Item ${i}: type is required`);
+          if (!item.type || !['text', 'link', 'file'].includes(item.type)) {
+            throw new Error(`Item ${i}: type must be 'text', 'link', or 'file'`);
           }
           
-          if (!item.texts || Object.keys(item.texts).length === 0) {
-            throw new Error(`Item ${i}: texts is required and must contain at least one translation`);
+          if (!item.text || item.text.trim().length === 0) {
+            throw new Error(`Item ${i}: text is required`);
           }
           
           await ContactInfoItems.create({
@@ -61,13 +61,9 @@ const contactInfoController = {
             type: item.type,
             icon: item.icon || 'info',
             order: i,
-            data: {
-              texts: item.texts,
-              value: item.value || '',
-              fileName: item.fileName || null,
-              downloadable: item.downloadable || false,
-              settings: item.settings || {}
-            }
+            text: item.text,
+            value: item.value || null,
+            fileName: item.fileName || null
           }, { transaction });
         }
       }
@@ -170,7 +166,7 @@ const contactInfoController = {
     
     try {
       const { blockId } = req.params;
-      let { type, icon, texts, value, fileName, downloadable, settings, kz, ru, en } = req.body;
+      let { type, icon, text, value } = req.body;
       
       // Проверяем существование блока
       const block = await Blocks.findOne({
@@ -183,59 +179,47 @@ const contactInfoController = {
         return res.status(404).json({ error: "Contact info block not found" });
       }
       
-      // При multipart/form-data JSON поля приходят как строки - парсим их
-      try {
-        if (typeof texts === 'string') {
-          texts = JSON.parse(texts);
-        }
-        if (typeof settings === 'string') {
-          settings = JSON.parse(settings);
-        }
-        if (typeof downloadable === 'string') {
-          downloadable = downloadable === 'true';
-        }
-      } catch (parseError) {
+      // Парсим text если это строка (из multipart/form-data)
+      // Для обычного текста text уже строка, парсить не нужно
+      
+      // Валидация типа
+      if (!type || !['text', 'link', 'file'].includes(type)) {
         await transaction.rollback();
-        return res.status(400).json({ 
-          error: "Invalid JSON format in texts or settings field" 
-        });
+        return res.status(400).json({ error: "Type must be 'text', 'link', or 'file'" });
       }
       
-      // Обрабатываем тексты - поддерживаем два формата
-      let processedTexts = texts || {};
-      
-      // Если тексты переданы как отдельные поля (kz, ru, en)
-      if (!texts && (kz || ru || en)) {
-        processedTexts = {};
-        if (kz) processedTexts.kz = kz;
-        if (ru) processedTexts.ru = ru;
-        if (en) processedTexts.en = en;
-      }
-      
-      // Проверяем что хотя бы один текст передан
-      if (!processedTexts || Object.keys(processedTexts).length === 0) {
-        await transaction.rollback();
-        return res.status(400).json({ 
-          error: "Texts are required. Use either 'texts' object or individual 'kz', 'ru', 'en' fields" 
-        });
-      }
+      // Обрабатываем загруженный файл
+      let processedValue = value;
+      let fileName = null;
       
       if (req.file) {
-        processedValue = getRelativePath(req.file.filename);
-        processedFileName = req.file.originalname;
+        if (type !== 'file') {
+          await transaction.rollback();
+          return res.status(400).json({ error: "File upload is only allowed for type 'file'" });
+        }
+        processedValue = `/uploads/blocks/contact-info/${req.file.filename}`;
+        fileName = req.file.originalname;
+      }
+      
+      // Для типа file обязательно нужен файл
+      if (type === 'file' && !processedValue) {
+        await transaction.rollback();
+        return res.status(400).json({ error: "File type requires file upload" });
+      }
+      
+      // Для типа link обязательно нужно значение
+      if (type === 'link' && !processedValue) {
+        await transaction.rollback();
+        return res.status(400).json({ error: "Link type requires value field" });
       }
       
       const item = await ContactInfoItems.create({
         blockId: parseInt(blockId),
         type,
         icon: icon || 'info',
-        data: {
-          texts: processedTexts,
-          value: processedValue || '',
-          fileName: processedFileName || null,
-          downloadable: downloadable || false,
-          settings: settings || {}
-        }
+        text: text,
+        value: processedValue,
+        fileName: fileName
       }, { transaction });
       
       await transaction.commit();
@@ -253,7 +237,7 @@ const contactInfoController = {
     
     try {
       const { id } = req.params;
-      let { type, icon, texts, value, fileName, downloadable, settings, kz, ru, en } = req.body;
+      let { type, icon, text, value } = req.body;
       
       const item = await ContactInfoItems.findByPk(id, { transaction });
       if (!item) {
@@ -261,61 +245,28 @@ const contactInfoController = {
         return res.status(404).json({ error: "Item not found" });
       }
       
-      // При multipart/form-data JSON поля приходят как строки - парсим их
-      try {
-        if (typeof texts === 'string') {
-          texts = JSON.parse(texts);
-        }
-        if (typeof settings === 'string') {
-          settings = JSON.parse(settings);
-        }
-        if (typeof downloadable === 'string') {
-          downloadable = downloadable === 'true';
-        }
-      } catch (parseError) {
-        await transaction.rollback();
-        return res.status(400).json({ 
-          error: "Invalid JSON format in texts or settings field" 
-        });
-      }
-      
-      // Обрабатываем тексты - поддерживаем два формата
-      let processedTexts = texts;
-      
-      // Если тексты переданы как отдельные поля (kz, ru, en)
-      if (!texts && (kz || ru || en)) {
-        processedTexts = {};
-        if (kz) processedTexts.kz = kz;
-        if (ru) processedTexts.ru = ru;
-        if (en) processedTexts.en = en;
-      }
+      // Для обычного текста text уже строка, парсить не нужно
       
       // Обрабатываем новый файл
       let processedValue = value;
-      let processedFileName = fileName;
+      let fileName = item.fileName;
       
       if (req.file) {
         // Удаляем старый файл если был
-        if (item.type === 'file' && item.data.value) {
-          await deleteFile(item.data.value);
+        if (item.type === 'file' && item.value) {
+          await deleteFile(item.value);
         }
         
-        processedValue = getRelativePath(req.file.filename);
-        processedFileName = req.file.originalname;
+        processedValue = `/uploads/blocks/contact-info/${req.file.filename}`;
+        fileName = req.file.originalname;
       }
-      
-      // Обновляем данные
-      const updatedData = { ...item.data };
-      if (processedTexts !== undefined) updatedData.texts = processedTexts;
-      if (processedValue !== undefined) updatedData.value = processedValue;
-      if (processedFileName !== undefined) updatedData.fileName = processedFileName;
-      if (downloadable !== undefined) updatedData.downloadable = downloadable;
-      if (settings !== undefined) updatedData.settings = { ...updatedData.settings, ...settings };
       
       await item.update({
         type: type || item.type,
         icon: icon || item.icon,
-        data: updatedData
+        text: text || item.text,
+        value: processedValue !== undefined ? processedValue : item.value,
+        fileName: fileName
       }, { transaction });
       
       await transaction.commit();

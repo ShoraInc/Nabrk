@@ -18,34 +18,36 @@ const ContactInfoItems = sequelize.define("ContactInfoItems", {
     onDelete: 'CASCADE'
   },
   type: { 
-    type: DataTypes.ENUM('phone', 'email', 'fax', 'file', 'link', 'video', 'address', 'custom'),
-    allowNull: false,
-    comment: 'Тип элемента контактной информации'
+    type: DataTypes.ENUM('text', 'link', 'file'),
+    allowNull: false
   },
   icon: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    defaultValue: 'info',
-    comment: 'Ключ иконки из Lucide React'
+    defaultValue: 'info'
   },
   order: { 
     type: DataTypes.INTEGER, 
     allowNull: false, 
-    defaultValue: 0,
-    comment: 'Порядок отображения в списке'
+    defaultValue: 0
   },
-  data: {
-    type: DataTypes.JSONB,
-    allowNull: false,
-    defaultValue: {},
-    comment: 'Данные элемента: тексты, ссылки, настройки'
+  text: {
+    type: DataTypes.STRING(500),
+    allowNull: false
+  },
+  value: {
+    type: DataTypes.STRING(500),
+    allowNull: true
+  },
+  fileName: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   },
   isActive: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true,
-    field: 'is_active',
-    comment: 'Активен ли элемент'
+    field: 'is_active'
   }
 }, {
   tableName: 'ContactInfoItems',
@@ -66,24 +68,26 @@ const ContactInfoItems = sequelize.define("ContactInfoItems", {
     },
     {
       type: 'GIN',
-      fields: ['data'],
-      name: 'contact_info_items_data_gin_idx'
+      fields: ['text'], // GIN индекс для JSONB поиска по переводам
+      name: 'contact_info_items_text_gin_idx'
     }
   ],
   
   validate: {
-    // Упрощенная валидация - только критические проверки
+    // Упрощенная валидация
     validateBasicStructure() {
-      const { data } = this;
-      
-      // Проверяем что data существует
-      if (!data || typeof data !== 'object') {
-        throw new Error('Data field is required and must be an object');
+      // Проверяем что есть текст
+      if (!this.text || this.text.trim().length === 0) {
+        throw new Error('Text field is required');
       }
       
-      // Мягкая проверка texts - если есть, то должен быть объектом
-      if (data.texts && typeof data.texts !== 'object') {
-        throw new Error('Texts field must be an object');
+      // Валидация в зависимости от типа
+      if (this.type === 'link' && !this.value) {
+        throw new Error('Link type requires value field');
+      }
+      
+      if (this.type === 'file' && !this.value) {
+        throw new Error('File type requires value field (file path)');
       }
     }
   }
@@ -106,9 +110,9 @@ ContactInfoItems.addHook('beforeDestroy', async (item) => {
   console.log(`🗑️ Удаляется ContactInfoItem ID: ${item.id}, type: ${item.type}`);
   
   // Если это файл, удаляем его с сервера
-  if (item.type === 'file' && item.data.value) {
+  if (item.type === 'file' && item.value) {
     const { deleteFile } = require('../middleware/contactsFilesUploadMiddleware');
-    await deleteFile(item.data.value);
+    await deleteFile(item.value);
   }
 });
 
