@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./ForgetPassword.scss";
-import LoginHeader from "../../../components/LoginHeader/LoginHeader";
+import LoginHeader from "../../../components/layout/LoginHeader/LoginHeader";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { switchToLogin } from "../../../store/modalSlice";

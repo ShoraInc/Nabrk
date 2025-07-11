@@ -3,6 +3,7 @@ import "./News.scss";
 import ArrowIcon from "./assets/icons/Arrow-icon.png";
 import NewsApi from "../../../../api/newsApi";
 import { useNavigate } from "react-router-dom";
+import { generateRoute } from "../../../../routes/constants";
 
 export default function News() {
   const [newsData, setNewsData] = useState([]);
@@ -48,9 +49,7 @@ export default function News() {
   };
 
   const handleNewsClick = (newsId) => {
-    // Здесь можно добавить навигацию к детальной странице новости
-    console.log("Opening news:", newsId);
-    // Например: navigate(`/news/${newsId}`);
+    navigate(generateRoute.newsDetail(newsId));
   };
 
   const handleViewAllClick = () => {
@@ -272,7 +271,9 @@ export default function News() {
                         {/* Показываем кнопку только для больших карточек на десктопе */}
                         {news.isLarge && (
                           <button
-                            onClick={() => navigate(`/news/${news.id}`)}
+                            onClick={() =>
+                              navigate(generateRoute.newsDetail(news.id))
+                            }
                             className="news-button desktop-only"
                           >
                             ТОЛЫҚТАЙ ОҚУ

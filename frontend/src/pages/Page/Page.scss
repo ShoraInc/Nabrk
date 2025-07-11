@@ -1,0 +1,231 @@
+// Variables
+$max-width: 600px;
+$text-color: #333333;
+$text-muted: #666666;
+$text-light: #999999;
+$primary-color: #007bff;
+$primary-hover: #0056b3;
+$error-color: #e74c3c;
+$bg-white: #ffffff;
+$bg-light: #f8f9fa;
+$border-color: #e9ecef;
+$border-light: #dee2e6;
+
+.page {
+  max-width: $max-width;
+  margin: 20px auto;
+  min-height: 100vh;
+  background-color: $bg-white;
+
+  // Основной контейнер с блоками
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    
+    // На мобильных устройствах добавляем небольшой gap
+    @media (max-width: 768px) {
+      gap: 8px;
+    }
+  }
+
+  // Состояния загрузки
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding: 40px 0;
+    
+    &-text {
+      text-align: center;
+      color: $text-muted;
+      font-size: 16px;
+    }
+    
+    @media (max-width: 768px) {
+      padding: 20px 0;
+    }
+  }
+
+  // 404 страница
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding: 40px 0;
+    text-align: center;
+
+    &-title {
+      font-size: 48px;
+      color: $text-color;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    &-subtitle {
+      color: $text-muted;
+      margin-bottom: 16px;
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    &-description {
+      color: $text-light;
+      margin-bottom: 32px;
+      font-size: 16px;
+      max-width: 400px;
+    }
+
+    &-button {
+      padding: 12px 24px;
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: $primary-hover;
+      }
+    }
+
+    // Мобильная версия
+    @media (max-width: 768px) {
+      padding: 20px 0;
+
+      &-title {
+        font-size: 32px;
+      }
+
+      &-subtitle {
+        font-size: 18px;
+      }
+    }
+  }
+
+  // Страница с ошибкой
+  &__error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+    padding: 40px 0;
+    text-align: center;
+
+    &-title {
+      color: $error-color;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    &-description {
+      color: $text-muted;
+      margin-bottom: 24px;
+      font-size: 16px;
+    }
+
+    &-button {
+      padding: 12px 24px;
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: $primary-hover;
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 20px 0;
+    }
+  }
+
+  // Пустая страница (нет блоков)
+  &__empty {
+    text-align: center;
+    color: $text-light;
+    font-size: 18px;
+    padding: 60px 20px;
+
+    &-title {
+      color: $text-color;
+      margin-bottom: 20px;
+      font-size: 32px;
+    }
+
+    @media (max-width: 768px) {
+      &-title {
+        font-size: 24px;
+      }
+    }
+  }
+
+  // Debug блок (только в development)
+  &__debug {
+    margin-top: 60px;
+    padding: 20px 0;
+    background-color: $bg-light;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: monospace;
+
+    &-title {
+      margin: 0 0 12px 0;
+      color: #495057;
+      font-size: 14px;
+    }
+
+    &-item {
+      margin-bottom: 8px;
+      
+      strong {
+        color: $text-color;
+      }
+    }
+
+    &-details {
+      margin-top: 12px;
+
+      summary {
+        cursor: pointer;
+        color: $primary-color;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    &-data {
+      margin-top: 8px;
+      padding: 12px;
+      background-color: $bg-white;
+      border: 1px solid $border-light;
+      border-radius: 4px;
+      overflow: auto;
+      max-height: 300px;
+      font-size: 11px;
+      line-height: 1.4;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .page {
+    // На мобильных убираем боковые отступы, оставляем только верх/низ
+    padding: 0;
+  }
+}

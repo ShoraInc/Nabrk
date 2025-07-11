@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./News.scss";
 import NewsApi from "../../api/newsApi";
+import { generateRoute } from "../../routes/constants";
 
 export default function News() {
   const navigate = useNavigate();
@@ -60,7 +61,7 @@ export default function News() {
   };
 
   const handleNewsClick = (newsId) => {
-    navigate(`/news/${newsId}`);
+    navigate(generateRoute.newsDetail(newsId));
   };
 
   const formatDate = (dateString) => {

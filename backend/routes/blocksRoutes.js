@@ -19,7 +19,7 @@ router.get("/options", blocksController.getBlockOptions);
  * @desc Get all blocks for a page with texts
  * @query {string} [lang=kz] - Language for translations
  */
-router.get("/page/:pageId", blocksController.getBlocksByPageId);
+router.get("/page/:slug", blocksController.getBlocksByPageId);
 
 /**
  * @route GET /api/blocks/:id

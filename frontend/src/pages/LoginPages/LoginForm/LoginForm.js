@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { switchToRegistration, switchToForgetPassword } from '../../../store/modalSlice';
 import './LoginForm.scss';
-import LoginHeader from '../../../components/LoginHeader/LoginHeader';
+import LoginHeader from '../../../components/layout/LoginHeader/LoginHeader';
 import wireframe from './img/wireframe_black.png';
 
 const LoginForm = ({ onClose }) => {

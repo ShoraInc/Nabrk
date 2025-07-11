@@ -14,7 +14,7 @@ const pagesController = {
         ],
         order: [["updatedAt", "DESC"]],
       });
-      
+
       res.json(pages);
     } catch (error) {
       console.error("Ошибка при получении страниц:", error);
@@ -38,7 +38,7 @@ const pagesController = {
         ],
         order: [["updatedAt", "DESC"]],
       });
-      
+
       res.json(pages);
     } catch (error) {
       console.error("Ошибка при получении опубликованных страниц:", error);
@@ -80,16 +80,18 @@ const pagesController = {
   getPublishedPageBySlug: async (req, res) => {
     try {
       const page = await Pages.findOne({
-        where: { 
+        where: {
           slug: req.params.slug,
-          status: "published" 
+          status: "published",
         },
         include: [
           {
             model: Blocks,
             as: "blocks",
-            order: [["order", "ASC"]],
           },
+        ],
+        order: [
+          [{ model: Blocks, as: "blocks" }, "order", "ASC"], // ← ВОТ ЗДЕСЬ!
         ],
       });
 
@@ -228,7 +230,7 @@ const pagesController = {
       // Проверяем, есть ли у страницы блоки
       const blocksCount = await Blocks.count({
         where: { pageId: page.id },
-        transaction
+        transaction,
       });
 
       if (blocksCount === 0) {
@@ -240,11 +242,11 @@ const pagesController = {
 
       // Дополнительная проверка: у всех title блоков должны быть переводы
       const titleBlocks = await Blocks.findAll({
-        where: { 
+        where: {
           pageId: page.id,
-          type: "title" 
+          type: "title",
         },
-        transaction
+        transaction,
       });
 
       for (const block of titleBlocks) {
@@ -345,10 +347,11 @@ const pagesController = {
       // Проверяем, можно ли удалить опубликованную страницу
       if (page.status === "published") {
         const { force } = req.query;
-        if (force !== 'true') {
+        if (force !== "true") {
           await transaction.rollback();
           return res.status(400).json({
-            error: "Нельзя удалить опубликованную страницу. Добавьте параметр ?force=true для принудительного удаления",
+            error:
+              "Нельзя удалить опубликованную страницу. Добавьте параметр ?force=true для принудительного удаления",
           });
         }
       }
@@ -356,7 +359,7 @@ const pagesController = {
       // Удаляем все блоки страницы (каскадное удаление)
       await Blocks.destroy({
         where: { pageId: page.id },
-        transaction
+        transaction,
       });
 
       // Удаляем саму страницу
@@ -381,18 +384,18 @@ const pagesController = {
     try {
       const stats = await Pages.findAll({
         attributes: [
-          'status',
-          [sequelize.fn('COUNT', sequelize.col('id')), 'count']
+          "status",
+          [sequelize.fn("COUNT", sequelize.col("id")), "count"],
         ],
-        group: ['status'],
-        raw: true
+        group: ["status"],
+        raw: true,
       });
 
       const totalBlocks = await Blocks.count();
 
       res.json({
         pageStats: stats,
-        totalBlocks
+        totalBlocks,
       });
     } catch (error) {
       console.error("Ошибка при получении статистики:", error);

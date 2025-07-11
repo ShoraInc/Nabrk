@@ -5,13 +5,18 @@ const blocksController = {
   // Получить все блоки страницы
   getBlocksByPageId: async (req, res) => {
     try {
+      const page = await Pages.findOne({
+        where: { slug: req.params.slug },
+        attributes: ["id", "slug"],
+      });
+
       const blocks = await Blocks.findAll({
-        where: { pageId: req.params.pageId },
+        where: { pageId: page.id },
         order: [["order", "ASC"]],
       });
 
       // Возвращаем блоки с данными напрямую (переводы уже в data)
-      const blocksData = blocks.map(block => block.toJSON());
+      const blocksData = blocks.map((block) => block.toJSON());
 
       res.json(blocksData);
     } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./RegistrationForm.scss";
-import LoginHeader from "../../../components/LoginHeader/LoginHeader";
+import LoginHeader from "../../../components/layout/LoginHeader/LoginHeader";
 import backButton from "../assets/icons/back_button.png";
 import { switchToLogin } from "../../../store/modalSlice";
 import { useDispatch } from "react-redux";
