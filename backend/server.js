@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const sequelize = require("./db");
 
-// Import models with associations
 require("./models/index");
 
 // Import routes
@@ -41,7 +40,7 @@ const start = async () => {
         console.log("Database connected successfully");
         
         // Sync database
-        await sequelize.sync({ alter: true });
+        await sequelize.sync({ for: true });
         console.log("Database synchronized");
         
         app.listen(PORT, () => {

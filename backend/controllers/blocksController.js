@@ -1,5 +1,5 @@
 const { BLOCK_OPTIONS } = require("../constants/blockConstants");
-const { Blocks, Pages, sequelize } = require("../models");
+const { Blocks, Pages, ContactInfoItems, sequelize } = require("../models");
 
 const blocksController = {
   // Получить все блоки страницы
@@ -9,6 +9,10 @@ const blocksController = {
         where: { slug: req.params.slug },
         attributes: ["id", "slug"],
       });
+
+      if (!page) {
+        return res.status(404).json({ error: "Page not found" });
+      }
 
       const blocks = await Blocks.findAll({
         where: { pageId: page.id },
@@ -34,6 +38,18 @@ const blocksController = {
         return res.status(404).json({ error: "Block not found" });
       }
 
+      // Если это contact-info блок, добавляем элементы
+      if (block.type === 'contact-info') {
+        const items = await ContactInfoItems.findAll({
+          where: { blockId: block.id, isActive: true },
+          order: [['order', 'ASC']]
+        });
+        
+        const blockData = block.toJSON();
+        blockData.items = items.map(item => item.toJSON());
+        return res.json(blockData);
+      }
+
       res.json(block.toJSON());
     } catch (error) {
       console.error("Ошибка при получении блока:", error);
@@ -53,7 +69,18 @@ const blocksController = {
         return res.status(404).json({ error: "Block not found" });
       }
 
-      // Просто удаляем блок (больше не нужно удалять связанные тексты)
+      // ВАЖНО: Если это contact-info блок, удаляем связанные элементы
+      if (block.type === 'contact-info') {
+        // Удаляем все элементы контактной информации
+        // individualHooks: true активирует хук beforeDestroy для каждого элемента
+        await ContactInfoItems.destroy({
+          where: { blockId: block.id },
+          individualHooks: true,
+          transaction
+        });
+      }
+
+      // Удаляем сам блок
       await block.destroy({ transaction });
 
       await transaction.commit();

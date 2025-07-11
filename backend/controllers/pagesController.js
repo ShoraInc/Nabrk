@@ -1,4 +1,4 @@
-const { Pages, Blocks, sequelize } = require("../models");
+const { Pages, Blocks, ContactInfoItems, sequelize } = require("../models");
 
 const pagesController = {
   // АДМИН: Получить все страницы (включая черновики)
@@ -356,13 +356,29 @@ const pagesController = {
         }
       }
 
-      // Удаляем все блоки страницы (каскадное удаление)
+      // ВАЖНО: Сначала удаляем элементы contact-info блоков (включая файлы)
+      const contactInfoBlocks = await Blocks.findAll({
+        where: { pageId: page.id, type: 'contact-info' },
+        transaction
+      });
+
+      for (const block of contactInfoBlocks) {
+        // Удаляем все элементы контактной информации
+        // individualHooks: true активирует хук beforeDestroy для каждого элемента
+        await ContactInfoItems.destroy({
+          where: { blockId: block.id },
+          individualHooks: true,
+          transaction
+        });
+      }
+
+      // Затем удаляем все блоки страницы
       await Blocks.destroy({
         where: { pageId: page.id },
         transaction,
       });
 
-      // Удаляем саму страницу
+      // И наконец удаляем саму страницу
       await page.destroy({ transaction });
 
       await transaction.commit();

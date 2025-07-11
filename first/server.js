@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const sequelize = require("./db");
 
-// Import models with associations
 require("./models/index");
 
 // Import routes

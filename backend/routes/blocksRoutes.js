@@ -5,6 +5,7 @@ const blocksController = require("../controllers/blocksController");
 // Подключаем отдельные роутеры для каждого типа блока
 const titleRoutes = require("./blocks/titleRoutes");
 const lineRoutes = require("./blocks/lineRoutes");
+const contactInfoRoutes = require("./blocks/contactInfoRoutes");
 
 // ВАЖНО: /options должен быть ПЕРЕД /:id чтобы избежать конфликта роутов
 /**
@@ -53,6 +54,20 @@ router.use("/title", titleRoutes);
  * DELETE /api/blocks/line/:id       - Delete line block
  */
 router.use("/line", lineRoutes);
+
+/**
+ * Contact Info block routes:
+ * POST   /api/blocks/contact-info                    - Create contact info block
+ * GET    /api/blocks/contact-info/:id                - Get contact info block
+ * PUT    /api/blocks/contact-info/:id                - Update contact info block
+ * DELETE /api/blocks/contact-info/:id                - Delete contact info block
+ * POST   /api/blocks/contact-info/:blockId/items     - Create contact item
+ * PUT    /api/blocks/contact-info/items/:id          - Update contact item
+ * DELETE /api/blocks/contact-info/items/:id          - Delete contact item
+ * PUT    /api/blocks/contact-info/:blockId/items/reorder - Reorder items
+ * GET    /api/blocks/contact-info/icons/available    - Get available icons
+ */
+router.use("/contact-info", contactInfoRoutes);
 
 // Здесь будем добавлять новые типы блоков:
 // router.use("/card", cardRoutes);

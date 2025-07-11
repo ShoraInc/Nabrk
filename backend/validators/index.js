@@ -1,26 +1,31 @@
-// validators/index.js
 const { validateTitleBlock } = require("./titleValidator");
 const { validateLineBlock } = require("./lineValidator");
+const { validateContactInfoBlock } = require("./contactInfoValidator");
 
-const validateBlockData = (blockType, data) => {
-  if (!data || typeof data !== "object") {
-    throw new Error(`Block data must be an object, received: ${typeof data}`);
-  }
-
-  switch (blockType) {
+// Основная функция валидации блоков
+const validateBlockData = (type, data) => {
+  switch (type) {
     case "title":
-      validateTitleBlock(data);
-      break;
-
+      return validateTitleBlock(data);
+      
     case "line":
-      validateLineBlock(data);
+      return validateLineBlock(data);
+      
+    case "contact-info":
+      return validateContactInfoBlock(data);
+      
+    case "card":
+    case "image":
+    case "button":
+      // Пока что пропускаем валидацию для этих типов
+      console.warn(`Validation not implemented for block type: ${type}`);
       break;
-
+      
     default:
-      throw new Error(`Unknown block type: ${blockType}`);
+      throw new Error(`Unknown block type: ${type}`);
   }
 };
 
 module.exports = {
-  validateBlockData
+  validateBlockData,
 };
