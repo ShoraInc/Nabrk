@@ -4,6 +4,7 @@ import React from 'react';
 import TitleBlock from './TitleBlock';
 import LineBlock from './LineBlock';
 import ContactInfoBlock from './ContactInfoBlock';
+import FaqBlock from './FaqBlock';
 
 const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
   const renderBlock = () => {
@@ -28,6 +29,15 @@ const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
       case 'contact-info':
         return (
           <ContactInfoBlock 
+            block={block}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'faq':
+        return (
+          <FaqBlock 
             block={block}
             currentLanguage={currentLanguage}
             isMobile={isMobile}

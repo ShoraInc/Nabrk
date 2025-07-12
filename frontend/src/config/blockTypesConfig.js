@@ -2,6 +2,7 @@
 import TitleBlockForm from '..//admin/components/blocks/forms/TitleBlockForm';
 import LineBlockForm from '../admin/components/blocks/forms/LineBlockForm';
 import ContactInfoBlockForm from '../admin/components/blocks/forms/ContactInfoBlockForm';
+import FaqBlockForm from '../admin/components/blocks/forms/FaqBlockForm';
 
 export const BLOCK_TYPES_CONFIG = {
   title: {
@@ -27,6 +28,14 @@ export const BLOCK_TYPES_CONFIG = {
     category: 'content',
     hasTranslations: true,
     FormComponent: ContactInfoBlockForm,
+  },
+  faq: {
+    name: 'FAQ (Вопрос-ответ)',
+    description: 'Блок с вопросами и ответами, поддерживает любые блоки в качестве ответов',
+    icon: '❓',
+    category: 'interactive',
+    hasTranslations: true,
+    FormComponent: FaqBlockForm,
   },
 };
 

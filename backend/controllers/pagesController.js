@@ -106,6 +106,9 @@ const pagesController = {
           {
             model: Blocks,
             as: "blocks",
+            where: {
+              isHidden: false // Исключаем скрытые блоки
+            },
             include: [
               {
                 model: ContactInfoItems,

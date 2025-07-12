@@ -1,6 +1,7 @@
 const { validateTitleBlock } = require("./titleValidator");
 const { validateLineBlock } = require("./lineValidator");
 const { validateContactInfoBlock } = require("./contactInfoValidator");
+const { validateFaqBlock } = require("./faqValidator");
 
 // Основная функция валидации блоков
 const validateBlockData = (type, data) => {
@@ -13,6 +14,9 @@ const validateBlockData = (type, data) => {
       
     case "contact-info":
       return validateContactInfoBlock(data);
+      
+    case "faq":
+      return validateFaqBlock(data);
       
     case "card":
     case "image":

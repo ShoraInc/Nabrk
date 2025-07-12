@@ -15,13 +15,20 @@ const Blocks = sequelize.define(
       field: "page_id",
     },
     type: {
-      type: DataTypes.ENUM("title", "line", "contact-info"),
+      type: DataTypes.ENUM("title", "line", "contact-info", "faq"),
       allowNull: false,
     },
     order: {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
+    },
+    isHidden: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+      field: "is_hidden",
+      comment: "Скрыть блок от отображения на странице (для дочерних блоков FAQ)",
     },
     data: {
       type: DataTypes.JSONB,
@@ -41,6 +48,9 @@ const Blocks = sequelize.define(
       },
       {
         fields: ["type"], // для поиска по типу
+      },
+      {
+        fields: ["is_hidden"], // для фильтрации скрытых блоков
       },
       {
         type: "GIN",

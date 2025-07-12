@@ -128,18 +128,27 @@ const SortableBlockItem = ({
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center">
-              <h3 className="font-medium text-gray-800 truncate">
+              <h3 className="font-medium text-gray-800 truncate max-w-xs">
                 {getBlockSummary()}
               </h3>
-              <span className="ml-2 text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">
+              <span className="ml-2 text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded flex-shrink-0">
                 {index + 1}
               </span>
+              {block.isHidden && (
+                <span className="ml-2 text-xs text-yellow-600 bg-yellow-100 px-2 py-1 rounded flex-shrink-0" title="Скрытый блок">
+                  👁️‍🗨️ Скрытый
+                </span>
+              )}
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 mt-1 truncate">
               {config?.name || block.type}
             </p>
-            {/* Компактный предпросмотр */}
-            {getCompactPreview()}
+            {/* Компактный предпросмотр — не показываем для title */}
+            {block.type !== 'title' && (
+              <div className="truncate">
+                {getCompactPreview()}
+              </div>
+            )}
           </div>
         </div>
 

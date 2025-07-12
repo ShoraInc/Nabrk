@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import blocksApi from '../../../../api/blocksApi';
 
-const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel }) => {
+const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) => {
   const isEditing = !!editingBlock;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -113,7 +113,8 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel }) => {
           pageId: parseInt(pageId),
           text: currentText.trim(),
           language: currentLang,
-          ...formData
+          isHidden: isHidden || false, // Добавляем флаг скрытого блока
+          ...formData,
         };
 
         const newBlock = await blocksApi.createTitleBlock(blockData);

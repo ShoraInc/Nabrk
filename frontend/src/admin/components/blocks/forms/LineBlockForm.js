@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import blocksApi from '../../../../api/blocksApi';
 
-const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel }) => {
+const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) => {
   const isEditing = !!editingBlock;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -85,7 +85,8 @@ const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel }) => {
       } else {
         const blockData = {
           pageId: parseInt(pageId),
-          ...formData
+          isHidden: isHidden || false, // Добавляем флаг скрытого блока
+          ...formData,
         };
         const newBlock = await blocksApi.createLineBlock(blockData);
         onSubmit(newBlock);

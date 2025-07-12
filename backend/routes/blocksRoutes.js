@@ -16,11 +16,18 @@ router.get("/options", blocksController.getBlockOptions);
 
 // Общие роуты для всех блоков
 /**
- * @route GET /api/blocks/page/:pageId
- * @desc Get all blocks for a page with texts
+ * @route GET /api/blocks/page/:slug
+ * @desc Get all blocks for a page by slug
  * @query {string} [lang=kz] - Language for translations
  */
-router.get("/page/:slug", blocksController.getBlocksByPageId);
+router.get("/page/:slug", blocksController.getBlocksByPageSlug);
+
+/**
+ * @route GET /api/blocks/page-id/:pageId
+ * @desc Get all blocks for a page by ID
+ * @query {string} [lang=kz] - Language for translations
+ */
+router.get("/page-id/:pageId", blocksController.getBlocksByPageId);
 
 /**
  * @route GET /api/blocks/:id
@@ -68,6 +75,14 @@ router.use("/line", lineRoutes);
  * GET    /api/blocks/contact-info/icons/available    - Get available icons
  */
 router.use("/contact-info", contactInfoRoutes);
+
+/**
+ * FAQ block routes:
+ * POST   /api/blocks/faq            - Create FAQ block
+ * PUT    /api/blocks/faq/:id        - Update FAQ block
+ */
+router.post("/faq", blocksController.createFaqBlock);
+router.put("/faq/:id", blocksController.updateFaqBlock);
 
 // Здесь будем добавлять новые типы блоков:
 // router.use("/card", cardRoutes);

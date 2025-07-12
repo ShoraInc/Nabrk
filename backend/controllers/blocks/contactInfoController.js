@@ -14,7 +14,7 @@ const contactInfoController = {
     const transaction = await sequelize.transaction();
 
     try {
-      const { pageId, title, items = [], settings = {} } = req.body;
+      const { pageId, title, items = [], settings = {}, isHidden = false } = req.body;
 
       // Проверяем существование страницы
       const page = await Pages.findByPk(pageId);
@@ -38,6 +38,7 @@ const contactInfoController = {
           pageId,
           type: "contact-info",
           order: blockOrder,
+          isHidden: isHidden,
           data: {
             title: title || {},
             settings: {

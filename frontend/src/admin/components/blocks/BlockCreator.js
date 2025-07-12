@@ -7,14 +7,17 @@ const BlockCreator = ({
   editingBlock, 
   onBlockCreated, 
   onBlockUpdated, 
-  onCancel 
+  onCancel,
+  selectedType = '',
+  isChildBlock = false
 }) => {
-  const [selectedType, setSelectedType] = useState(editingBlock?.type || '');
-  const [showForm, setShowForm] = useState(!!editingBlock);
+  const [selectedTypeState, setSelectedTypeState] = useState(editingBlock?.type || selectedType);
+  const [showForm, setShowForm] = useState(!!editingBlock || !!selectedType);
+  const [isHidden, setIsHidden] = useState(isChildBlock);
   const isEditing = !!editingBlock;
 
   const handleTypeSelect = (type) => {
-    setSelectedType(type);
+    setSelectedTypeState(type);
     setShowForm(true);
   };
 
@@ -22,27 +25,31 @@ const BlockCreator = ({
     if (isEditing) {
       onBlockUpdated(blockData);
     } else {
-      onBlockCreated(blockData);
+      // Передаем информацию о том, что блок скрытый
+      const blockWithHiddenFlag = { ...blockData, isHidden };
+      console.log('Creating block with hidden flag:', blockWithHiddenFlag);
+      onBlockCreated(blockWithHiddenFlag);
     }
   };
 
   const handleCancel = () => {
-    setSelectedType('');
+    setSelectedTypeState('');
     setShowForm(false);
+    setIsHidden(false);
     onCancel();
   };
 
   // Группируем блоки по категориям
   const categoriesWithBlocks = blockUtils.getCategoriesWithBlocks();
 
-  if (showForm && selectedType) {
-    const config = BLOCK_TYPES_CONFIG[selectedType];
+  if (showForm && selectedTypeState) {
+    const config = BLOCK_TYPES_CONFIG[selectedTypeState];
     const FormComponent = config?.FormComponent;
 
     if (!FormComponent) {
       return (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          Форма для типа блока "{selectedType}" не найдена
+          Форма для типа блока "{selectedTypeState}" не найдена
         </div>
       );
     }
@@ -58,11 +65,34 @@ const BlockCreator = ({
           </p>
         </div>
         <div className="p-6">
+          {/* Опция скрытого блока (только при создании) */}
+          {!isEditing && (
+            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  checked={isHidden}
+                  onChange={(e) => setIsHidden(e.target.checked)}
+                  className="mr-2"
+                />
+                <span className="text-sm text-yellow-800">
+                  Создать как скрытый блок (не будет отображаться на странице)
+                </span>
+              </label>
+              <p className="text-xs text-yellow-600 mt-1">
+                Скрытые блоки можно использовать как дочерние элементы для других блоков
+              </p>
+            </div>
+          )}
+          
           <FormComponent
             pageId={pageId}
             editingBlock={editingBlock}
             onSubmit={handleFormSubmit}
+            onBlockCreated={onBlockCreated}
+            onBlockUpdated={onBlockUpdated}
             onCancel={handleCancel}
+            isHidden={isHidden} // Передаем состояние скрытого блока
           />
         </div>
       </div>

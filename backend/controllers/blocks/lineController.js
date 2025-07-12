@@ -15,7 +15,8 @@ const lineController = {
         width = '100%',
         style = 'solid',
         marginTop = 10,
-        marginBottom = 10
+        marginBottom = 10,
+        isHidden = false
       } = req.body;
       
       // Проверяем существует ли страница
@@ -42,6 +43,7 @@ const lineController = {
         pageId,
         type: 'line',
         order,
+        isHidden: isHidden ?? false,
         data: lineData
       }, { transaction });
       

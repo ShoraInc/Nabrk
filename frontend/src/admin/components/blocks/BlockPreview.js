@@ -6,6 +6,7 @@ import useMobileDetection from '../../../hooks/useMobileDetection';
 import TitleBlock from './admin/AdminTitleBlock';
 import AdminLineBlock from './admin/AdminLineBlock';
 import AdminContactInfoBlock from './admin/AdminContactInfoBlock';
+import AdminFaqBlock from './admin/AdminFaqBlock';
 
 const BlockPreview = ({ block }) => {
   const { currentLanguage } = useLanguage();
@@ -33,6 +34,14 @@ const BlockPreview = ({ block }) => {
       case 'contact-info':
         return (
           <AdminContactInfoBlock
+            block={block}
+            currentLanguage={currentLanguage}
+          />
+        );
+      
+      case 'faq':
+        return (
+          <AdminFaqBlock
             block={block}
             currentLanguage={currentLanguage}
           />
@@ -74,6 +83,11 @@ const BlockPreview = ({ block }) => {
         
         const allLangs = new Set([...titleLangs, ...itemsLangs]);
         return allLangs.size > 0 ? Array.from(allLangs).join(', ') : null;
+      }
+      
+      case 'faq': {
+        const questionLangs = Object.keys(block.data?.translations || {});
+        return questionLangs.length > 0 ? questionLangs.join(', ') : null;
       }
       
       default:

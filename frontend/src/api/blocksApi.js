@@ -226,6 +226,82 @@ const blocksApi = {
       throw error;
     }
   },
+
+  // Получить дочерние блоки
+  getChildBlocks: async (parentBlockId, relationType = "faq_answer") => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/${parentBlockId}/children?relationType=${relationType}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching child blocks:", error);
+      throw error;
+    }
+  },
+
+  // Удалить дочерний блок
+  removeChildBlock: async (parentBlockId, childBlockId, options = {}) => {
+    try {
+      const params = new URLSearchParams();
+      if (options.relationType) {
+        params.append('relationType', options.relationType);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/blocks/${parentBlockId}/relations/${childBlockId}?${params}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error removing child block:", error);
+      throw error;
+    }
+  },
+
+  // Обновить порядок дочерних блоков
+  updateChildBlockOrder: async (parentBlockId, childBlockId, orderData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/${parentBlockId}/relations/${childBlockId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating child block order:", error);
+      throw error;
+    }
+  },
+
+  // Получить родительские блоки
+  getParentBlocks: async (childBlockId, relationType) => {
+    try {
+      const params = new URLSearchParams();
+      if (relationType) {
+        params.append('relationType', relationType);
+      }
+
+      const response = await fetch(`${API_BASE_URL}/blocks/${childBlockId}/parents?${params}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching parent blocks:", error);
+      throw error;
+    }
+  },
 };
 
 export default blocksApi;

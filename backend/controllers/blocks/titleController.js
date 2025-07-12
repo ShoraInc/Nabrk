@@ -19,6 +19,7 @@ const titleController = {
         textAlign = "left",
         marginTop = 0,
         marginBottom = 0,
+        isHidden,
       } = req.body;
 
       // Проверяем существует ли страница
@@ -67,6 +68,7 @@ const titleController = {
           pageId,
           type: "title",
           order,
+          isHidden: isHidden ?? false,
           data: titleData,
         },
         { transaction }

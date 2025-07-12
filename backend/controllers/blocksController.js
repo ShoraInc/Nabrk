@@ -1,9 +1,10 @@
 const { BLOCK_OPTIONS } = require("../constants/blockConstants");
 const { Blocks, Pages, ContactInfoItems, sequelize } = require("../models");
+const { validateBlockData } = require("../validators");
 
 const blocksController = {
-  // Получить все блоки страницы
-  getBlocksByPageId: async (req, res) => {
+  // Получить все блоки страницы по slug
+  getBlocksByPageSlug: async (req, res) => {
     try {
       const page = await Pages.findOne({
         where: { slug: req.params.slug },
@@ -16,6 +17,32 @@ const blocksController = {
 
       const blocks = await Blocks.findAll({
         where: { pageId: page.id },
+        order: [["order", "ASC"]],
+      });
+
+      // Возвращаем блоки с данными напрямую (переводы уже в data)
+      const blocksData = blocks.map((block) => block.toJSON());
+
+      res.json(blocksData);
+    } catch (error) {
+      console.error("Ошибка при получении блоков страницы:", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // Получить все блоки страницы по ID
+  getBlocksByPageId: async (req, res) => {
+    try {
+      const pageId = parseInt(req.params.pageId);
+      
+      // Проверяем существование страницы
+      const page = await Pages.findByPk(pageId);
+      if (!page) {
+        return res.status(404).json({ error: "Page not found" });
+      }
+
+      const blocks = await Blocks.findAll({
+        where: { pageId: pageId },
         order: [["order", "ASC"]],
       });
 
@@ -98,6 +125,89 @@ const blocksController = {
       res.json({ ...BLOCK_OPTIONS });
     } catch (error) {
       console.error("Ошибка при получении опций:", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // Создать FAQ блок
+  createFaqBlock: async (req, res) => {
+    try {
+      const { pageId, data, isChildBlock = false, isHidden = false } = req.body;
+
+      if (!pageId || !data) {
+        return res.status(400).json({ error: "pageId and data are required" });
+      }
+
+      // Проверяем существование страницы
+      const page = await Pages.findByPk(pageId);
+      if (!page) {
+        return res.status(404).json({ error: "Page not found" });
+      }
+
+      // Валидация данных блока
+      try {
+        validateBlockData('faq', data);
+      } catch (validationError) {
+        return res.status(400).json({ error: validationError.message });
+      }
+
+      // Создаем FAQ блок
+      const block = await Blocks.create({
+        pageId,
+        type: 'faq',
+        order: 0, // Будет обновлено автоматически
+        isHidden: isHidden || isChildBlock, // Используем isHidden или isChildBlock
+        data: data || {}
+      });
+
+      res.status(201).json({
+        message: "FAQ block created successfully",
+        block
+      });
+    } catch (error) {
+      console.error("Error creating FAQ block:", error);
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  // Обновить FAQ блок
+  updateFaqBlock: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { data } = req.body;
+
+      if (!data) {
+        return res.status(400).json({ error: "data is required" });
+      }
+
+      // Проверяем существование блока
+      const block = await Blocks.findByPk(id);
+      if (!block) {
+        return res.status(404).json({ error: "FAQ block not found" });
+      }
+
+      if (block.type !== 'faq') {
+        return res.status(400).json({ error: "Block is not a FAQ block" });
+      }
+
+      // Валидация данных блока
+      try {
+        validateBlockData('faq', data);
+      } catch (validationError) {
+        return res.status(400).json({ error: validationError.message });
+      }
+
+      // Обновляем данные блока
+      await block.update({
+        data: data
+      });
+
+      res.json({
+        message: "FAQ block updated successfully",
+        block: block.toJSON()
+      });
+    } catch (error) {
+      console.error("Error updating FAQ block:", error);
       res.status(500).json({ error: error.message });
     }
   },

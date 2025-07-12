@@ -6,6 +6,7 @@ const TextTranslations = require("./TextTranslations");
 const Texts = require("./Texts");
 const sequelize = require("../db");
 const ContactInfoItems = require("./ContactInfoItems");
+const BlockRelations = require("./BlockRelations");
 
 // Связи News с Texts
 News.belongsTo(Texts, {
@@ -45,6 +46,29 @@ Pages.hasMany(Blocks, {
 Blocks.belongsTo(Pages, {
   foreignKey: "pageId",
   as: "page",
+});
+
+// Связи для блоков (родительские и дочерние)
+Blocks.hasMany(BlockRelations, {
+  foreignKey: "parentBlockId",
+  as: "childRelations",
+  onDelete: "CASCADE"
+});
+
+Blocks.hasMany(BlockRelations, {
+  foreignKey: "childBlockId",
+  as: "parentRelations",
+  onDelete: "CASCADE"
+});
+
+BlockRelations.belongsTo(Blocks, {
+  foreignKey: "parentBlockId",
+  as: "parentBlock"
+});
+
+BlockRelations.belongsTo(Blocks, {
+  foreignKey: "childBlockId",
+  as: "childBlock"
 });
 
 // Обратные связи для News и Events
@@ -106,5 +130,6 @@ module.exports = {
   Texts,
   TextTranslations,
   sequelize,
-  ContactInfoItems
+  ContactInfoItems,
+  BlockRelations
 };

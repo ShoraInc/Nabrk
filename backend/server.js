@@ -10,6 +10,7 @@ const newsRoutes = require("./routes/newsRoutes");
 const eventsRoutes = require("./routes/eventsRoutes");
 const pagesRoutes = require("./routes/pagesRoutes");
 const blocksRoutes = require("./routes/blocksRoutes");
+const blockRelationsRoutes = require("./routes/blockRelationsRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -27,6 +28,7 @@ app.use("/api/news", newsRoutes);
 app.use("/api/events", eventsRoutes);
 app.use("/api/pages", pagesRoutes);
 app.use("/api/blocks", blocksRoutes);
+app.use("/api/blocks", blockRelationsRoutes);
 
 // Health check
 app.get("/", (req, res) => {

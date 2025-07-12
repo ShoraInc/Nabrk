@@ -128,10 +128,20 @@ const AdminBlocksManager = () => {
     }
   };
 
-  const handleBlockCreated = async (newBlock) => {
+  const handleBlockCreated = async (blockData) => {
     setShowCreator(false);
     setEditingBlock(null);
     setShowCreateModal(false);
+    
+    // Отладочная информация
+    console.log('Block data received:', blockData);
+    console.log('isHidden:', blockData.isHidden);
+    
+    // Если блок создан как скрытый, показываем уведомление
+    if (blockData.isHidden) {
+      alert('Блок создан как скрытый. Вы можете добавить его к FAQ блоку.');
+    }
+    
     await loadPageAndBlocks();
   };
 

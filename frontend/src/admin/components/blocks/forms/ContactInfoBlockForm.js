@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import contactInfoApi from "../../../../api/contactInfoApi";
 
-const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel }) => {
+const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) => {
   const isEditing = !!editingBlock;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -407,6 +407,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel }) => {
         // Создаем новый блок
         const blockData = {
           pageId: parseInt(pageId),
+          isHidden: isHidden || false, // Добавляем флаг скрытого блока
           ...formData,
         };
         resultBlock = await contactInfoApi.createBlock(blockData);
