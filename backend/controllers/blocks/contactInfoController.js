@@ -207,7 +207,6 @@ const contactInfoController = {
   // Создать элемент
   createItem: async (req, res) => {
     const transaction = await sequelize.transaction();
-
     try {
       const { blockId } = req.params;
       let { type, icon, text, value } = req.body;
@@ -223,9 +222,6 @@ const contactInfoController = {
         return res.status(404).json({ error: "Contact info block not found" });
       }
 
-      // Парсим text если это строка (из multipart/form-data)
-      // Для обычного текста text уже строка, парсить не нужно
-
       // Валидация типа
       if (!type || !["text", "link", "file"].includes(type)) {
         await transaction.rollback();
@@ -237,7 +233,6 @@ const contactInfoController = {
       // Обрабатываем загруженный файл
       let processedValue = value;
       let fileName = null;
-
       if (req.file) {
         if (type !== "file") {
           await transaction.rollback();
@@ -265,6 +260,23 @@ const contactInfoController = {
           .json({ error: "Link type requires value field" });
       }
 
+      // НАДЕЖНОЕ ОПРЕДЕЛЕНИЕ ORDER: Находим максимальный order и добавляем 1
+      const maxOrderResult = await ContactInfoItems.findOne({
+        where: { blockId: parseInt(blockId) },
+        order: [["order", "DESC"]],
+        transaction,
+      });
+
+      let nextOrder = 0; // Если нет элементов, начинаем с 0
+      if (maxOrderResult) {
+        nextOrder = maxOrderResult.order + 1;
+      }
+
+      console.log(
+        `Block ${blockId} max order: ${maxOrderResult?.order || "none"}`
+      );
+      console.log(`New item will have order: ${nextOrder}`);
+
       const item = await ContactInfoItems.create(
         {
           blockId: parseInt(blockId),
@@ -273,11 +285,14 @@ const contactInfoController = {
           text: text,
           value: processedValue,
           fileName: fileName,
+          order: nextOrder,
         },
         { transaction }
       );
 
       await transaction.commit();
+
+      console.log(`Created item with id: ${item.id}, order: ${item.order}`);
       res.status(201).json(item);
     } catch (error) {
       await transaction.rollback();

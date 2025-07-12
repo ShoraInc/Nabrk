@@ -33,6 +33,7 @@ const AdminBlocksManager = () => {
   const [showCreator, setShowCreator] = useState(false);
   const [editingBlock, setEditingBlock] = useState(null);
   const [reorderLoading, setReorderLoading] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // Настройка сенсоров для drag & drop
   const sensors = useSensors(
@@ -90,7 +91,6 @@ const AdminBlocksManager = () => {
   };
 
   // Обновление порядка блоков на сервере
-  // Обновление порядка блоков на сервере
   const updateBlocksOrder = async (reorderedBlocks) => {
     try {
       setReorderLoading(true);
@@ -131,12 +131,14 @@ const AdminBlocksManager = () => {
   const handleBlockCreated = async (newBlock) => {
     setShowCreator(false);
     setEditingBlock(null);
+    setShowCreateModal(false);
     await loadPageAndBlocks();
   };
 
   const handleBlockUpdated = async (updatedBlock) => {
     setShowCreator(false);
     setEditingBlock(null);
+    setShowCreateModal(false);
     await loadPageAndBlocks();
   };
 
@@ -155,7 +157,7 @@ const AdminBlocksManager = () => {
 
   const handleEditBlock = (block) => {
     setEditingBlock(block);
-    setShowCreator(true);
+    setShowCreateModal(true);
   };
 
   // Ручное изменение порядка стрелками
@@ -240,53 +242,52 @@ const AdminBlocksManager = () => {
           </div>
         </div>
 
+        {/* Статистика блоков */}
+        <div className="mb-6 bg-white rounded-lg shadow-sm p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-blue-600">{blocks.length}</div>
+                <div className="text-xs text-gray-500">Всего блоков</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-green-600">
+                  {new Set(blocks.map((b) => b.type)).size}
+                </div>
+                <div className="text-xs text-gray-500">Типов блоков</div>
+              </div>
+            </div>
+            
+            {/* Кнопка добавления блока */}
+            <button
+              onClick={() => {
+                setEditingBlock(null);
+                setShowCreateModal(true);
+              }}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
+            >
+              <span className="mr-2">+</span>
+              Добавить блок
+            </button>
+          </div>
+        </div>
+
         {/* Инструкция по drag & drop */}
         {blocks.length > 1 && (
-          <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="flex items-center text-blue-800">
+          <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <div className="flex items-center text-blue-800 text-sm">
               <span className="text-lg mr-2">💡</span>
-              <span className="text-sm font-medium">
-                Перетащите блоки для изменения порядка или используйте стрелки
-                ↕️
+              <span>
+                Перетащите блоки для изменения порядка или используйте стрелки ↕️
               </span>
             </div>
           </div>
         )}
 
-        {/* Кнопка добавления блока */}
-        <div className="mb-6">
-          <button
-            onClick={() => {
-              setEditingBlock(null);
-              setShowCreator(true);
-            }}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors flex items-center"
-          >
-            <span className="mr-2">+</span>
-            Добавить блок
-          </button>
-        </div>
-
-        {/* Создатель/редактор блоков */}
-        {showCreator && (
-          <div className="mb-6">
-            <BlockCreator
-              pageId={pageId}
-              editingBlock={editingBlock}
-              onBlockCreated={handleBlockCreated}
-              onBlockUpdated={handleBlockUpdated}
-              onCancel={() => {
-                setShowCreator(false);
-                setEditingBlock(null);
-              }}
-            />
-          </div>
-        )}
-
         {/* Список блоков с drag & drop */}
-        <div className="space-y-4">
+        <div className="space-y-2">
           {blocks.length === 0 ? (
-            <div className="bg-white rounded-lg shadow p-8 text-center">
+            <div className="bg-white rounded-lg shadow-sm p-8 text-center">
               <div className="text-gray-400 text-6xl mb-4">📝</div>
               <h3 className="text-xl font-semibold text-gray-600 mb-2">
                 На странице пока нет блоков
@@ -297,7 +298,7 @@ const AdminBlocksManager = () => {
               <button
                 onClick={() => {
                   setEditingBlock(null);
-                  setShowCreator(true);
+                  setShowCreateModal(true);
                 }}
                 className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors"
               >
@@ -331,40 +332,44 @@ const AdminBlocksManager = () => {
             </DndContext>
           )}
         </div>
+      </div>
 
-        {/* Статистика */}
-        {blocks.length > 0 && (
-          <div className="mt-8 bg-white rounded-lg shadow p-6">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              📊 Статистика блоков
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">
-                  {blocks.length}
-                </div>
-                <div className="text-sm text-gray-600">Всего блоков</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
-                  {new Set(blocks.map((b) => b.type)).size}
-                </div>
-                <div className="text-sm text-gray-600">Типов блоков</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">
-                  {
-                    blocks.filter(
-                      (b) => BLOCK_TYPES_CONFIG[b.type]?.hasTranslations
-                    ).length
-                  }
-                </div>
-                <div className="text-sm text-gray-600">С переводами</div>
-              </div>
+      {/* Модальное окно для создания/редактирования блоков */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-xl font-semibold text-gray-800">
+                {editingBlock ? 'Редактировать блок' : 'Создать новый блок'}
+              </h2>
+              <button
+                onClick={() => {
+                  setShowCreateModal(false);
+                  setEditingBlock(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <BlockCreator
+                pageId={pageId}
+                editingBlock={editingBlock}
+                onBlockCreated={handleBlockCreated}
+                onBlockUpdated={handleBlockUpdated}
+                onCancel={() => {
+                  setShowCreateModal(false);
+                  setEditingBlock(null);
+                }}
+              />
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
