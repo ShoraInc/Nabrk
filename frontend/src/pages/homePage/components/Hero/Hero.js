@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Hero.scss";
-import HeroImage from "./assets/images/image.png";
+// import HeroImage from "./assets/images/image.png";
 import { openLoginModal } from "../../../../store/modalSlice";
 import { useDispatch } from "react-redux";
 
@@ -97,7 +97,7 @@ const Hero = () => {
 
       <main className="hero">
         <div className="hero__image">
-          <img src={HeroImage} alt="Қазақстан Ұлттық Кітапханасы" />
+          {/* <img src={HeroImage} alt="Қазақстан Ұлттық Кітапханасы" /> */}
         </div>
         <div className="hero__overlay"></div>
         <div className="hero__content">
