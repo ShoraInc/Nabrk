@@ -23,12 +23,14 @@ const ContactInfoBlock = ({
   // Получаем заголовок для текущего языка с фоллбэком
   const getTitle = () => {
     if (!data?.title) return "";
+    // Показываем только реально существующие переводы
+    const availableLangs = Object.keys(data.title).filter(lang => data.title[lang]);
     return (
       data.title[currentLanguage] ||
       data.title["kz"] ||
       data.title["ru"] ||
       data.title["en"] ||
-      Object.values(data.title)[0] ||
+      Object.values(data.title).find(Boolean) ||
       ""
     );
   };

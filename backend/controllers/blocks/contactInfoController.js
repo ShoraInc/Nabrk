@@ -135,7 +135,13 @@ const contactInfoController = {
       if (settings !== undefined)
         updatedData.settings = { ...updatedData.settings, ...settings };
 
-      await block.update({ data: updatedData }, { transaction });
+      await block.update(
+        {
+          data: updatedData,
+          ...(typeof req.body.isHidden !== 'undefined' ? { isHidden: req.body.isHidden } : {})
+        },
+        { transaction }
+      );
 
       await transaction.commit();
 

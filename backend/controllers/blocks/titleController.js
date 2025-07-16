@@ -141,8 +141,14 @@ const titleController = {
         updates.data = dataUpdates;
       }
 
-      if (Object.keys(updates).length > 0) {
-        await block.update(updates, { transaction });
+      if (Object.keys(updates).length > 0 || typeof req.body.isHidden !== 'undefined') {
+        await block.update(
+          {
+            ...updates,
+            ...(typeof req.body.isHidden !== 'undefined' ? { isHidden: req.body.isHidden } : {})
+          },
+          { transaction }
+        );
       }
 
       await transaction.commit();

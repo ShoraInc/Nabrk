@@ -15,11 +15,14 @@ const FaqBlock = ({ block, currentLanguage = "kz", isMobile = false }) => {
 
   // Получаем вопрос для текущего языка
   const getQuestion = () => {
+    const translations = data.translations || {};
+    // Показываем только реально существующие переводы
+    const availableLangs = Object.keys(translations).filter(lang => translations[lang]);
     return (
       translations[currentLanguage] ||
       translations["kz"] ||
       translations["en"] ||
-      Object.values(translations)[0] ||
+      Object.values(translations).find(Boolean) ||
       "Вопрос не задан"
     );
   };

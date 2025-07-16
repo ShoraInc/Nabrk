@@ -4,10 +4,11 @@ import blocksApi from '../../../../api/blocksApi';
 
 const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) => {
   const isEditing = !!editingBlock;
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [blockOptions, setBlockOptions] = useState(null);
-  
+
   // Данные формы
   const [formData, setFormData] = useState({
     order: 1,
@@ -17,6 +18,7 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
     textAlign: 'center',
     marginTop: 0,
     marginBottom: 0,
+    isHidden: false, // <-- добавить по умолчанию
   });
 
   // Переводы
@@ -55,6 +57,7 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
       textAlign: data.textAlign || 'center',
       marginTop: data.marginTop || 0,
       marginBottom: data.marginBottom || 0,
+      isHidden: editingBlock.isHidden || false, // <-- добавлено
     });
 
     // Загружаем переводы
@@ -81,7 +84,7 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Валидация
     const currentText = getCurrentTranslation();
     if (!currentText || !currentText.trim()) {
@@ -95,10 +98,10 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
 
       if (isEditing) {
         // При редактировании обновляем стили и переводы отдельно
-        
-        // 1. Обновляем стили блока
+
+        // 1. Обновляем стили блока, включая isHidden
         await blocksApi.updateTitleBlock(editingBlock.id, formData);
-        
+
         // 2. Обновляем переводы
         for (const [lang, text] of Object.entries(translations)) {
           if (text && text.trim()) {
@@ -113,12 +116,12 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
           pageId: parseInt(pageId),
           text: currentText.trim(),
           language: currentLang,
-          isHidden: isHidden || false, // Добавляем флаг скрытого блока
+          isHidden: formData.isHidden || false, // Добавляем флаг скрытого блока
           ...formData,
         };
 
         const newBlock = await blocksApi.createTitleBlock(blockData);
-        
+
         // Добавляем остальные переводы
         for (const [lang, text] of Object.entries(translations)) {
           if (lang !== currentLang && text && text.trim()) {
@@ -139,10 +142,10 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
   // Получаем языки из опций
   const getLanguages = () => {
     if (!blockOptions?.languages) return [];
-    
+
     const languageNames = {
       'kz': 'Қазақша',
-      'ru': 'Русский', 
+      'ru': 'Русский',
       'en': 'English',
       'qaz': 'Qazaqsha'
     };
@@ -223,6 +226,11 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
     }));
   };
 
+  // Проверка: используется ли блок как дочерний в FAQ
+  async function checkBlockUsedInFaq(blockId) {
+    return await blocksApi.checkBlockUsedInFaq(blockId);
+  }
+
   if (!blockOptions) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -230,6 +238,7 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
       </div>
     );
   }
+
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -242,7 +251,7 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
       {/* Переводы */}
       <div className="bg-blue-50 p-4 rounded-lg">
         <h4 className="font-semibold text-gray-800 mb-4">📝 Переводы текста</h4>
-        
+
         {/* Переключатель языков */}
         <div className="flex flex-wrap gap-2 mb-4">
           {getLanguages().map((lang) => (
@@ -250,11 +259,10 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
               key={lang.code}
               type="button"
               onClick={() => setCurrentLang(lang.code)}
-              className={`px-3 py-2 rounded font-medium text-sm transition-colors ${
-                currentLang === lang.code
+              className={`px-3 py-2 rounded font-medium text-sm transition-colors ${currentLang === lang.code
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-100 border'
-              }`}
+                }`}
             >
               {lang.name}
               {translations[lang.code] && (
@@ -400,6 +408,23 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
             max={blockOptions.title?.marginRange?.max || 200}
           />
         </div>
+      </div>
+      {/* Чекбокс скрытого блока — теперь всегда */}
+      <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={formData.isHidden}
+            onChange={e => setFormData(prev => ({ ...prev, isHidden: e.target.checked }))}
+            className="mr-2"
+          />
+          <span className="text-sm text-yellow-800">
+            Скрытый блок (не будет отображаться на странице)
+          </span>
+        </label>
+        <p className="text-xs text-yellow-600 mt-1">
+          Скрытые блоки можно использовать как дочерние элементы для других блоков
+        </p>
       </div>
 
       {/* Кнопки */}

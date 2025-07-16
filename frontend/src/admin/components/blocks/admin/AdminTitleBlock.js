@@ -10,6 +10,7 @@ const AdminTitleBlock = ({ block, currentLanguage = 'kz', isMobile = false }) =>
     return translations[currentLanguage] || 
            translations['kz'] || 
            translations['en'] || 
+           translations['qaz'] || 
            Object.values(translations)[0] || 
            'Нет текста';
   };

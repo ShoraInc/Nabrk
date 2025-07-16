@@ -13,7 +13,6 @@ const BlockCreator = ({
 }) => {
   const [selectedTypeState, setSelectedTypeState] = useState(editingBlock?.type || selectedType);
   const [showForm, setShowForm] = useState(!!editingBlock || !!selectedType);
-  const [isHidden, setIsHidden] = useState(isChildBlock);
   const isEditing = !!editingBlock;
 
   const handleTypeSelect = (type) => {
@@ -25,17 +24,13 @@ const BlockCreator = ({
     if (isEditing) {
       onBlockUpdated(blockData);
     } else {
-      // Передаем информацию о том, что блок скрытый
-      const blockWithHiddenFlag = { ...blockData, isHidden };
-      console.log('Creating block with hidden flag:', blockWithHiddenFlag);
-      onBlockCreated(blockWithHiddenFlag);
+      onBlockCreated(blockData);
     }
   };
 
   const handleCancel = () => {
     setSelectedTypeState('');
     setShowForm(false);
-    setIsHidden(false);
     onCancel();
   };
 
@@ -65,25 +60,6 @@ const BlockCreator = ({
           </p>
         </div>
         <div className="p-6">
-          {/* Опция скрытого блока (только при создании) */}
-          {!isEditing && (
-            <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={isHidden}
-                  onChange={(e) => setIsHidden(e.target.checked)}
-                  className="mr-2"
-                />
-                <span className="text-sm text-yellow-800">
-                  Создать как скрытый блок (не будет отображаться на странице)
-                </span>
-              </label>
-              <p className="text-xs text-yellow-600 mt-1">
-                Скрытые блоки можно использовать как дочерние элементы для других блоков
-              </p>
-            </div>
-          )}
           
           <FormComponent
             pageId={pageId}
@@ -92,7 +68,6 @@ const BlockCreator = ({
             onBlockCreated={onBlockCreated}
             onBlockUpdated={onBlockUpdated}
             onCancel={handleCancel}
-            isHidden={isHidden} // Передаем состояние скрытого блока
           />
         </div>
       </div>

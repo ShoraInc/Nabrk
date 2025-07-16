@@ -42,6 +42,12 @@ router.get("/:id", blocksController.getBlockById);
  */
 router.delete("/:id", blocksController.deleteBlock);
 
+/**
+ * @route GET /api/blocks/:blockId/used-in-faq
+ * @desc Проверить, используется ли блок как ответ в FAQ
+ */
+router.get('/:blockId/used-in-faq', blocksController.isBlockUsedInFaq);
+
 // Роуты для конкретных типов блоков
 /**
  * Title block routes:
@@ -75,6 +81,7 @@ router.use("/line", lineRoutes);
  * GET    /api/blocks/contact-info/icons/available    - Get available icons
  */
 router.use("/contact-info", contactInfoRoutes);
+router.post("/faq", blocksController.createFaqBlock);
 
 /**
  * FAQ block routes:

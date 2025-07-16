@@ -1,6 +1,12 @@
 // admin/components/blocks/forms/ContactInfoBlockForm.js
 import React, { useState, useEffect } from "react";
 import contactInfoApi from "../../../../api/contactInfoApi";
+import blocksApi from '../../../../api/blocksApi';
+
+// Проверка: используется ли блок как дочерний в FAQ
+async function checkBlockUsedInFaq(blockId) {
+  return await blocksApi.checkBlockUsedInFaq(blockId);
+}
 
 const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) => {
   const isEditing = !!editingBlock;
@@ -25,6 +31,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
       itemSpacing: "normal",
       iconSize: "medium",
     },
+    isHidden: false, // <-- добавить по умолчанию
   });
 
   const [newItemData, setNewItemData] = useState({
@@ -36,11 +43,20 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
 
   const [selectedFile, setSelectedFile] = useState(null);
 
+  // Состояние для переводов заголовка на все языки
+  const [titleTranslations, setTitleTranslations] = useState({});
+  const [currentLang, setCurrentLang] = useState('kz');
+
   useEffect(() => {
     loadAvailableIcons();
 
     if (isEditing && editingBlock) {
       loadBlockData();
+    } else {
+      // При создании — инициализируем пустыми переводами для всех языков
+      const emptyTranslations = {};
+      Object.keys(formData.title).forEach(lang => { emptyTranslations[lang] = ""; });
+      setTitleTranslations(emptyTranslations);
     }
   }, [isEditing, editingBlock]);
 
@@ -350,7 +366,11 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
           itemSpacing: blockData.data?.settings?.itemSpacing || "normal",
           iconSize: blockData.data?.settings?.iconSize || "medium",
         },
+        isHidden: blockData.isHidden || false, // <-- исправлено здесь
       });
+
+      // Загружаем переводы заголовка, если они есть
+      setTitleTranslations(blockData.data?.title || {});
     } catch (err) {
       setError("Ошибка при загрузке данных блока: " + err.message);
     }
@@ -407,7 +427,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
         // Создаем новый блок
         const blockData = {
           pageId: parseInt(pageId),
-          isHidden: isHidden || false, // Добавляем флаг скрытого блока
+          isHidden: formData.isHidden || false, // Добавляем флаг скрытого блока
           ...formData,
         };
         resultBlock = await contactInfoApi.createBlock(blockData);
@@ -568,6 +588,21 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
     return languageNames[code] || code.toUpperCase();
   };
 
+  const handleTitleTranslationChange = (lang, value) => {
+    setTitleTranslations(prev => ({ ...prev, [lang]: value }));
+    setFormData(prev => ({
+      ...prev,
+      title: {
+        ...prev.title,
+        [lang]: value,
+      },
+    }));
+  };
+
+  const getCurrentTitleTranslation = () => {
+    return titleTranslations[currentLang] || '';
+  };
+
   // Закрываем dropdown при клике вне его
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -595,64 +630,39 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
 
       {/* Форма блока */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Заголовок блока */}
-        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-          <h4 className="font-semibold text-gray-800 mb-3">
-            📝 Заголовок блока
-          </h4>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {getLanguageLabel("kz")}
-              </label>
-              <input
-                type="text"
-                value={formData.title.kz}
-                onChange={(e) => handleTitleChange("kz", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Байланыс ақпараты"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {getLanguageLabel("ru")}
-              </label>
-              <input
-                type="text"
-                value={formData.title.ru}
-                onChange={(e) => handleTitleChange("ru", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Контактная информация"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {getLanguageLabel("en")}
-              </label>
-              <input
-                type="text"
-                value={formData.title.en}
-                onChange={(e) => handleTitleChange("en", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Contact Information"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                {getLanguageLabel("qaz")}
-              </label>
-              <input
-                type="text"
-                value={formData.title.qaz}
-                onChange={(e) => handleTitleChange("qaz", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Baiianys aqparaty"
-              />
-            </div>
+        {/* Переводы заголовка через переключатель языков */}
+        <div className="bg-blue-50 p-4 rounded-lg mb-4">
+          <h4 className="font-semibold text-gray-800 mb-4">📝 Переводы заголовка</h4>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {Object.keys(formData.title).map(lang => (
+              <button
+                key={lang}
+                type="button"
+                onClick={() => setCurrentLang(lang)}
+                className={`px-3 py-2 rounded font-medium text-sm transition-colors ${
+                  currentLang === lang
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white text-gray-700 hover:bg-gray-100 border'
+                }`}
+              >
+                {getLanguageLabel(lang)}
+                {titleTranslations[lang] && (
+                  <span className="ml-1 text-green-500">✓</span>
+                )}
+              </button>
+            ))}
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">
+              {getLanguageLabel(currentLang)}
+            </label>
+            <input
+              type="text"
+              value={getCurrentTitleTranslation()}
+              onChange={e => handleTitleTranslationChange(currentLang, e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder={`Введите заголовок на ${getLanguageLabel(currentLang)}`}
+            />
           </div>
         </div>
 
@@ -713,6 +723,23 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
               </select>
             </div>
           </div>
+        </div>
+        {/* Чекбокс скрытого блока — теперь всегда */}
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={formData.isHidden}
+              onChange={e => setFormData(prev => ({ ...prev, isHidden: e.target.checked }))}
+              className="mr-2"
+            />
+            <span className="text-sm text-yellow-800">
+              Скрытый блок (не будет отображаться на странице)
+            </span>
+          </label>
+          <p className="text-xs text-yellow-600 mt-1">
+            Скрытые блоки можно использовать как дочерние элементы для других блоков
+          </p>
         </div>
 
         {/* Кнопки сохранения блока */}

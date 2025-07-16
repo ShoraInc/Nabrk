@@ -6,12 +6,16 @@ const TitleBlock = ({ block, currentLanguage = 'kz', isMobile = false }) => {
   const { data } = block;
   const { translations = {} } = data;
 
+  // Получаем список реально существующих переводов
+  const availableLangs = Object.keys(translations).filter(lang => translations[lang]);
+
   // Получаем текст для текущего языка с фоллбэком
   const getText = () => {
-    return translations[currentLanguage] || 
-           translations['kz'] || 
-           translations['en'] || 
-           Object.values(translations)[0] || 
+    return translations[currentLanguage] ||
+           translations['kz'] ||
+           translations['ru'] ||
+           translations['en'] ||
+           Object.values(translations).find(Boolean) ||
            '';
   };
 

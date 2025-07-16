@@ -16,6 +16,7 @@ const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) =
     style: 'solid',
     marginTop: 0,
     marginBottom: 0,
+    isHidden: false, // <-- добавить по умолчанию
   });
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) =
         style: data.style || 'solid',
         marginTop: data.marginTop || 0,
         marginBottom: data.marginBottom || 0,
+        isHidden: editingBlock.isHidden || false, // <-- исправлено здесь
       });
     }
   }, [isEditing, editingBlock]);
@@ -291,6 +293,23 @@ const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) =
             max={blockOptions.line?.marginRange?.max || 200}
           />
         </div>
+        {/* Чекбокс скрытого блока — теперь всегда */}
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={formData.isHidden}
+              onChange={e => setFormData(prev => ({ ...prev, isHidden: e.target.checked }))}
+              className="mr-2"
+            />
+            <span className="text-sm text-yellow-800">
+              Скрытый блок (не будет отображаться на странице)
+            </span>
+          </label>
+          <p className="text-xs text-yellow-600 mt-1">
+            Скрытые блоки можно использовать как дочерние элементы для других блоков
+          </p>
+        </div>
       </div>
 
       {/* Кнопки */}
@@ -313,5 +332,10 @@ const LineBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) =
     </form>
   );
 };
+
+// Проверка: используется ли блок как дочерний в FAQ
+async function checkBlockUsedInFaq(blockId) {
+  return await blocksApi.checkBlockUsedInFaq(blockId);
+}
 
 export default LineBlockForm;

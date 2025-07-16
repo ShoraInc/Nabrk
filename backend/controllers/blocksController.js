@@ -1,5 +1,5 @@
 const { BLOCK_OPTIONS } = require("../constants/blockConstants");
-const { Blocks, Pages, ContactInfoItems, sequelize } = require("../models");
+const { Blocks, Pages, ContactInfoItems, sequelize, BlockRelations } = require("../models");
 const { validateBlockData } = require("../validators");
 
 const blocksController = {
@@ -199,7 +199,8 @@ const blocksController = {
 
       // Обновляем данные блока
       await block.update({
-        data: data
+        data: data,
+        ...(typeof req.body.isHidden !== 'undefined' ? { isHidden: req.body.isHidden } : {})
       });
 
       res.json({
@@ -213,4 +214,21 @@ const blocksController = {
   },
 };
 
-module.exports = blocksController;
+// Проверить, используется ли блок как ответ в FAQ
+const isBlockUsedInFaq = async (req, res) => {
+  try {
+    const { blockId } = req.params;
+    const relations = await BlockRelations.findAll({
+      where: { childBlockId: blockId, relationType: 'faq_answer' }
+    });
+    res.json({ used: relations.length > 0, relations });
+  } catch (error) {
+    console.error("Error checking if block is used in FAQ:", error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  ...blocksController,
+  isBlockUsedInFaq,
+};

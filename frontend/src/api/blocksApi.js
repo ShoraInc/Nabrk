@@ -302,6 +302,18 @@ const blocksApi = {
       throw error;
     }
   },
+
+  // Проверить, используется ли блок как ответ в FAQ
+  checkBlockUsedInFaq: async (blockId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/${blockId}/used-in-faq`);
+      if (!response.ok) return false;
+      const data = await response.json();
+      return data.used ;
+    } catch (e) {
+      return false;
+    }
+  },
 };
 
 export default blocksApi;

@@ -108,6 +108,10 @@ const AdminBlocksManager = () => {
             return blocksApi.updateContactInfoBlock(block.id, {
               order: newOrder,
             });
+          } else if (block.type === "faq") {
+            return blocksApi.updateContactInfoBlock(block.id, {
+              order: newOrder,
+            });
           }
           // Добавьте другие типы блоков здесь
         }
@@ -132,16 +136,16 @@ const AdminBlocksManager = () => {
     setShowCreator(false);
     setEditingBlock(null);
     setShowCreateModal(false);
-    
+
     // Отладочная информация
-    console.log('Block data received:', blockData);
-    console.log('isHidden:', blockData.isHidden);
-    
+    console.log("Block data received:", blockData);
+    console.log("isHidden:", blockData.isHidden);
+
     // Если блок создан как скрытый, показываем уведомление
     if (blockData.isHidden) {
-      alert('Блок создан как скрытый. Вы можете добавить его к FAQ блоку.');
+      alert("Блок создан как скрытый. Вы можете добавить его к FAQ блоку.");
     }
-    
+
     await loadPageAndBlocks();
   };
 
@@ -257,7 +261,9 @@ const AdminBlocksManager = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-blue-600">{blocks.length}</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {blocks.length}
+                </div>
                 <div className="text-xs text-gray-500">Всего блоков</div>
               </div>
               <div className="text-center">
@@ -267,7 +273,7 @@ const AdminBlocksManager = () => {
                 <div className="text-xs text-gray-500">Типов блоков</div>
               </div>
             </div>
-            
+
             {/* Кнопка добавления блока */}
             <button
               onClick={() => {
@@ -288,7 +294,8 @@ const AdminBlocksManager = () => {
             <div className="flex items-center text-blue-800 text-sm">
               <span className="text-lg mr-2">💡</span>
               <span>
-                Перетащите блоки для изменения порядка или используйте стрелки ↕️
+                Перетащите блоки для изменения порядка или используйте стрелки
+                ↕️
               </span>
             </div>
           </div>
@@ -350,7 +357,7 @@ const AdminBlocksManager = () => {
           <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800">
-                {editingBlock ? 'Редактировать блок' : 'Создать новый блок'}
+                {editingBlock ? "Редактировать блок" : "Создать новый блок"}
               </h2>
               <button
                 onClick={() => {
@@ -359,12 +366,23 @@ const AdminBlocksManager = () => {
                 }}
                 className="text-gray-400 hover:text-gray-600 transition-colors"
               >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
-            
+
             <div className="p-6">
               <BlockCreator
                 pageId={pageId}
