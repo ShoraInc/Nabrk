@@ -1,4 +1,3 @@
-
 export const PUBLIC_ROUTES = {
   HOME: "/",
   NEWS: "/news",
@@ -8,6 +7,15 @@ export const PUBLIC_ROUTES = {
   CONTACT: "/contact",
   EVENTS: "/events",
   EVENT_DETAIL: "/events/:id",
+  
+  // Личный кабинет
+  CABINET: "/cabinet",
+  CABINET_ORDERS: "/cabinet/orders",
+  CABINET_FAVORITES: "/cabinet/favorites",
+  CABINET_MESSAGES: "/cabinet/messages",
+  CABINET_DELIVERY: "/cabinet/delivery",
+  CABINET_HISTORY: "/cabinet/history",
+  CABINET_PASSWORD: "/cabinet/password",
 };
 
 export const ADMIN_ROUTES = {
@@ -50,7 +58,18 @@ export const AUTH_ROUTES = {
 // Функции для генерации роутов с параметрами
 export const generateRoute = {
   newsDetail: (id) => `/news/${id}`,
+  eventDetail: (id) => `/events/${id}`,
   pageBySlug: (slug) => `/page/${slug}`,
+  
+  // Cabinet routes
+  cabinetOrders: () => `/cabinet/orders`,
+  cabinetFavorites: () => `/cabinet/favorites`,
+  cabinetMessages: () => `/cabinet/messages`,
+  cabinetDelivery: () => `/cabinet/delivery`,
+  cabinetHistory: () => `/cabinet/history`,
+  cabinetPassword: () => `/cabinet/password`,
+  
+  // Admin routes
   adminPageEdit: (id) => `/admin/pages/edit/${id}`,
   adminPageBlocks: (pageId) => `/admin/pages/${pageId}/blocks`,
   adminNewsEdit: (id) => `/admin/news/edit/${id}`,

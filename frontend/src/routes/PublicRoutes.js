@@ -5,6 +5,7 @@ import Home from "../pages/homePage/home";
 import News from "../pages/NewsPage/News";
 import NewsDetail from "../pages/NewsDetailPage/NewsDetail";
 import Page from "../pages/Page/Page";
+import Cabinet from "../pages/homePage/components/Cabinet/Cabinet";
 
 const PublicRoutes = () => {
   return (
@@ -15,6 +16,10 @@ const PublicRoutes = () => {
       {/* Новости */}
       <Route path="/news" element={<News />} />
       <Route path="/news/:id" element={<NewsDetail />} />
+
+      {/* Личный кабинет */}
+      <Route path="/cabinet" element={<Cabinet />} />
+      <Route path="/cabinet/*" element={<Cabinet />} />
 
       {/* Динамические страницы */}
       <Route path="/page/:slug" element={<Page />} />
