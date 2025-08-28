@@ -1,0 +1,247 @@
+/* AdvancedSearchForm.scss - Стили для расширенного поиска */
+
+.advanced-search-form {
+  padding: 2rem;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  &__section {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 1.5rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 1rem;
+  }
+
+  &__search-item {
+    margin-bottom: 1.5rem;
+  }
+
+  &__search-row {
+    display: flex;
+    gap: 0;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+
+  &__select {
+    padding: 0.5rem 0.75rem;
+    border: none;
+    background-color: #f8f9fa;
+    color: #495057;
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-right: 1px solid #dee2e6;
+    min-width: 180px;
+
+    &:focus {
+      outline: none;
+      background-color: #e9ecef;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: none;
+    font-size: 0.875rem;
+    outline: none;
+
+    &:focus {
+      background-color: #f8f9fa;
+    }
+
+    &:disabled {
+      background-color: #f8f9fa;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    &::placeholder {
+      color: #6c757d;
+    }
+  }
+
+  &__operators {
+    display: flex;
+    gap: 1rem;
+    margin-left: 180px;
+  }
+
+  &__operator {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #495057;
+    cursor: pointer;
+
+    input[type="radio"] {
+      margin: 0;
+      cursor: pointer;
+    }
+
+    span {
+      cursor: pointer;
+    }
+  }
+
+  &__row-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  &__add-row-btn,
+  &__remove-row-btn {
+    padding: 0.5rem 1rem;
+    background: none;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    color: #495057;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #f8f9fa;
+      border-color: #adb5bd;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  &__filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__filter-label {
+    font-size: 0.875rem;
+    color: #495057;
+    font-weight: 500;
+  }
+
+  &__filter-input,
+  &__filter-select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    background-color: white;
+
+    &:focus {
+      outline: none;
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    &:disabled {
+      background-color: #f8f9fa;
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+
+  &__submit-section {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__submit-btn {
+    padding: 0.75rem 2rem;
+    background-color: var(--main-color);
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: var(--primary-600);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .advanced-search-form {
+    padding: 1rem;
+
+    &__search-row {
+      flex-direction: column;
+    }
+
+    &__select {
+      min-width: auto;
+      border-right: none;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    &__operators {
+      margin-left: 0;
+      justify-content: center;
+    }
+
+    &__filters {
+      grid-template-columns: 1fr;
+    }
+
+    &__row-controls {
+      flex-direction: column;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .advanced-search-form {
+    &__operators {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    &__submit-section {
+      justify-content: center;
+    }
+
+    &__submit-btn {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,141 @@
+/* BookSearchPage.scss - Страница поиска книг */
+
+.book-search-page {
+  min-height: 60vh;
+  background-color: #f8fafc;
+
+  &__header {
+    background: linear-gradient(135deg, var(--primary-700) 0%, var(--primary-500) 100%);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+    overflow: hidden;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__tab {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    border: none;
+    color: #495057;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent;
+
+    &:hover {
+      background-color: #e9ecef;
+    }
+
+    &--active {
+      background-color: var(--main-color);
+      color: white;
+      border-bottom-color: #b8941f;
+    }
+  }
+
+  &__search-area {
+    background-color: white;
+    border-radius: 0 0 0.5rem 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Цвета для компонентов */
+:root {
+  /* Основные цвета - используем основной цвет проекта */
+  --primary-50: #fefbf0;
+  --primary-100: #fdf6d9;
+  --primary-200: #fbeab3;
+  --primary-300: #f8d980;
+  --primary-400: #f4c54d;
+  --primary-500: var(--main-color);
+  --primary-600: #b8941f;
+  --primary-700: #9a7a1a;
+  --primary-800: #7c6115;
+  --primary-900: #5e4810;
+
+  /* Вторичные цвета */
+  --secondary-50: #f8fafc;
+  --secondary-100: #f1f5f9;
+  --secondary-200: #e2e8f0;
+  --secondary-300: #cbd5e1;
+  --secondary-400: #94a3b8;
+  --secondary-500: #64748b;
+  --secondary-600: #475569;
+  --secondary-700: #334155;
+  --secondary-800: #1e293b;
+  --secondary-900: #0f172a;
+
+  /* Акцентные цвета */
+  --accent-50: #fefce8;
+  --accent-100: #fef9c3;
+  --accent-200: #fef08a;
+  --accent-300: #fde047;
+  --accent-400: #facc15;
+  --accent-500: #eab308;
+  --accent-600: #ca8a04;
+  --accent-700: #a16207;
+  --accent-800: #854d0e;
+  --accent-900: #713f12;
+
+  /* Статусы книг */
+  --status-available: #059669;
+  --status-busy: #dc2626;
+  --status-reserved: #d97706;
+
+  /* Нейтральные цвета */
+  --neutral-white: #ffffff;
+  --neutral-gray-50: #f9fafb;
+  --neutral-gray-100: #f3f4f6;
+  --neutral-gray-200: #e5e7eb;
+  --neutral-gray-300: #d1d5db;
+  --neutral-gray-400: #9ca3af;
+  --neutral-gray-500: #6b7280;
+  --neutral-gray-600: #4b5563;
+  --neutral-gray-700: #374151;
+  --neutral-gray-800: #1f2937;
+  --neutral-gray-900: #111827;
+  --neutral-black: #000000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .book-search-page {
+    &__header {
+      .container {
+        padding: 1rem;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .book-search-page {
+    &__header {
+      .container {
+        padding: 0.75rem;
+      }
+      
+      h1 {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}

@@ -30,7 +30,7 @@ const Footer = () => {
             <h3 className="footer__title">НАВИГАЦИЯ</h3>
             <ul className="footer__list">
               <li className="footer__item">
-                <a href="#" className="footer__link">
+                <a href="/book-search" className="footer__link">
                   Электронды каталог
                 </a>
               </li>

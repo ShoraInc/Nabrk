@@ -6,6 +6,7 @@ import News from "../pages/NewsPage/News";
 import NewsDetail from "../pages/NewsDetailPage/NewsDetail";
 import Page from "../pages/Page/Page";
 import Cabinet from "../pages/homePage/components/Cabinet/Cabinet";
+import BookSearchPage from "../pages/BookSearchPage/BookSearchPage";
 
 const PublicRoutes = () => {
   return (
@@ -23,6 +24,9 @@ const PublicRoutes = () => {
 
       {/* Динамические страницы */}
       <Route path="/page/:slug" element={<Page />} />
+
+      {/* Поиск книг */}
+      <Route path="/book-search" element={<BookSearchPage />} />
 
       {/* 404 для публичных страниц */}
       <Route path="*" element={<NotFoundPage />} />

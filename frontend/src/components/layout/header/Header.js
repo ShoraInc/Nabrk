@@ -21,6 +21,9 @@ const Header = () => {
           <a href="/" className="main-header__nav-item">
             Главная
           </a>
+          <a href="/book-search" className="main-header__nav-item">
+            Поиск книг
+          </a>
           <a href="/about" className="main-header__nav-item">
             О нас
           </a>

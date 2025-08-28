@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>kz.inessoft.nabrk.portal</groupId>
+        <artifactId>elcat</artifactId>
+        <version>2.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>elcat-ear</artifactId>
+    <packaging>ear</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>kz.inessoft.nabrk.portal</groupId>
+            <artifactId>elcat-web</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-ear-plugin</artifactId>
+                <version>2.8</version>
+                <configuration>
+                    <version>5</version>
+                    <displayName>${project.build.finalName}</displayName>
+                    <defaultLibBundleDir>lib</defaultLibBundleDir>
+                    <modules>
+                        <webModule>
+                            <groupId>kz.inessoft.nabrk.portal</groupId>
+                            <artifactId>elcat-web</artifactId>
+                            <context-root>elcat</context-root>
+                            <bundleFileName>elcat.war</bundleFileName>
+                        </webModule>
+                    </modules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>was6-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>deploy to WPS</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>wsDefaultBindings</goal>
+                            <goal>installApp</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip.wps.deploy}</skip>
+                            <earFile>${basedir}/target/${project.build.finalName}.ear</earFile>
+                            <wasHome>${kz.inessoft.kazneb.wps.wasHome}</wasHome>
+                            <profileName>${kz.inessoft.kazneb.wps.profile}</profileName>
+                            <user>${kz.inessoft.kazneb.wps.login}</user>
+                            <password>${kz.inessoft.kazneb.wps.password}</password>
+                            <host>${kz.inessoft.kazneb.wps.host}</host>
+                            <targetCluster>${kz.inessoft.kazneb.wps.cluster}</targetCluster>
+                            <cluster>${kz.inessoft.kazneb.wps.cluster}</cluster>
+                            <cell>${kz.inessoft.kazneb.wps.cell}</cell>
+                            <targetCell>${kz.inessoft.kazneb.wps.cell}</targetCell>
+                            <virtualHost>${kz.inessoft.kazneb.wps.virtualHost}</virtualHost>
+                            <conntype>${kz.inessoft.kazneb.wps.connectionType}</conntype>
+                            <port>${kz.inessoft.kazneb.wps.port}</port>
+                            <!--Выставлять false при первом деплое-->
+                            <updateExisting>${update.existing.ear}</updateExisting>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

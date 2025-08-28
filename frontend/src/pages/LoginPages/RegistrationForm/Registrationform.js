@@ -4,6 +4,7 @@ import LoginHeader from "../../../components/layout/LoginHeader/LoginHeader";
 import backButton from "../assets/icons/back_button.png";
 import { switchToLogin } from "../../../store/modalSlice";
 import { useDispatch } from "react-redux";
+import AuthApi from "../../../api/authApi";
 
 const RegistrationForm = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -95,6 +96,14 @@ const RegistrationForm = ({ onClose }) => {
   // Обработчики изменений
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // Для поля года рождения - разрешаем только цифры
+    if (name === 'birthYear') {
+      if (value && !/^\d{0,4}$/.test(value)) {
+        return; // Не обновляем состояние если введено не число
+      }
+    }
+    
     setAllFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -123,21 +132,165 @@ const RegistrationForm = ({ onClose }) => {
   };
 
   // Финальная отправка формы
-  const handleFinalSubmit = (e) => {
+  const handleFinalSubmit = async (e) => {
     e.preventDefault();
 
-    // Валидация для второго шага
+    // Валидация обязательных полей
+    if (!allFormData.firstName.trim()) {
+      alert("Аты міндетті");
+      return;
+    }
+    if (!allFormData.lastName.trim()) {
+      alert("Тегі міндетті");
+      return;
+    }
     if (!allFormData.email.trim()) {
       alert("Email міндетті");
       return;
     }
+    if (!allFormData.birthYear || allFormData.birthYear.trim() === '') {
+      alert("Туған жылы міндетті");
+      return;
+    }
+    
+    // Преобразуем год рождения в число и валидируем
+    const birthYear = parseInt(allFormData.birthYear, 10);
+    const currentYear = new Date().getFullYear();
+    const minAge = 14;
+    const maxAllowedYear = currentYear - minAge;
+    
+    if (isNaN(birthYear) || birthYear < 1900 || birthYear > maxAllowedYear) {
+      alert(`Туған жылы дұрыс емес. 1900-ден ${maxAllowedYear} дейінгі жылды енгізіңіз (минимальный возраст ${minAge} лет)`);
+      return;
+    }
+    
+    if (!allFormData.gender || allFormData.gender === '') {
+      alert("Жынысы міндетті");
+      return;
+    }
 
-    console.log("Вся форма отправлена:", allFormData);
+    try {
+      // Подготовка данных для API
+      const registrationData = {
+        firstName: allFormData.firstName.trim(),
+        lastName: allFormData.lastName.trim(),
+        middleName: allFormData.fatherName.trim() || null,
+        email: allFormData.email.trim(),
+        genderId: getGenderId(allFormData.gender),
+        yearOfBirth: Number(birthYear),
+        nationalityId: getNationalityId(allFormData.nationality),
+        homeAddress: allFormData.address.trim() || null,
+        educationId: getEducationId(allFormData.knowledge),
+        socialStatusId: getSocialStatusId(allFormData.workplace),
+        academicDegreeId: getAcademicDegreeId(allFormData.degree),
+        job: allFormData.workplace.trim() || null,
+        placeOfStudy: allFormData.studyPlace.trim() || null
+      };
 
-    // Здесь будет отправка на сервер
-    // await submitRegistration(allFormData);
+      console.log("Отправка данных на сервер:", registrationData);
+      
+      // Дополнительная проверка типов перед отправкой
+      const requiredNumericFields = {
+        genderId: registrationData.genderId,
+        yearOfBirth: registrationData.yearOfBirth,
+        nationalityId: registrationData.nationalityId,
+        educationId: registrationData.educationId,
+        socialStatusId: registrationData.socialStatusId,
+        academicDegreeId: registrationData.academicDegreeId
+      };
+      
+      for (const [fieldName, value] of Object.entries(requiredNumericFields)) {
+        if (!Number.isInteger(value) || value < 1) {
+          console.error(`Поле ${fieldName} содержит некорректное значение:`, value);
+          alert(`Қате: ${fieldName} поле дұрыс толтырылмаған`);
+          return;
+        }
+      }
 
-    onClose();
+      console.log("Отправка данных на сервер:", registrationData);
+
+      // Отправка на сервер
+      const response = await AuthApi.fullRegistration(registrationData);
+      
+      console.log("Ответ сервера:", response);
+      
+      alert("Тіркеу сәтті! Сіздің email-ге хабарландыру жіберілді.");
+      onClose();
+      
+    } catch (error) {
+      console.error("Ошибка регистрации:", error);
+      
+      // Более детальная обработка ошибок
+      let errorMessage = "Тіркеу қатесі";
+      if (error.response?.data?.message) {
+        errorMessage += `: ${error.response.data.message}`;
+      } else if (error.message) {
+        errorMessage += `: ${error.message}`;
+      }
+      
+      alert(errorMessage);
+    }
+  };
+
+  // Функции для преобразования значений в ID (возвращают числа)
+  const getGenderId = (gender) => {
+    const genderMap = {
+      'Ер': 1,
+      'Әйел': 2,
+      'Айтпағанды жөн көру': 3
+    };
+    return genderMap[gender] || 3;
+  };
+
+  const getNationalityId = (nationality) => {
+    const nationalityMap = {
+      'Қазақ': 1,
+      'Орыс': 2,
+      'Өзбек': 3,
+      'Қырғыз': 4,
+      'Тәжік': 5,
+      'Түрікмен': 6,
+      'Басқа': 7
+    };
+    return nationalityMap[nationality] || 1;
+  };
+
+  const getEducationId = (education) => {
+    const educationMap = {
+      'Көрсетілмеген': 1,
+      'Жоғары': 2,
+      'Толық емес жоғары': 3,
+      'Арнаулы орта': 4,
+      'Орта': 5,
+      'Толық емес орта': 6,
+      'Техникалық орта': 7
+    };
+    return educationMap[education] || 1;
+  };
+
+  const getSocialStatusId = (status) => {
+    const statusMap = {
+      'Студент': 1,
+      'Жұмысшы': 2,
+      'Қызметкер': 3,
+      'Зейнеткер': 4,
+      'Жұмыссыз': 5,
+      'Кәсіпкер': 6,
+      'Басқа': 7
+    };
+    return statusMap[status] || 1;
+  };
+
+  const getAcademicDegreeId = (degree) => {
+    const degreeMap = {
+      'Көрсетілмеген': 1,
+      'Бакалавр': 2,
+      'Магистр': 3,
+      'Ғылым кандидаты': 4,
+      'Ғылым докторы': 5,
+      'PhD докторы': 6
+    };
+    return degreeMap[degree] || 1;
   };
 
   const handleClose = () => {
@@ -254,12 +407,15 @@ const RegistrationForm = ({ onClose }) => {
             ))}
           </select>
           <input
-            type="text"
+            type="number"
             className="multi-step-form__input multi-step-form__input--small"
-            placeholder="Жылы"
+            placeholder="Жылы (1990)"
             name="birthYear"
             value={allFormData.birthYear}
             onChange={handleInputChange}
+            min="1900"
+            max={new Date().getFullYear() - 14}
+            title="Минимальный возраст 14 лет"
           />
         </div>
       </div>

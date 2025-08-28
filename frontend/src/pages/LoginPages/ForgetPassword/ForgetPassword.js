@@ -4,6 +4,7 @@ import LoginHeader from "../../../components/layout/LoginHeader/LoginHeader";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { switchToLogin } from "../../../store/modalSlice";
+import AuthApi from "../../../api/authApi";
 
 const ForgetPassword = ({ onClose }) => {
   const navigate = useNavigate();
@@ -33,23 +34,25 @@ const ForgetPassword = ({ onClose }) => {
     e.preventDefault();
 
     if (!formData.inputValue.trim()) {
+      alert('Электронды поштаны толтырыңыз');
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Здесь будет логика отправки данных
-      console.log("Password reset attempt:", formData);
+      console.log("Password recovery attempt:", formData);
 
-      // Имитация запроса
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // После успешной отправки можно перенаправить
+      // Отправка на сервер
+      const response = await AuthApi.passwordRecovery(formData.inputValue);
+      
+      console.log("Password recovery response:", response);
+      
       alert("Сілтеме электронды поштаңызға жіберілді!");
       onClose();
     } catch (error) {
       console.error("Reset error:", error);
+      alert(`Құпия сөзді қалпына келтіру қатесі: ${error.message}`);
     } finally {
       setIsLoading(false);
     }

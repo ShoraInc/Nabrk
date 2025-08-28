@@ -4,6 +4,7 @@ import { switchToRegistration, switchToForgetPassword } from '../../../store/mod
 import './LoginForm.scss';
 import LoginHeader from '../../../components/layout/LoginHeader/LoginHeader';
 import wireframe from './img/wireframe_black.png';
+import AuthApi from '../../../api/authApi';
 
 const LoginForm = ({ onClose }) => {
   const dispatch = useDispatch();
@@ -25,6 +26,7 @@ const LoginForm = ({ onClose }) => {
     e.preventDefault();
     
     if (!formData.readerNumber.trim() || !formData.password.trim()) {
+      alert('Оқырман нөмірі мен құпия сөзді толтырыңыз');
       return;
     }
 
@@ -32,10 +34,21 @@ const LoginForm = ({ onClose }) => {
     
     try {
       console.log('Login attempt:', formData);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Отправка на сервер
+      const response = await AuthApi.signIn({
+        username: formData.readerNumber,
+        password: formData.password
+      });
+      
+      console.log('Login response:', response);
+      
+      alert('Сәтті кірдіңіз!');
       onClose();
+      
     } catch (error) {
       console.error('Login error:', error);
+      alert(`Кіру қатесі: ${error.message}`);
     } finally {
       setIsLoading(false);
     }

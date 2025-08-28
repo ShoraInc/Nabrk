@@ -1,0 +1,35 @@
+/.idea
+target/
+
+*.orig
+*.iml
+*.class
+*.ipr
+*.iws
+*.jasper
+.project
+.classpath
+.settings
+.checkstyle
+
+atlassian-ide-plugin.xml
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Icon must ends with two \r.
+Icon
+
+
+# Thumbnails
+._*
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+elcat-web/repository/
+gulpfile.js
+package.json
+node_modules/

@@ -9,14 +9,20 @@ const LibraryServices = () => {
   return (
     <section className="library-services">
       <div className="library-services__container">
-        
+
         {/* Электронды каталог */}
-        <div className="service-card">
-          <div className="service-card__icon">
-            <img src={BookOpen} alt="Book Open" />
+        <a href="/book-search" className="footer__link">
+
+          <div className="service-card">
+
+            <div className="service-card__icon">
+              <img src={BookOpen} alt="Book Open" />
+            </div>
+            <h3 className="service-card__title">
+              Электронды каталог
+            </h3>
           </div>
-          <h3 className="service-card__title">Электронды каталог</h3>
-        </div>
+        </a>
 
         {/* Электронды кітапхана */}
         <div className="service-card">
