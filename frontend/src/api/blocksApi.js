@@ -314,6 +314,278 @@ const blocksApi = {
       return false;
     }
   },
+
+  // ===========================================
+  // TEXT-IMAGE BLOCK МЕТОДЫ
+  // ===========================================
+
+  // Создать text-image блок
+  createTextImageBlock: async (formData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image`, {
+        method: "POST",
+        body: formData, // FormData с изображением
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error creating text-image block:", error);
+      throw error;
+    }
+  },
+
+  // Получить text-image блок
+  getTextImageBlock: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching text-image block:", error);
+      throw error;
+    }
+  },
+
+  // Обновить text-image блок
+  updateTextImageBlock: async (id, formData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image/${id}`, {
+        method: "PUT",
+        body: formData, // FormData с изображением (если есть)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating text-image block:", error);
+      throw error;
+    }
+  },
+
+  // Удалить text-image блок
+  deleteTextImageBlock: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting text-image block:", error);
+      throw error;
+    }
+  },
+
+  // Создать/обновить перевод для text-image блока
+  upsertTextImageTranslation: async (blockId, language, text) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image/${blockId}/translations/${language}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error upserting text-image translation:", error);
+      throw error;
+    }
+  },
+
+  // Получить все переводы text-image блока
+  getTextImageTranslations: async (blockId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image/${blockId}/translations`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching text-image translations:", error);
+      throw error;
+    }
+  },
+
+  // Удалить перевод text-image блока
+  deleteTextImageTranslation: async (blockId, language) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text-image/${blockId}/translations/${language}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting text-image translation:", error);
+      throw error;
+    }
+  },
+
+  // ===========================================
+  // BUTTON BLOCK МЕТОДЫ
+  // ===========================================
+
+  // Создать button блок
+  createButtonBlock: async (blockData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blockData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error creating button block:", error);
+      throw error;
+    }
+  },
+
+  // Получить button блок
+  getButtonBlock: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching button block:", error);
+      throw error;
+    }
+  },
+
+  // Обновить button блок
+  updateButtonBlock: async (id, blockData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blockData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating button block:", error);
+      throw error;
+    }
+  },
+
+  // Удалить button блок
+  deleteButtonBlock: async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting button block:", error);
+      throw error;
+    }
+  },
+
+  // Создать/обновить перевод для button блока
+  upsertButtonTranslation: async (blockId, language, text) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button/${blockId}/translations/${language}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error upserting button translation:", error);
+      throw error;
+    }
+  },
+
+  // Получить все переводы button блока
+  getButtonTranslations: async (blockId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button/${blockId}/translations`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching button translations:", error);
+      throw error;
+    }
+  },
+
+  // Удалить перевод button блока
+  deleteButtonTranslation: async (blockId, language) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/button/${blockId}/translations/${language}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting button translation:", error);
+      throw error;
+    }
+  },
 };
 
 export default blocksApi;

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import UdcHierarchy from './UdcHierarchy';
 import './SearchForm.scss';
 
 export default function SearchForm({ onSearch, loading, searchType = 'SIMPLE' }) {
@@ -97,49 +98,10 @@ export default function SearchForm({ onSearch, loading, searchType = 'SIMPLE' })
             </div>
             
             <div className="search-form__udc-categories">
-              <div className="search-form__udc-controls">
-                <span>Жазу</span>
-                <span>Жиыру</span>
-              </div>
-              
-              <div className="search-form__udc-list">
-                <div className="search-form__udc-item" onClick={() => setSearchText('0')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>0 - Наука и знание. Организация. Информатика. Информация. Документация. Библиотечное дело. Учреждения. Публикации в целом</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('1')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>1 - Философия. Психология</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('2')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>2 - Религия. Богословие</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('3')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>3 - Общественные науки. Статистика. Политика. Экономика. Торговля. Право. Государство. Военное дело. Социальное обеспечение. Страхование. Образование. Фольклор</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('5')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>5 - Математика и естественные науки</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('6')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>6 - Прикладные науки. Медицина. Технология</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('7')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>7 - Искусство. Развлечения. Зрелища. Спорт</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('8')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>8 - Язык. Языкознание. Лингвистика. Литература</span>
-                </div>
-                <div className="search-form__udc-item" onClick={() => setSearchText('9')}>
-                  <span className="search-form__udc-chevron">▼</span>
-                  <span>9 - География. Биографии. История</span>
-                </div>
-              </div>
+              <UdcHierarchy 
+                onSelectUdc={setSearchText}
+                selectedUdc={searchText}
+              />
             </div>
           </div>
         </form>

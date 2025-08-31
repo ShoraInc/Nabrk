@@ -14,7 +14,10 @@ const contactInfoController = {
     const transaction = await sequelize.transaction();
 
     try {
-      const { pageId, title, items = [], settings = {}, isHidden = false } = req.body;
+      const { pageId, title, items = [], settings = {}, backgroundColor, isHidden = false } = req.body;
+      
+      // Отладка: проверяем что backgroundColor приходит
+      console.log('Creating contact-info block, backgroundColor:', backgroundColor);
 
       // Проверяем существование страницы
       const page = await Pages.findByPk(pageId);
@@ -47,6 +50,7 @@ const contactInfoController = {
               iconSize: "medium",
               ...settings,
             },
+            ...(backgroundColor !== undefined && { backgroundColor }),
           },
         },
         { transaction }
@@ -121,7 +125,10 @@ const contactInfoController = {
     const transaction = await sequelize.transaction();
 
     try {
-      const { title, settings } = req.body;
+      const { title, settings, backgroundColor } = req.body;
+      
+      // Отладка: проверяем что backgroundColor приходит при обновлении
+      console.log('Updating contact-info block, backgroundColor:', backgroundColor);
 
       const block = await Blocks.findByPk(req.params.id, { transaction });
       if (!block) {
@@ -134,6 +141,7 @@ const contactInfoController = {
       if (title !== undefined) updatedData.title = title;
       if (settings !== undefined)
         updatedData.settings = { ...updatedData.settings, ...settings };
+      if (backgroundColor !== undefined) updatedData.backgroundColor = backgroundColor;
 
       await block.update(
         {

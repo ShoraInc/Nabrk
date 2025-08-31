@@ -1,8 +1,10 @@
 // config/blockTypesConfig.js
-import TitleBlockForm from '..//admin/components/blocks/forms/TitleBlockForm';
+import TitleBlockForm from '../admin/components/blocks/forms/TitleBlockForm';
 import LineBlockForm from '../admin/components/blocks/forms/LineBlockForm';
 import ContactInfoBlockForm from '../admin/components/blocks/forms/ContactInfoBlockForm';
 import FaqBlockForm from '../admin/components/blocks/forms/FaqBlockForm';
+import TextImageBlockForm from '../admin/components/blocks/forms/TextImageBlockForm';
+import ButtonBlockForm from '../admin/components/blocks/forms/ButtonBlockForm';
 
 export const BLOCK_TYPES_CONFIG = {
   title: {
@@ -36,6 +38,22 @@ export const BLOCK_TYPES_CONFIG = {
     category: 'interactive',
     hasTranslations: true,
     FormComponent: FaqBlockForm,
+  },
+  'text-image': {
+    name: 'Текст с изображением',
+    description: 'Блок с текстом и изображением, поддерживает позиционирование изображения слева или справа',
+    icon: '📝🖼️',
+    category: 'content',
+    hasTranslations: true,
+    FormComponent: TextImageBlockForm,
+  },
+  button: {
+    name: 'Кнопка',
+    description: 'Интерактивная кнопка с настраиваемым стилем и ссылкой',
+    icon: '🔘',
+    category: 'interactive',
+    hasTranslations: true,
+    FormComponent: ButtonBlockForm,
   },
 };
 

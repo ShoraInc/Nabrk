@@ -1,4 +1,5 @@
 const { Pages, Blocks, ContactInfoItems, sequelize } = require("../models");
+const { cleanupPageBlockImages } = require("../middleware/blockImageUploadMiddleware");
 
 const pagesController = {
   // АДМИН: Получить все страницы (включая черновики)
@@ -417,7 +418,12 @@ const pagesController = {
         }
       }
 
-      // ВАЖНО: Сначала удаляем элементы contact-info блоков (включая файлы)
+      // ВАЖНО: Сначала очищаем файлы блоков
+      
+      // 1. Очищаем изображения text-image блоков
+      await cleanupPageBlockImages(page.id, Blocks);
+      
+      // 2. Удаляем элементы contact-info блоков (включая файлы)
       const contactInfoBlocks = await Blocks.findAll({
         where: { pageId: page.id, type: "contact-info" },
         transaction,

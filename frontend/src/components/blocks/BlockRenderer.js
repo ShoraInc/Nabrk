@@ -5,6 +5,8 @@ import TitleBlock from './TitleBlock';
 import LineBlock from './LineBlock';
 import ContactInfoBlock from './ContactInfoBlock';
 import FaqBlock from './FaqBlock';
+import TextImageBlock from './TextImageBlock';
+import ButtonBlock from './ButtonBlock';
 
 const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
   const renderBlock = () => {
@@ -38,6 +40,24 @@ const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
       case 'faq':
         return (
           <FaqBlock 
+            block={block}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'text-image':
+        return (
+          <TextImageBlock 
+            block={block}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'button':
+        return (
+          <ButtonBlock 
             block={block}
             currentLanguage={currentLanguage}
             isMobile={isMobile}

@@ -13,6 +13,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [availableIcons, setAvailableIcons] = useState([]);
+  const [blockOptions, setBlockOptions] = useState(null);
   const [block, setBlock] = useState(null);
   const [items, setItems] = useState([]);
   const [showAddItem, setShowAddItem] = useState(false);
@@ -24,13 +25,13 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
       kz: "",
       ru: "",
       en: "",
-      qaz: "",
     },
     settings: {
       showTitle: true,
       itemSpacing: "normal",
       iconSize: "medium",
     },
+    backgroundColor: "#FFFFFF", // Белый по умолчанию
     isHidden: false, // <-- добавить по умолчанию
   });
 
@@ -49,6 +50,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
 
   useEffect(() => {
     loadAvailableIcons();
+    loadBlockOptions();
 
     if (isEditing && editingBlock) {
       loadBlockData();
@@ -188,6 +190,15 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
       setAvailableIcons(allIcons);
     } catch (err) {
       console.error("Error loading icons:", err);
+    }
+  };
+
+  const loadBlockOptions = async () => {
+    try {
+      const options = await blocksApi.getBlockOptions();
+      setBlockOptions(options);
+    } catch (err) {
+      console.error('Error loading block options:', err);
     }
   };
 
@@ -360,12 +371,13 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
       setItems(blockData.items || []);
 
       setFormData({
-        title: blockData.data?.title || { kz: "", ru: "", en: "", qaz: "" },
+        title: blockData.data?.title || { kz: "", ru: "", en: "" },
         settings: {
           showTitle: blockData.data?.settings?.showTitle ?? true,
           itemSpacing: blockData.data?.settings?.itemSpacing || "normal",
           iconSize: blockData.data?.settings?.iconSize || "medium",
         },
+        backgroundColor: blockData.data?.backgroundColor || "#FFFFFF",
         isHidden: blockData.isHidden || false, // <-- исправлено здесь
       });
 
@@ -415,10 +427,14 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
       setLoading(true);
       setError(null);
 
+      // Отладка: проверяем formData
+      console.log('Contact-info formData before submit:', formData);
+
       let resultBlock;
 
       if (isEditing) {
         // Обновляем блок
+        console.log('Updating contact-info block with data:', formData);
         resultBlock = await contactInfoApi.updateBlock(
           editingBlock.id,
           formData
@@ -430,6 +446,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
           isHidden: formData.isHidden || false, // Добавляем флаг скрытого блока
           ...formData,
         };
+        console.log('Creating contact-info block with data:', blockData);
         resultBlock = await contactInfoApi.createBlock(blockData);
       }
 
@@ -580,10 +597,9 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
   // Получаем названия языков
   const getLanguageLabel = (code) => {
     const languageNames = {
-      kz: "Қазақша",
-      ru: "Русский",
       en: "English",
-      qaz: "Qazaqsha",
+      ru: "Русский",
+      kz: "Қазақша",
     };
     return languageNames[code] || code.toUpperCase();
   };
@@ -723,6 +739,34 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
               </select>
             </div>
           </div>
+
+          {/* Цвет фона */}
+          {blockOptions?.['contact-info']?.backgroundColors && (
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Цвет фона контейнера
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={formData.backgroundColor || "#FFFFFF"}
+                  onChange={(e) => setFormData(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                  className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                />
+                <select
+                  value={formData.backgroundColor || "#FFFFFF"}
+                  onChange={(e) => setFormData(prev => ({ ...prev, backgroundColor: e.target.value }))}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {blockOptions['contact-info'].backgroundColors.map((color) => (
+                    <option key={color} value={color}>
+                      {color} {color === '#FFFFFF' ? '(белый)' : color === '#F9FAFB' ? '(светло-серый)' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
         </div>
         {/* Чекбокс скрытого блока — теперь всегда */}
         <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">

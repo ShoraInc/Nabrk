@@ -13,7 +13,7 @@ const books = JSON.parse(readFileSync(join(__dirname, 'data', 'books.json'), 'ut
 dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 4001
 const PROXY_MODE = process.env.PROXY_MODE === 'true'
 const REAL_BASE_URL = process.env.REAL_BASE_URL
 

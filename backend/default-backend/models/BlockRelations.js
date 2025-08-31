@@ -32,7 +32,7 @@ const BlockRelations = sequelize.define("BlockRelations", {
     field: "order_index"
   },
   relationType: {
-    type: DataTypes.ENUM("faq_answer", "gallery_item", "tab_content"),
+    type: DataTypes.ENUM("faq_answer"),
     allowNull: false,
     defaultValue: "faq_answer",
     field: "relation_type"

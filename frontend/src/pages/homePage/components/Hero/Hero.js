@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Hero.scss";
-// import HeroImage from "./assets/images/image.png";
+// import HeroImage from "../../../../assets/images/hero-image.png";
 import { openLoginModal } from "../../../../store/modalSlice";
 import { useDispatch } from "react-redux";
 

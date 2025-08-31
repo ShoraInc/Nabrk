@@ -2,6 +2,8 @@ const { validateTitleBlock } = require("./titleValidator");
 const { validateLineBlock } = require("./lineValidator");
 const { validateContactInfoBlock } = require("./contactInfoValidator");
 const { validateFaqBlock } = require("./faqValidator");
+const { validateTextImageBlock } = require("./textImageValidator");
+const { validateButtonBlock } = require("./buttonValidator");
 
 // Основная функция валидации блоков
 const validateBlockData = (type, data) => {
@@ -18,9 +20,14 @@ const validateBlockData = (type, data) => {
     case "faq":
       return validateFaqBlock(data);
       
+    case "text-image":
+      return validateTextImageBlock(data);
+      
+    case "button":
+      return validateButtonBlock(data);
+      
     case "card":
     case "image":
-    case "button":
       // Пока что пропускаем валидацию для этих типов
       console.warn(`Validation not implemented for block type: ${type}`);
       break;

@@ -1,0 +1,163 @@
+.udc-hierarchy {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &__controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  &__control-btn {
+    background: transparent;
+    border: 1px solid #d1d5db;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #f9fafb;
+      border-color: #D4AF37;
+    }
+  }
+
+  &__list {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  &__item {
+    &--level-0 {
+      margin-bottom: 4px;
+    }
+    
+    &--level-1 {
+      margin-left: 20px;
+      margin-bottom: 2px;
+    }
+    
+    &--level-2 {
+      margin-left: 40px;
+      margin-bottom: 1px;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    gap: 8px;
+    min-height: 40px;
+
+    &:hover {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    &--selected {
+      background: #D4AF37;
+      color: white;
+      font-weight: 500;
+
+      &:hover {
+        background: #B8860B;
+      }
+    }
+  }
+
+  &__chevron {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 2px;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+
+    &--expanded {
+      transform: rotate(180deg);
+    }
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  &__code {
+    font-weight: 600;
+    color: #D4AF37;
+    min-width: 30px;
+    flex-shrink: 0;
+    font-size: 14px;
+    margin-top: 1px;
+
+    .udc-hierarchy__header--selected & {
+      color: white;
+    }
+  }
+
+  &__title {
+    font-size: 14px;
+    line-height: 1.4;
+    color: #374151;
+    flex: 1;
+
+    .udc-hierarchy__header--selected & {
+      color: white;
+    }
+  }
+
+  &__subcategories {
+    padding-left: 8px;
+    margin-top: 4px;
+    border-left: 2px solid #f3f4f6;
+  }
+}
+
+// Адаптивность для мобильных
+@media (max-width: 768px) {
+  .udc-hierarchy {
+    padding: 12px;
+
+    &__list {
+      max-height: 400px;
+    }
+
+    &__header {
+      padding: 6px 8px;
+      min-height: 36px;
+    }
+
+    &__title {
+      font-size: 13px;
+    }
+
+    &__code {
+      font-size: 13px;
+      min-width: 25px;
+    }
+
+    &__item {
+      &--level-1 {
+        margin-left: 16px;
+      }
+      
+      &--level-2 {
+        margin-left: 32px;
+      }
+    }
+  }
+}

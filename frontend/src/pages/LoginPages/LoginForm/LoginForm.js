@@ -8,7 +8,7 @@ import AuthApi from '../../../api/authApi';
 
 const LoginForm = ({ onClose }) => {
   const dispatch = useDispatch();
-  
+
   const [formData, setFormData] = useState({
     readerNumber: '',
     password: '',
@@ -24,28 +24,28 @@ const LoginForm = ({ onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.readerNumber.trim() || !formData.password.trim()) {
       alert('Оқырман нөмірі мен құпия сөзді толтырыңыз');
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       console.log('Login attempt:', formData);
-      
+
       // Отправка на сервер
       const response = await AuthApi.signIn({
         username: formData.readerNumber,
         password: formData.password
       });
-      
+
       console.log('Login response:', response);
-      
+
       alert('Сәтті кірдіңіз!');
       onClose();
-      
+
     } catch (error) {
       console.error('Login error:', error);
       alert(`Кіру қатесі: ${error.message}`);
@@ -69,18 +69,18 @@ const LoginForm = ({ onClose }) => {
   return (
     <div className="login-form">
       <LoginHeader onClose={onClose} />
-      
+
       <div className="login-form__layout">
         <div className="login-form__form-section">
           <div className="login-form__container">
-            
+
             <div className="login-form__warning">
               <div className="login-form__warning-icon">⚠️</div>
               <div className="login-form__warning-content">
                 <h3>Құрметті пайдаланушы!</h3>
                 <p>
-                  Авторизацияңдан кейін жеке кабинетіңізде 
-                  электрондық поштаңыздың дұрыс толтырылғанын 
+                  Авторизацияңдан кейін жеке кабинетіңізде
+                  электрондық поштаңыздың дұрыс толтырылғанын
                   тексеріңіз.
                 </p>
               </div>
@@ -95,7 +95,7 @@ const LoginForm = ({ onClose }) => {
               </div>
 
               <form className="login-form__form" onSubmit={handleSubmit}>
-                
+
                 <div className="login-form__field">
                   <label className="login-form__label">
                     Оқырман билетінің нөмірі
@@ -135,7 +135,7 @@ const LoginForm = ({ onClose }) => {
                       </button>
                     </div>
                   </label>
-                  
+
                   <button
                     type="button"
                     className="login-form__forgot-password"
@@ -145,18 +145,18 @@ const LoginForm = ({ onClose }) => {
                   </button>
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   className="login-form__submit"
                   disabled={!formData.readerNumber.trim() || !formData.password.trim() || isLoading}
                 >
                   {isLoading ? 'Жалғастыру...' : 'Жалғастыру'}
                 </button>
               </form>
-              
+
               <div className="login-form__switch">
                 <p>Аккаунтыңыз жоқ па?</p>
-                <button 
+                <button
                   className="login-form__switch-btn"
                   onClick={handleSwitchToRegistration}
                   type="button"
@@ -168,15 +168,7 @@ const LoginForm = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="login-form__image-section">
-          <div className="login-form__image-placeholder">
-            <img 
-              src={wireframe}
-              alt="Library background" 
-              className="login-form__image"
-            />
-          </div>
-        </div>
+
       </div>
     </div>
   );

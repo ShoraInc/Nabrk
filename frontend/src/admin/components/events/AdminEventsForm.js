@@ -25,10 +25,9 @@ const AdminEventsForm = () => {
   const [currentLang, setCurrentLang] = useState('kz');
 
   const languages = [
-    { code: 'kz', name: 'Қазақша' },
-    { code: 'ru', name: 'Русский' },
     { code: 'en', name: 'English' },
-    { code: 'qaz', name: 'Qazaqsha (Latin)' },
+    { code: 'ru', name: 'Русский' },
+    { code: 'kz', name: 'Қазақша' },
   ];
 
   useEffect(() => {
@@ -245,9 +244,6 @@ const AdminEventsForm = () => {
                     }`}
                   >
                     {lang.name}
-                    {lang.code === 'qaz' && (
-                      <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-0.5 text-xs rounded">Новый</span>
-                    )}
                     {translations[lang.code] && (translations[lang.code].name || translations[lang.code].description) && (
                       <span className="ml-2 bg-green-500 text-white rounded-full px-2 py-0.5 text-xs">✓</span>
                     )}
@@ -369,9 +365,6 @@ const AdminEventsForm = () => {
                       <div key={lang.code} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center">
                           <span className="text-sm font-medium text-gray-700">{lang.name}</span>
-                          {lang.code === 'qaz' && (
-                            <span className="ml-2 bg-blue-100 text-blue-800 px-2 py-0.5 text-xs rounded">Новый</span>
-                          )}
                         </div>
                         <div className="text-sm">
                           {translations[lang.code] && (translations[lang.code].name || translations[lang.code].description) ? (

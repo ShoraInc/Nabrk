@@ -41,6 +41,9 @@ const initialState = loadState() || {
     query: ''
   },
   
+  // Данные для фильтров (RefinementItems)
+  refinementItems: null,
+  
   // Состояние загрузки
   loading: false,
   
@@ -71,6 +74,7 @@ const bookSearchSlice = createSlice({
     setSearchResults: (state, action) => {
       state.results = action.payload.results || [];
       state.searchStats = action.payload.stats || state.searchStats;
+      state.refinementItems = action.payload.refinementItems || null;
       state.loading = false;
       state.error = null;
     },
@@ -169,6 +173,7 @@ export const selectSearchResults = (state) => state.bookSearch.results;
 export const selectLastSearchParams = (state) => state.bookSearch.lastSearchParams;
 export const selectActiveTab = (state) => state.bookSearch.activeTab;
 export const selectSearchStats = (state) => state.bookSearch.searchStats;
+export const selectRefinementItems = (state) => state.bookSearch.refinementItems;
 export const selectLoading = (state) => state.bookSearch.loading;
 export const selectError = (state) => state.bookSearch.error;
 export const selectAdvancedFilters = (state) => state.bookSearch.advancedFilters;

@@ -15,7 +15,7 @@ const Blocks = sequelize.define(
       field: "page_id",
     },
     type: {
-      type: DataTypes.ENUM("title", "line", "contact-info", "faq"),
+      type: DataTypes.ENUM("title", "line", "contact-info", "faq", "text-image", "button"),
       allowNull: false,
     },
     order: {

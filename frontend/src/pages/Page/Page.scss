@@ -16,6 +16,8 @@ $border-light: #dee2e6;
   margin: 64px auto 96px auto;
   min-height: 100vh;
   background-color: $bg-white;
+  padding: 0 20px;
+  box-sizing: content-box;
 
   // Основной контейнер с блоками
   &__content {
@@ -219,13 +221,5 @@ $border-light: #dee2e6;
       font-size: 11px;
       line-height: 1.4;
     }
-  }
-}
-
-// Responsive Design
-@media (max-width: 768px) {
-  .page {
-    // На мобильных убираем боковые отступы, оставляем только верх/низ
-    padding: 0;
   }
 }

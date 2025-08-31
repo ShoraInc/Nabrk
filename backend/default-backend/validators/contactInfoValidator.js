@@ -1,4 +1,6 @@
 // Валидатор для блока контактной информации
+const { BLOCK_OPTIONS } = require('../constants/blockConstants');
+
 const validateContactInfoBlock = (data) => {
   if (!data || typeof data !== "object") {
     throw new Error("Contact info block data must be an object");
@@ -16,7 +18,7 @@ const validateContactInfoBlock = (data) => {
 
   // Валидируем структуру title если он есть
   if (data.title) {
-    const validLanguages = ['kz', 'ru', 'en', 'qaz'];
+    const validLanguages = ['kz', 'ru', 'en'];
     const titleKeys = Object.keys(data.title);
     
     if (titleKeys.length === 0) {
@@ -56,6 +58,26 @@ const validateContactInfoBlock = (data) => {
 
     if (data.settings.iconSize && !['small', 'medium', 'large'].includes(data.settings.iconSize)) {
       throw new Error('Setting "iconSize" must be one of: small, medium, large');
+    }
+  }
+
+  // Валидируем backgroundColor если он есть
+  if (data.backgroundColor !== undefined) {
+    if (typeof data.backgroundColor !== 'string') {
+      throw new Error('backgroundColor must be a string');
+    }
+    
+    // Проверяем что это hex цвет
+    if (!data.backgroundColor.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
+      throw new Error('backgroundColor must be a valid hex color (e.g., #FF0000 or #F00)');
+    }
+    
+    // Проверяем что цвет из разрешенного списка (опционально)
+    if (BLOCK_OPTIONS['contact-info']?.backgroundColors) {
+      const allowedColors = BLOCK_OPTIONS['contact-info'].backgroundColors;
+      if (!allowedColors.includes(data.backgroundColor)) {
+        console.warn(`backgroundColor "${data.backgroundColor}" is not in the predefined list, but will be accepted`);
+      }
     }
   }
 };

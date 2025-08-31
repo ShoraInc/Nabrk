@@ -35,7 +35,9 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
   &__layout {
     display: flex;
     min-height: 600px;
-
+    justify-content: center;
+    
+    align-items: center;
     @media (max-width: 768px) {
       flex-direction: column;
       min-height: auto;
@@ -46,11 +48,7 @@ $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     flex: 1;
     max-width: 45%;
     padding: 48px 40px;
-    background: linear-gradient(
-      135deg,
-      rgba($white, 0.95) 0%,
-      rgba($light-gray, 0.98) 100%
-    );
+    
 
     @media (max-width: 768px) {
       max-width: 100%;

@@ -166,7 +166,7 @@ const ContactInfoBlock = ({
       border: "1px solid #d1d5db",
       borderRadius: "8px",
       padding: "20px",
-      backgroundColor: "#ffffff",
+      backgroundColor: data?.backgroundColor || "#ffffff",
       fontSize: "14px",
       lineHeight: "1.5",
       maxWidth: "400px",
@@ -186,7 +186,7 @@ const ContactInfoBlock = ({
     },
     item: {
       display: "flex",
-      alignItems: "flex-start",
+      alignItems: "center",
       cursor: "default",
       transition: "all 0.2s ease",
     },
@@ -216,10 +216,9 @@ const ContactInfoBlock = ({
       border: "1px solid #d1d5db",
       borderRadius: "8px",
       padding: "24px",
-      backgroundColor: "#ffffff",
+      backgroundColor: data?.backgroundColor || "#ffffff",
       fontSize: "16px",
       lineHeight: "1.5",
-      maxWidth: "500px",
       margin: "0 auto",
     },
     title: {
@@ -236,7 +235,7 @@ const ContactInfoBlock = ({
     },
     item: {
       display: "flex",
-      alignItems: "flex-start",
+      alignItems: "center",
       cursor: "default",
       transition: "all 0.2s ease",
     },

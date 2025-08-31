@@ -6,6 +6,8 @@ const blocksController = require("../controllers/blocksController");
 const titleRoutes = require("./blocks/titleRoutes");
 const lineRoutes = require("./blocks/lineRoutes");
 const contactInfoRoutes = require("./blocks/contactInfoRoutes");
+const textImageRoutes = require("./blocks/textImageRoutes");
+const buttonRoutes = require("./blocks/buttonRoutes");
 
 // ВАЖНО: /options должен быть ПЕРЕД /:id чтобы избежать конфликта роутов
 /**
@@ -81,6 +83,30 @@ router.use("/line", lineRoutes);
  * GET    /api/blocks/contact-info/icons/available    - Get available icons
  */
 router.use("/contact-info", contactInfoRoutes);
+
+/**
+ * Text-Image block routes:
+ * POST   /api/blocks/text-image                      - Create text-image block (with image upload)
+ * GET    /api/blocks/text-image/:id                  - Get text-image block
+ * PUT    /api/blocks/text-image/:id                  - Update text-image block (with image upload)
+ * DELETE /api/blocks/text-image/:id                  - Delete text-image block (removes image file)
+ * PUT    /api/blocks/text-image/:id/translations/:lang - Manage translations
+ * GET    /api/blocks/text-image/:id/translations     - Get all translations
+ * DELETE /api/blocks/text-image/:id/translations/:lang - Delete translation
+ */
+router.use("/text-image", textImageRoutes);
+
+/**
+ * Button block routes:
+ * POST   /api/blocks/button                          - Create button block
+ * GET    /api/blocks/button/:id                      - Get button block
+ * PUT    /api/blocks/button/:id                      - Update button block
+ * DELETE /api/blocks/button/:id                      - Delete button block
+ * PUT    /api/blocks/button/:id/translations/:lang   - Manage translations
+ * GET    /api/blocks/button/:id/translations         - Get all translations
+ * DELETE /api/blocks/button/:id/translations/:lang   - Delete translation
+ */
+router.use("/button", buttonRoutes);
 router.post("/faq", blocksController.createFaqBlock);
 
 /**

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './BookSearchPage.scss';
 import SearchForm from './components/SearchForm/SearchForm';
 import SearchResults from './components/SearchResults/SearchResults';
 import AdvancedSearchForm from './components/AdvancedSearchForm/AdvancedSearchForm';
+import SearchSidebar from './components/SearchSidebar/SearchSidebar';
 import { BookSearchApi } from '../../api/bookSearchApi';
 import {
   setSearchResults,
@@ -15,17 +16,20 @@ import {
   selectLastSearchParams,
   selectActiveTab,
   selectSearchStats,
+  selectRefinementItems,
   selectLoading,
   selectError
 } from '../../store/bookSearchSlice';
 
 export default function BookSearchPage() {
   const dispatch = useDispatch();
+  const [appliedFilters, setAppliedFilters] = useState({});
   
   // Получаем данные из Redux
   const results = useSelector(selectSearchResults);
   const loading = useSelector(selectLoading);
   const searchStats = useSelector(selectSearchStats);
+  const refinementItems = useSelector(selectRefinementItems);
   const activeTab = useSelector(selectActiveTab);
   const error = useSelector(selectError);
   const lastSearchParams = useSelector(selectLastSearchParams);
@@ -48,13 +52,15 @@ export default function BookSearchPage() {
     
     try {
       const response = await BookSearchApi.search(searchData);
+      console.log('Search response:', response);
       dispatch(setSearchResults({
         results: response.BRList || [],
         stats: {
           totalResults: response.ResultSize || 0,
           searchTime: Date.now(),
           query: JSON.stringify(searchData)
-        }
+        },
+        refinementItems: response.RefinementItems || null
       }));
     } catch (error) {
       console.error('Search error:', error);
@@ -68,13 +74,15 @@ export default function BookSearchPage() {
     
     try {
       const response = await BookSearchApi.search(searchData);
+      console.log('Search response:', response);
       dispatch(setSearchResults({
         results: response.BRList || [],
         stats: {
           totalResults: response.ResultSize || 0,
           searchTime: Date.now(),
           query: JSON.stringify(searchData)
-        }
+        },
+        refinementItems: response.RefinementItems || null
       }));
     } catch (error) {
       console.error('Advanced search error:', error);
@@ -85,6 +93,88 @@ export default function BookSearchPage() {
   const handleTabChange = (tab) => {
     dispatch(setActiveTab(tab));
   };
+
+  // Функция для создания поискового запроса с фильтрами
+  const buildSearchDataWithFilters = (baseSearchData, filters) => {
+    const searchData = { ...baseSearchData };
+    const filterItems = [];
+    
+    // Добавляем фильтры как дополнительные searchItems
+    Object.entries(filters).forEach(([filterType, values]) => {
+      values.forEach(value => {
+        filterItems.push({
+          field: filterType,
+          operator: 'AND',
+          value: value
+        });
+      });
+    });
+    
+    // Объединяем исходные searchItems с фильтрами
+    const originalItems = searchData.searchItems || [];
+    searchData.searchItems = [...originalItems, ...filterItems];
+    
+    return searchData;
+  };
+
+  // Функция для повторного поиска с фильтрами
+  const reapplySearchWithFilters = useCallback(async (newFilters) => {
+    if (!lastSearchParams) return;
+    
+    const searchDataWithFilters = buildSearchDataWithFilters(lastSearchParams, newFilters);
+    console.log('Reapplying search with filters:', searchDataWithFilters);
+    
+    dispatch(setLoading(true));
+    
+    try {
+      const response = await BookSearchApi.search(searchDataWithFilters);
+      console.log('Filtered search response:', response);
+      dispatch(setSearchResults({
+        results: response.BRList || [],
+        stats: {
+          totalResults: response.ResultSize || 0,
+          searchTime: Date.now(),
+          query: JSON.stringify(searchDataWithFilters)
+        },
+        refinementItems: response.RefinementItems || null
+      }));
+    } catch (error) {
+      console.error('Filtered search error:', error);
+      dispatch(setError('Фильтрация не удалась'));
+    }
+  }, [lastSearchParams, dispatch]);
+
+  const handleFilterChange = (filterType, value, checked) => {
+    setAppliedFilters(prev => {
+      const newFilters = { ...prev };
+      
+      if (!newFilters[filterType]) {
+        newFilters[filterType] = [];
+      }
+      
+      if (checked) {
+        if (!newFilters[filterType].includes(value)) {
+          newFilters[filterType] = [...newFilters[filterType], value];
+        }
+      } else {
+        newFilters[filterType] = newFilters[filterType].filter(v => v !== value);
+        if (newFilters[filterType].length === 0) {
+          delete newFilters[filterType];
+        }
+      }
+      
+      return newFilters;
+    });
+    
+    console.log('Filter changed:', { filterType, value, checked });
+  };
+
+  // Применяем фильтры при их изменении
+  useEffect(() => {
+    if (Object.keys(appliedFilters).length > 0) {
+      reapplySearchWithFilters(appliedFilters);
+    }
+  }, [appliedFilters, reapplySearchWithFilters]);
 
   // Восстанавливаем состояние при загрузке страницы
   useEffect(() => {
@@ -173,14 +263,23 @@ export default function BookSearchPage() {
           </div>
         )}
 
-        {/* Результаты поиска */}
+        {/* Результаты поиска с сайдбаром */}
         {results.length > 0 && (
-          <div className="mt-8" style={{ maxWidth: '1200px', margin: '2rem auto 0' }}>
-            <SearchResults 
-              results={results} 
-              loading={loading} 
-              searchStats={searchStats}
-            />
+          <div className="book-search-page__results-container">
+            <div className="book-search-page__results-sidebar">
+              <SearchSidebar 
+                filters={appliedFilters}
+                onFilterChange={handleFilterChange}
+                refinementItems={refinementItems}
+              />
+            </div>
+            <div className="book-search-page__results-main">
+              <SearchResults 
+                results={results} 
+                loading={loading} 
+                searchStats={searchStats}
+              />
+            </div>
           </div>
         )}
       </main>

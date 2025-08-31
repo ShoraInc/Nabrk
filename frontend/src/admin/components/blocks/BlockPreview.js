@@ -7,6 +7,8 @@ import TitleBlock from './admin/AdminTitleBlock';
 import AdminLineBlock from './admin/AdminLineBlock';
 import AdminContactInfoBlock from './admin/AdminContactInfoBlock';
 import AdminFaqBlock from './admin/AdminFaqBlock';
+import AdminTextImageBlock from './admin/AdminTextImageBlock';
+import AdminButtonBlock from './admin/AdminButtonBlock';
 
 const BlockPreview = ({ block }) => {
   const { currentLanguage } = useLanguage();
@@ -44,6 +46,23 @@ const BlockPreview = ({ block }) => {
           <AdminFaqBlock
             block={block}
             currentLanguage={currentLanguage}
+          />
+        );
+      
+      case 'text-image':
+        return (
+          <AdminTextImageBlock
+            block={block}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'button':
+        return (
+          <AdminButtonBlock
+            block={block}
+            isMobile={isMobile}
           />
         );
       
@@ -88,6 +107,16 @@ const BlockPreview = ({ block }) => {
       case 'faq': {
         const questionLangs = Object.keys(block.data?.translations || {});
         return questionLangs.length > 0 ? questionLangs.join(', ') : null;
+      }
+      
+      case 'text-image': {
+        const textLangs = Object.keys(block.data?.translations || {});
+        return textLangs.length > 0 ? textLangs.join(', ') : null;
+      }
+      
+      case 'button': {
+        const buttonLangs = Object.keys(block.data?.translations || {});
+        return buttonLangs.length > 0 ? buttonLangs.join(', ') : null;
       }
       
       default:

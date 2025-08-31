@@ -1,5 +1,5 @@
 // API сервис для поиска книг
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+const API_BASE_URL = 'http://localhost:4001';
 
 export class BookSearchApi {
   static async search(data) {
@@ -12,11 +12,11 @@ export class BookSearchApi {
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         throw new Error('Search failed');
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('Search error:', error);
@@ -35,15 +35,15 @@ export class BookSearchApi {
   static async getSuggestions(fieldName, searchText) {
     const encodedField = encodeURIComponent(fieldName);
     const encodedText = encodeURIComponent(searchText);
-    
+
     const response = await fetch(
       `${API_BASE_URL}/view/Suggest?fieldName=${encodedField}&searchText=${encodedText}`
     );
-    
+
     if (!response.ok) {
       return [];
     }
-    
+
     return response.json();
   }
 }

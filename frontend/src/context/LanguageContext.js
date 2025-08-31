@@ -4,10 +4,9 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const LanguageContext = createContext();
 
 export const LANGUAGES = {
-  kz: { code: 'kz', name: 'Қазақша' },
-  ru: { code: 'ru', name: 'Русский' },
   en: { code: 'en', name: 'English' },
-  qaz: { code: 'qaz', name: 'Qazaqsha' }
+  ru: { code: 'ru', name: 'Русский' },
+  kz: { code: 'kz', name: 'Қазақша' }
 };
 
 export const DEFAULT_LANGUAGE = 'kz';

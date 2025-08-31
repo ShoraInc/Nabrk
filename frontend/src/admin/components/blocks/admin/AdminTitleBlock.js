@@ -10,7 +10,6 @@ const AdminTitleBlock = ({ block, currentLanguage = 'kz', isMobile = false }) =>
     return translations[currentLanguage] || 
            translations['kz'] || 
            translations['en'] || 
-           translations['qaz'] || 
            Object.values(translations)[0] || 
            'Нет текста';
   };
@@ -27,7 +26,8 @@ const AdminTitleBlock = ({ block, currentLanguage = 'kz', isMobile = false }) =>
     margin: '12px 0',
     padding: 0,
     wordWrap: 'break-word',
-    hyphens: 'auto'
+    hyphens: 'auto',
+    fontFamily: "'Cormorant SC', 'Times New Roman', 'serif'"
   };
 
   const desktopStyles = {
@@ -40,7 +40,8 @@ const AdminTitleBlock = ({ block, currentLanguage = 'kz', isMobile = false }) =>
     lineHeight: '1.3',
     padding: 0,
     letterSpacing: '-0.01em',
-    wordWrap: 'break-word'
+    wordWrap: 'break-word',
+    fontFamily: "'Cormorant SC', 'Times New Roman', 'serif'"
   };
 
   const styles = isMobile ? mobileStyles : desktopStyles;
@@ -48,7 +49,7 @@ const AdminTitleBlock = ({ block, currentLanguage = 'kz', isMobile = false }) =>
   return (
     <div className="space-y-2">
       {/* Сам заголовок */}
-      <h1 style={styles}>
+      <h1 style={styles} className="title-block">
         {text}
       </h1>
       

@@ -1,7 +1,7 @@
 // constants/blockConstants.js
 
 const BLOCK_OPTIONS = {
-  types: ["title", "line"],
+  types: ["title", "line", "contact-info", "text-image", "button"],
 
   title: {
     // Расширенный список размеров шрифтов
@@ -57,7 +57,44 @@ const BLOCK_OPTIONS = {
     marginRange: { min: 0, max: 200 },
   },
 
-  languages: ["en", "ru", "kz", "qaz"],
+  "contact-info": {
+    backgroundColors: [
+      "#FFFFFF", // Белый (по умолчанию)
+      "#F5F5F5", 
+      "#F9FAFB", // Светло-серый
+      "#F3F4F6", // Серый светлый
+      "#FEF3C7", // Желтый светлый
+      "#DBEAFE", // Синий светлый
+      "#D1FAE5", // Зеленый светлый
+      "#FCE7F3", // Розовый светлый
+      "#E0E7FF", // Индиго светлый
+    ],
+  },
+
+  "text-image": {
+    imagePosition: ["left", "right"],
+    marginRange: { min: 0, max: 200 },
+  },
+
+  button: {
+    widthOptions: ["25%", "50%", "75%", "100%"],
+    backgroundColors: [
+      "#D4AF37", // Золотистый (как на фото)
+      "#FFD700", // Золотой
+      "#B8860B", // Темно-золотистый
+      "#F0E68C", // Хаки
+      "#4169E1", // Королевский синий
+      "#32CD32", // Лаймовый зеленый
+      "#FF6347", // Томатный
+      "#9370DB", // Средний фиолетовый
+      "#20B2AA", // Светлый морской зеленый
+      "#FF69B4"  // Горячий розовый
+    ],
+    textColors: ["#000000", "#FFFFFF", "#333333", "#666666"],
+    marginRange: { min: 0, max: 200 },
+  },
+
+  languages: ["en", "ru", "kz"],
 };
 
 module.exports = {

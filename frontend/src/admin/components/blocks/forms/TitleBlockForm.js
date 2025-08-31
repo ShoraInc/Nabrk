@@ -144,10 +144,9 @@ const TitleBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden }) 
     if (!blockOptions?.languages) return [];
 
     const languageNames = {
-      'kz': 'Қазақша',
-      'ru': 'Русский',
       'en': 'English',
-      'qaz': 'Qazaqsha'
+      'ru': 'Русский',
+      'kz': 'Қазақша'
     };
 
     return blockOptions.languages.map(code => ({

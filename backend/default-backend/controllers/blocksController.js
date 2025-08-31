@@ -1,6 +1,7 @@
 const { BLOCK_OPTIONS } = require("../constants/blockConstants");
 const { Blocks, Pages, ContactInfoItems, sequelize, BlockRelations } = require("../models");
 const { validateBlockData } = require("../validators");
+const { deleteBlockImageFile } = require("../middleware/blockImageUploadMiddleware");
 
 const blocksController = {
   // Получить все блоки страницы по slug
@@ -105,6 +106,11 @@ const blocksController = {
           individualHooks: true,
           transaction
         });
+      }
+
+      // ВАЖНО: Если это text-image блок, удаляем файл изображения
+      if (block.type === 'text-image' && block.data?.imagePath) {
+        deleteBlockImageFile(block.data.imagePath);
       }
 
       // Удаляем сам блок

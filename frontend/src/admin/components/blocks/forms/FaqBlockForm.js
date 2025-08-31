@@ -208,14 +208,12 @@ const FaqBlockForm = ({
       return block.data?.title?.[currentLanguage] ||
              block.data?.title?.["kz"] ||
              block.data?.title?.["en"] ||
-             block.data?.title?.["qaz"] ||
              Object.values(block.data?.title || {})[0] ||
              "Нет текста";
     }
     return block.data?.translations?.[currentLanguage] ||
            block.data?.translations?.["kz"] ||
            block.data?.translations?.["en"] ||
-           block.data?.translations?.["qaz"] ||
            (block.data?.translations && Object.values(block.data.translations)[0]) ||
            "Нет текста";
   }
