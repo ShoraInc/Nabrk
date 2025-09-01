@@ -1,19 +1,20 @@
 // components/blocks/ButtonBlock.js
 
 import React from 'react';
+import arrowUpRight from '../../assets/icons/Arrow-up-right.png';
 
 const ButtonBlock = ({ block, currentLanguage = 'kz', isMobile = false }) => {
   const { data } = block;
-  const { translations = {}, url = '', width = '100%', backgroundColor = '#D4AF37', textColor = '#000000' } = data;
+  const { translations = {}, url = '', width = '100%', backgroundColor = '#D4AF37', textColor = '#000000', fontWeight = '600' } = data;
 
   // Получаем текст для текущего языка с фоллбэком
   const getText = () => {
     return translations[currentLanguage] ||
-           translations['kz'] ||
-           translations['ru'] ||
-           translations['en'] ||
-           Object.values(translations).find(Boolean) ||
-           '';
+      translations['kz'] ||
+      translations['ru'] ||
+      translations['en'] ||
+      Object.values(translations).find(Boolean) ||
+      '';
   };
 
   const text = getText();
@@ -32,22 +33,26 @@ const ButtonBlock = ({ block, currentLanguage = 'kz', isMobile = false }) => {
     justifyContent: 'left', // Центрируем кнопку
   };
 
+
   // Стили для кнопки
   const buttonStyles = {
+    position: 'relative', // Для абсолютного позиционирования иконки
+    display: 'flex',
+    alignItems: 'flex-end', // Текст внизу
+    justifyContent: 'flex-start', // Текст слева
     width: isMobile ? '90%' : width, // На мобильных ограничиваем до 90%
     minWidth: '120px',
-    maxWidth: '500px', // Максимальная ширина для больших экранов
-    padding: isMobile ? '12px 16px' : '16px 24px',
+    minHeight: isMobile ? '48px' : '56px', // Минимальная высота для размещения иконки и текста
+    padding: isMobile ? '12px 32px 12px 16px' : '16px 40px 16px 24px', // Больше отступ справа для иконки
     backgroundColor: backgroundColor,
     color: textColor,
     border: 'none',
     fontSize: isMobile ? '14px' : '16px',
-    fontWeight: '600',
+    fontWeight: fontWeight,
     fontFamily: "'Roboto Flex', 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif",
     cursor: 'pointer',
     textDecoration: 'none',
-    display: 'inline-block',
-    textAlign: 'center',
+    textAlign: 'left', // Текст по левому краю
     lineHeight: '1.2',
     transition: 'all 0.2s ease-in-out',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -58,13 +63,22 @@ const ButtonBlock = ({ block, currentLanguage = 'kz', isMobile = false }) => {
     }
   };
 
+  // Стили для иконки - позиционируем в правом верхнем углу
+  const iconStyles = {
+    position: 'absolute',
+    top: isMobile ? '8px' : '12px',
+    right: isMobile ? '8px' : '12px',
+    width: '16px',
+    height: '16px',
+  };
+
   // Обработчик клика
   const handleClick = (e) => {
     if (!url) {
       e.preventDefault();
       return;
     }
-    
+
     // Если внешняя ссылка - открываем в новой вкладке
     if (url.startsWith('http')) {
       window.open(url, '_blank', 'noopener noreferrer');
@@ -91,6 +105,7 @@ const ButtonBlock = ({ block, currentLanguage = 'kz', isMobile = false }) => {
           }}
         >
           {text}
+          <img src={arrowUpRight} alt="Arrow Up Right" style={iconStyles} />
         </a>
       </div>
     );
@@ -111,6 +126,7 @@ const ButtonBlock = ({ block, currentLanguage = 'kz', isMobile = false }) => {
         }}
       >
         {text}
+        <img src={arrowUpRight} alt="Arrow Up Right" style={iconStyles} />
       </button>
     </div>
   );

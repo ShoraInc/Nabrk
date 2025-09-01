@@ -2,23 +2,25 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import "./NewsDetail.scss";
 import NewsApi from "../../api/newsApi";
+import { useTranslations } from "../../hooks/useTranslations";
 
 export default function NewsDetail() {
   const { id } = useParams();
+  const { t, currentLanguage } = useTranslations();
   const [newsItem, setNewsItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     loadNewsDetail();
-  }, [id]);
+  }, [id, currentLanguage]);
 
   const loadNewsDetail = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const response = await NewsApi.getNewsById(id, 'kz');
+      const response = await NewsApi.getNewsById(id, currentLanguage);
       setNewsItem(response);
     } catch (err) {
       console.error('Failed to load news detail:', err);
@@ -50,9 +52,9 @@ export default function NewsDetail() {
     <div className="news-detail">
       <div className="news-detail-container">
         <div className="error-state">
-          <h1>Жаңалық табылмады</h1>
-          <p>Сұралған жаңалық жоқ немесе жүйеде қате орын алды.</p>
-          <button onClick={() => window.history.back()}>Артқа қайту</button>
+          <h1>{t('news.detail.notFound')}</h1>
+          <p>{t('news.detail.notFoundDescription')}</p>
+          <button onClick={() => window.history.back()}>{t('news.detail.goBack')}</button>
         </div>
       </div>
     </div>
@@ -70,7 +72,7 @@ export default function NewsDetail() {
             <span className="news-detail-date">{NewsApi.formatDate(newsItem.publishedDate)}</span>
             <div className="news-detail-views">
               <span className="views-icon">👁</span>
-              <span className="views-count">{newsItem.views}</span>
+              <span className="views-count">{newsItem.views} {t('news.detail.views')}</span>
             </div>
           </div>
         </div>

@@ -8,8 +8,11 @@ import InstagramIcon from "./assets/icons/Instagram Icon.png";
 import TwitterIcon from "./assets/icons/X Icon.png";
 import YouTubeIcon from "./assets/icons/Youtube Icon.png";
 import LocationIcon from "./assets/icons/Address Icon.png";
+import { useTranslations } from "../../../hooks/useTranslations";
 
 const Footer = () => {
+  const { t } = useTranslations();
+  
   return (
     <footer className="footer">
       <div className="footer__container">
@@ -27,26 +30,26 @@ const Footer = () => {
 
           {/* Navigation Section */}
           <div className="footer__section">
-            <h3 className="footer__title">НАВИГАЦИЯ</h3>
+            <h3 className="footer__title">{t('footer.navigation').toUpperCase()}</h3>
             <ul className="footer__list">
               <li className="footer__item">
                 <a href="/book-search" className="footer__link">
-                  Электронды каталог
+                  {t('services.bookCatalog.title')}
                 </a>
               </li>
               <li className="footer__item">
                 <a href="#" className="footer__link">
-                  Электронды кітапхана
+                  {t('services.digitalResources.title')}
                 </a>
               </li>
               <li className="footer__item">
                 <a href="#" className="footer__link">
-                  Кітапханашыға сұрақ
+                  {t('services.support.title')}
                 </a>
               </li>
               <li className="footer__item">
                 <a href="#" className="footer__link">
-                  Басшының жеке блогы
+                  {t('services.news.title')}
                 </a>
               </li>
             </ul>
@@ -54,7 +57,7 @@ const Footer = () => {
 
           {/* Contact Section */}
           <div className="footer__section">
-            <h3 className="footer__title">БАСПАСӨЗ ХАТШЫСЫ</h3>
+            <h3 className="footer__title">{t('footer.pressSecretary').toUpperCase()}</h3>
             <div className="footer__contact">
               <div className="footer__contact-item">
                 <span className="footer__contact-icon">
@@ -65,7 +68,7 @@ const Footer = () => {
                   />
                 </span>
                 <span className="footer__contact-text">
-                  Лаура Телманқызы Палман
+                  {t('footer.pressSecretaryName')}
                 </span>
               </div>
               <div className="footer__contact-item">
@@ -100,7 +103,7 @@ const Footer = () => {
 
           {/* Contact Info Section */}
           <div className="footer__section">
-            <h3 className="footer__title">БАЙЛАНЫС</h3>
+            <h3 className="footer__title">{t('footer.contact').toUpperCase()}</h3>
             <div className="footer__contact">
               <div className="footer__contact-item">
                 <span className="footer__contact-icon">
@@ -111,7 +114,7 @@ const Footer = () => {
                   />
                 </span>
                 <span className="footer__contact-text">
-                  010000, Қазақстан, Астана қ., Достық көшесі, 11-үй
+                  {t('footer.address')}
                 </span>
               </div>
               <div className="footer__contact-item">

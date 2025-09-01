@@ -5,9 +5,11 @@ import './LoginForm.scss';
 import LoginHeader from '../../../components/layout/LoginHeader/LoginHeader';
 import wireframe from './img/wireframe_black.png';
 import AuthApi from '../../../api/authApi';
+import { useTranslations } from '../../../hooks/useTranslations';
 
 const LoginForm = ({ onClose }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslations();
 
   const [formData, setFormData] = useState({
     readerNumber: '',
@@ -26,7 +28,7 @@ const LoginForm = ({ onClose }) => {
     e.preventDefault();
 
     if (!formData.readerNumber.trim() || !formData.password.trim()) {
-      alert('Оқырман нөмірі мен құпия сөзді толтырыңыз');
+      alert(t('auth.login.fillRequired'));
       return;
     }
 
@@ -43,12 +45,12 @@ const LoginForm = ({ onClose }) => {
 
       console.log('Login response:', response);
 
-      alert('Сәтті кірдіңіз!');
+      alert(t('auth.login.success'));
       onClose();
 
     } catch (error) {
       console.error('Login error:', error);
-      alert(`Кіру қатесі: ${error.message}`);
+      alert(`${t('auth.login.error')}: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -79,18 +81,16 @@ const LoginForm = ({ onClose }) => {
               <div className="login-form__warning-content">
                 <h3>Құрметті пайдаланушы!</h3>
                 <p>
-                  Авторизацияңдан кейін жеке кабинетіңізде
-                  электрондық поштаңыздың дұрыс толтырылғанын
-                  тексеріңіз.
+                  {t('auth.login.description')}
                 </p>
               </div>
             </div>
 
             <div className="login-form__main">
               <div className="login-form__header">
-                <h1 className="login-form__title">Қош келдіңіз.</h1>
+                <h1 className="login-form__title">{t('auth.login.welcome')}.</h1>
                 <p className="login-form__description">
-                  ҚР ҰАК-нен қызметтерін пайдалану үшін
+                  {t('auth.login.serviceDescription')}
                 </p>
               </div>
 
@@ -98,14 +98,14 @@ const LoginForm = ({ onClose }) => {
 
                 <div className="login-form__field">
                   <label className="login-form__label">
-                    Оқырман билетінің нөмірі
+                    {t('auth.login.readerNumber')}
                     <input
                       type="text"
                       className="login-form__input"
                       name="readerNumber"
                       value={formData.readerNumber}
                       onChange={handleInputChange}
-                      placeholder="Оқырман нөміріңізді жазыңыз"
+                      placeholder={t('auth.login.readerNumberPlaceholder')}
                       required
                       disabled={isLoading}
                     />
@@ -114,7 +114,7 @@ const LoginForm = ({ onClose }) => {
 
                 <div className="login-form__field">
                   <label className="login-form__label">
-                    Құпия сөз
+                    {t('auth.login.password')}
                     <div className="login-form__password-wrapper">
                       <input
                         type={showPassword ? "text" : "password"}
@@ -122,7 +122,7 @@ const LoginForm = ({ onClose }) => {
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        placeholder="Құпия сөзіңізді жазыңыз"
+                        placeholder={t('auth.login.passwordPlaceholder')}
                         required
                         disabled={isLoading}
                       />
@@ -130,6 +130,7 @@ const LoginForm = ({ onClose }) => {
                         type="button"
                         className="login-form__password-toggle"
                         onClick={togglePasswordVisibility}
+                        title={showPassword ? t('auth.login.hidePassword') : t('auth.login.showPassword')}
                       >
                         {showPassword ? '🙈' : '👁️'}
                       </button>
@@ -141,7 +142,7 @@ const LoginForm = ({ onClose }) => {
                     className="login-form__forgot-password"
                     onClick={handleSwitchToForgetPassword}
                   >
-                    Құпия сөзді ұмытып қалдыныз ба?
+                    {t('auth.login.forgotPassword')}
                   </button>
                 </div>
 
@@ -150,18 +151,18 @@ const LoginForm = ({ onClose }) => {
                   className="login-form__submit"
                   disabled={!formData.readerNumber.trim() || !formData.password.trim() || isLoading}
                 >
-                  {isLoading ? 'Жалғастыру...' : 'Жалғастыру'}
+                  {isLoading ? t('auth.login.loading') : t('auth.login.submit')}
                 </button>
               </form>
 
               <div className="login-form__switch">
-                <p>Аккаунтыңыз жоқ па?</p>
+                <p>{t('auth.login.noAccount')}</p>
                 <button
                   className="login-form__switch-btn"
                   onClick={handleSwitchToRegistration}
                   type="button"
                 >
-                  Тіркелу
+                  {t('auth.login.register')}
                 </button>
               </div>
             </div>

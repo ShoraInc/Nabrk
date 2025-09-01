@@ -4,9 +4,11 @@ import "./Header.scss";
 import LanguageSelector from "../../LanguageSelector/LanguageSelector";
 import useMobileDetection from "../../../hooks/useMobileDetection";
 import Logo from "../../../assets/logos/Logo.png";
+import { useTranslations } from "../../../hooks/useTranslations";
 
 const Header = () => {
   const isMobile = useMobileDetection();
+  const { t } = useTranslations();
 
   return (
     <header className="main-header">
@@ -19,16 +21,16 @@ const Header = () => {
 
         <nav className="main-header__nav">
           <a href="/" className="main-header__nav-item">
-            Главная
+            {t('header.home')}
           </a>
           <a href="/book-search" className="main-header__nav-item">
-            Поиск книг
+            {t('header.bookSearch')}
           </a>
           <a href="/about" className="main-header__nav-item">
-            О нас
+            {t('header.aboutUs')}
           </a>
           <a href="/contact" className="main-header__nav-item">
-            Контакты
+            {t('header.contacts')}
           </a>
         </nav>
         <LanguageSelector isMobile={isMobile} />

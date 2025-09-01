@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import './Search.scss';
+import { useTranslations } from '../../../../hooks/useTranslations';
 
 const Search = () => {
+  const { t } = useTranslations();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Э-каталог');
+  const [selectedCategory, setSelectedCategory] = useState(t('search.categories.catalog'));
 
   const categories = [
-    'Э-каталог',
-    'Кітаптар', 
-    'Авторлар',
-    'Тақырыптар'
+    { key: 'catalog', label: t('search.categories.catalog') },
+    { key: 'books', label: t('search.categories.books') },
+    { key: 'authors', label: t('search.categories.authors') },
+    { key: 'topics', label: t('search.categories.topics') }
   ];
 
   return (
@@ -29,7 +31,7 @@ const Search = () => {
             <input
               type="text"
               className="search__input"
-              placeholder="Кітаптар, фотосуреттер, құжаттар үшін коллекциямыздан іздеңіз..."
+              placeholder={t('search.placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -42,8 +44,8 @@ const Search = () => {
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               {categories.map((category, index) => (
-                <option key={index} value={category}>
-                  {category}
+                <option key={index} value={category.label}>
+                  {category.label}
                 </option>
               ))}
             </select>

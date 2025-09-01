@@ -4,16 +4,18 @@ import ArrowIcon from "./assets/icons/Arrow-icon.png";
 import NewsApi from "../../../../api/newsApi";
 import { useNavigate } from "react-router-dom";
 import { generateRoute } from "../../../../routes/constants";
+import { useTranslations } from "../../../../hooks/useTranslations";
 
 export default function News() {
   const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { t, currentLanguage } = useTranslations();
 
   useEffect(() => {
     loadNews();
-  }, []);
+  }, [currentLanguage]);
 
   const loadNews = async () => {
     try {
@@ -21,7 +23,7 @@ export default function News() {
       setError(null);
 
       const response = await NewsApi.getPublishedNews({
-        lang: "kz",
+        lang: currentLanguage,
         limit: 5,
       });
 
@@ -32,6 +34,7 @@ export default function News() {
           title: item.title,
           date: NewsApi.formatDate(item.publishedDate),
           image: item.imageUrl || "/default-news-image.jpg", // fallback изображение
+          externalUrl: item.externalUrl, // внешняя ссылка
           isLarge: index === 0, // первая новость будет большой
         }));
 
@@ -48,8 +51,13 @@ export default function News() {
     }
   };
 
-  const handleNewsClick = (newsId) => {
-    navigate(generateRoute.newsDetail(newsId));
+  const handleNewsClick = (news) => {
+    // Если есть внешняя ссылка - переходим по ней, иначе на стандартную страницу
+    if (news.externalUrl) {
+      window.open(news.externalUrl, '_blank');
+    } else {
+      navigate(generateRoute.newsDetail(news.id));
+    }
   };
 
   const handleViewAllClick = () => {
@@ -127,7 +135,7 @@ export default function News() {
                 margin: "0 0 8px 0",
               }}
             >
-              Жаңалықтар жоқ
+              {t('news.noNews')}
             </h3>
             <p
               style={{
@@ -136,7 +144,7 @@ export default function News() {
                 margin: 0,
               }}
             >
-              Әзірге жарияланған жаңалықтар табылмады
+              {t('news.noNewsDescription')}
             </p>
           </div>
         </div>
@@ -201,7 +209,7 @@ export default function News() {
                 margin: "0 0 8px 0",
               }}
             >
-              Қате орын алды
+              {t('news.error')}
             </h3>
             <p
               style={{
@@ -210,7 +218,7 @@ export default function News() {
                 margin: "0 0 16px 0",
               }}
             >
-              Жаңалықтарды жүктеу мүмкін болмады
+              {t('news.errorDescription')}
             </p>
             <button
               onClick={loadNews}
@@ -224,7 +232,7 @@ export default function News() {
                 fontSize: "12px",
               }}
             >
-              Қайта жүктеу
+              {t('news.retry')}
             </button>
           </div>
         </div>
@@ -236,10 +244,10 @@ export default function News() {
     <div className="NewsSection">
       <div className="NewsSection-container">
         <div className="news-header">
-          <h2>Соңғы жаңалықтар</h2>
+          <h2>{t('news.title')}</h2>
           {newsData.length > 0 && (
             <button className="view-all-btn" onClick={handleViewAllClick}>
-              БАРЛЫҒЫН ОҚУ
+              {t('news.readAll')}
             </button>
           )}
         </div>
@@ -256,7 +264,7 @@ export default function News() {
               <div
                 key={news.id}
                 className={`news-item ${news.isLarge ? "large" : ""}`}
-                onClick={() => handleNewsClick(news.id)}
+                onClick={() => handleNewsClick(news)}
               >
                 <div
                   className="news-image"
@@ -271,12 +279,13 @@ export default function News() {
                         {/* Показываем кнопку только для больших карточек на десктопе */}
                         {news.isLarge && (
                           <button
-                            onClick={() =>
-                              navigate(generateRoute.newsDetail(news.id))
-                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleNewsClick(news);
+                            }}
                             className="news-button desktop-only"
                           >
-                            ТОЛЫҚТАЙ ОҚУ
+                            {news.externalUrl ? t('news.goToLink') : t('news.readMore')}
                             <img
                               src={ArrowIcon}
                               className="arrow"
@@ -303,7 +312,7 @@ export default function News() {
 
         {!loading && !error && newsData.length > 0 && (
           <button className="mobile-view-all-btn" onClick={handleViewAllClick}>
-            БАРЛЫҒЫ
+            {t('news.readAll')}
           </button>
         )}
       </div>

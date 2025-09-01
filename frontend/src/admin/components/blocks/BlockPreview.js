@@ -9,6 +9,8 @@ import AdminContactInfoBlock from './admin/AdminContactInfoBlock';
 import AdminFaqBlock from './admin/AdminFaqBlock';
 import AdminTextImageBlock from './admin/AdminTextImageBlock';
 import AdminButtonBlock from './admin/AdminButtonBlock';
+import AdminTextBlock from './admin/AdminTextBlock';
+import AdminImageBlock from './admin/AdminImageBlock';
 
 const BlockPreview = ({ block }) => {
   const { currentLanguage } = useLanguage();
@@ -66,6 +68,22 @@ const BlockPreview = ({ block }) => {
           />
         );
       
+      case 'text':
+        return (
+          <AdminTextBlock
+            block={block}
+            currentLanguage={currentLanguage}
+          />
+        );
+      
+      case 'image':
+        return (
+          <AdminImageBlock
+            block={block}
+            currentLanguage={currentLanguage}
+          />
+        );
+      
       default:
         return (
           <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
@@ -117,6 +135,16 @@ const BlockPreview = ({ block }) => {
       case 'button': {
         const buttonLangs = Object.keys(block.data?.translations || {});
         return buttonLangs.length > 0 ? buttonLangs.join(', ') : null;
+      }
+      
+      case 'text': {
+        const textLangs = Object.keys(block.data?.translations || {});
+        return textLangs.length > 0 ? textLangs.join(', ') : null;
+      }
+      
+      case 'image': {
+        // Image блок не имеет переводов
+        return null;
       }
       
       default:

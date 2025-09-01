@@ -5,9 +5,11 @@ import backButton from "../assets/icons/back_button.png";
 import { switchToLogin } from "../../../store/modalSlice";
 import { useDispatch } from "react-redux";
 import AuthApi from "../../../api/authApi";
+import { useTranslations } from "../../../hooks/useTranslations";
 
 const RegistrationForm = ({ onClose }) => {
   const dispatch = useDispatch();
+  const { t } = useTranslations();
   const [currentStep, setCurrentStep] = useState(1);
 
   // Объединенное состояние для всех данных формы
@@ -38,25 +40,25 @@ const RegistrationForm = ({ onClose }) => {
 
   // Опции для селектов и радио-кнопок
   const genderOptions = [
-    { value: "Ер", label: "Ер" },
-    { value: "Әйел", label: "Әйел" },
-    { value: "Айтпағанды жөн көру", label: "Айтпағанды жөн көру" },
+    { value: "Ер", label: t('auth.register.male') },
+    { value: "Әйел", label: t('auth.register.female') },
+    { value: "Айтпағанды жөн көру", label: t('auth.register.preferNotToSay') },
   ];
 
   const monthOptions = [
-    { value: "Айы", label: "Айы" },
-    { value: "Қаңтар", label: "Қаңтар" },
-    { value: "Ақпан", label: "Ақпан" },
-    { value: "Наурыз", label: "Наурыз" },
-    { value: "Сәуір", label: "Сәуір" },
-    { value: "Мамыр", label: "Мамыр" },
-    { value: "Маусым", label: "Маусым" },
-    { value: "Шілде", label: "Шілде" },
-    { value: "Тамыз", label: "Тамыз" },
-    { value: "Қыркүйек", label: "Қыркүйек" },
-    { value: "Қазан", label: "Қазан" },
-    { value: "Қараша", label: "Қараша" },
-    { value: "Желтоқсан", label: "Желтоқсан" },
+    { value: "Айы", label: t('auth.register.months.placeholder') },
+    { value: "Қаңтар", label: t('auth.register.months.january') },
+    { value: "Ақпан", label: t('auth.register.months.february') },
+    { value: "Наурыз", label: t('auth.register.months.march') },
+    { value: "Сәуір", label: t('auth.register.months.april') },
+    { value: "Мамыр", label: t('auth.register.months.may') },
+    { value: "Маусым", label: t('auth.register.months.june') },
+    { value: "Шілде", label: t('auth.register.months.july') },
+    { value: "Тамыз", label: t('auth.register.months.august') },
+    { value: "Қыркүйек", label: t('auth.register.months.september') },
+    { value: "Қазан", label: t('auth.register.months.october') },
+    { value: "Қараша", label: t('auth.register.months.november') },
+    { value: "Желтоқсан", label: t('auth.register.months.december') },
   ];
 
   const nationalityOptions = [
@@ -329,7 +331,7 @@ const RegistrationForm = ({ onClose }) => {
       {/* Тегі */}
       <div className="multi-step-form__section">
         <label className="multi-step-form__label">
-          Тегі
+          {t('auth.register.lastName')}
           <input
             type="text"
             className="multi-step-form__input"
@@ -344,7 +346,7 @@ const RegistrationForm = ({ onClose }) => {
       {/* Аты */}
       <div className="multi-step-form__section">
         <label className="multi-step-form__label">
-          Аты
+          {t('auth.register.firstName')}
           <input
             type="text"
             className="multi-step-form__input"
@@ -359,7 +361,7 @@ const RegistrationForm = ({ onClose }) => {
       {/* Әкесінің аты */}
       <div className="multi-step-form__section">
         <label className="multi-step-form__label">
-          Әкесінің аты
+          {t('auth.register.fatherName')}
           <input
             type="text"
             className="multi-step-form__input"
@@ -372,7 +374,7 @@ const RegistrationForm = ({ onClose }) => {
 
       {/* Жынысы */}
       <div className="multi-step-form__section">
-        <h3 className="multi-step-form__section-title">Жынысы</h3>
+        <h3 className="multi-step-form__section-title">{t('auth.register.gender')}</h3>
         <RadioGroup
           name="gender"
           options={genderOptions}
@@ -384,12 +386,12 @@ const RegistrationForm = ({ onClose }) => {
 
       {/* Туған жылы */}
       <div className="multi-step-form__section">
-        <h3 className="multi-step-form__section-title">Туған жылы</h3>
+        <h3 className="multi-step-form__section-title">{t('auth.register.birthDate')}</h3>
         <div className="multi-step-form__birth-row">
           <input
             type="text"
             className="multi-step-form__input multi-step-form__input--small"
-            placeholder="Күні"
+            placeholder={t('auth.register.dayPlaceholder')}
             name="birthDay"
             value={allFormData.birthDay}
             onChange={handleInputChange}
@@ -409,7 +411,7 @@ const RegistrationForm = ({ onClose }) => {
           <input
             type="number"
             className="multi-step-form__input multi-step-form__input--small"
-            placeholder="Жылы (1990)"
+            placeholder={t('auth.register.yearPlaceholder')}
             name="birthYear"
             value={allFormData.birthYear}
             onChange={handleInputChange}
@@ -423,7 +425,7 @@ const RegistrationForm = ({ onClose }) => {
       {/* Ұлт */}
       <div className="multi-step-form__section">
         <label className="multi-step-form__label">
-          Ұлт
+          {t('auth.register.nationality')}
           <select
             className="multi-step-form__select"
             name="nationality"
@@ -442,11 +444,11 @@ const RegistrationForm = ({ onClose }) => {
       {/* Тұрғылықты мекенжайы */}
       <div className="multi-step-form__section">
         <label className="multi-step-form__label">
-          Тұрғылықты мекенжайы
+          {t('auth.register.address')}
           <input
             type="text"
             className="multi-step-form__input"
-            placeholder="Мысалы: Астана қ, Шәміші көшесі 1/2"
+            placeholder={t('auth.register.addressPlaceholder', { fallback: 'Мысалы: Астана қ, Шәміші көшесі 1/2' })}
             name="address"
             value={allFormData.address}
             onChange={handleInputChange}
@@ -455,7 +457,7 @@ const RegistrationForm = ({ onClose }) => {
       </div>
 
       <button type="submit" className="multi-step-form__submit">
-        Жалғастыру
+        {t('auth.register.nextStep')}
       </button>
     </form>
   );
@@ -500,7 +502,7 @@ const RegistrationForm = ({ onClose }) => {
       <form className="multi-step-form__form" onSubmit={handleFinalSubmit}>
         {/* Білім секциясы */}
         <div className="multi-step-form__section">
-          <h3 className="multi-step-form__section-title">Білім</h3>
+          <h3 className="multi-step-form__section-title">{t('auth.register.knowledge')}</h3>
           <RadioGroupStep2
             name="knowledge"
             options={knowledgeOptions}
@@ -513,7 +515,7 @@ const RegistrationForm = ({ onClose }) => {
         {/* Өлкеметтік жағдайы */}
         <div className="multi-step-form__section">
           <label className="multi-step-form__label">
-            Өлкеметтік жағдайы
+            {t('auth.register.location')}
             <select
               className="multi-step-form__select"
               name="location"
@@ -533,21 +535,21 @@ const RegistrationForm = ({ onClose }) => {
         {/* Жұмыс орны */}
         <div className="multi-step-form__section">
           <label className="multi-step-form__label">
-            Жұмыс орны
+            {t('auth.register.workplace')}
             <input
               type="text"
               className="multi-step-form__input"
               name="workplace"
               value={allFormData.workplace}
               onChange={handleInputChange}
-              placeholder="Жұмыс орнын енгізіңіз"
+              placeholder={t('auth.register.workplacePlaceholder', { fallback: 'Жұмыс орнын енгізіңіз' })}
             />
           </label>
         </div>
 
         {/* Ғылыми дәреже */}
         <div className="multi-step-form__section">
-          <h3 className="multi-step-form__section-title">Ғылыми дәреже</h3>
+          <h3 className="multi-step-form__section-title">{t('auth.register.degree')}</h3>
           <RadioGroupStep2
             name="degree"
             options={degreeOptions}
@@ -560,14 +562,14 @@ const RegistrationForm = ({ onClose }) => {
         {/* Оқу орны */}
         <div className="multi-step-form__section">
           <label className="multi-step-form__label">
-            Оқу орны
+            {t('auth.register.studyPlace')}
             <input
               type="text"
               className="multi-step-form__input"
               name="studyPlace"
               value={allFormData.studyPlace}
               onChange={handleInputChange}
-              placeholder="Оқу орнын енгізіңіз"
+              placeholder={t('auth.register.studyPlaceholder', { fallback: 'Оқу орнын енгізіңіз' })}
             />
           </label>
         </div>
@@ -575,7 +577,7 @@ const RegistrationForm = ({ onClose }) => {
         {/* Email */}
         <div className="multi-step-form__section">
           <label className="multi-step-form__label">
-            Электрондық пошта мекенжайы
+            {t('auth.register.email')}
             <input
               type="email"
               className="multi-step-form__input"
@@ -593,7 +595,7 @@ const RegistrationForm = ({ onClose }) => {
           className="multi-step-form__submit"
           disabled={!allFormData.email.trim()}
         >
-          Дайын
+          {t('auth.register.register')}
         </button>
       </form>
     );
@@ -618,14 +620,14 @@ const RegistrationForm = ({ onClose }) => {
             onClick={handleGoBack}
             type="button"
           >
-            <img src={backButton} alt="Артқа" />
+            <img src={backButton} alt={t('auth.register.backButton')} />
           </button>
           <div className="multi-step-form__header-content">
-            <div className="multi-step-form__step">{currentStep}/2 қадам</div>
+            <div className="multi-step-form__step">{currentStep}/2 {t('auth.register.step')}</div>
             <h1 className="multi-step-form__title">
               {currentStep === 1
-                ? "Негізгі деректер"
-                : "Білімі туралы деректер"}
+                ? t('auth.register.basicData')
+                : t('auth.register.educationData')}
             </h1>
           </div>
         </div>
@@ -635,13 +637,13 @@ const RegistrationForm = ({ onClose }) => {
         </div>
 
         <div className="multi-step-form__switch">
-          <p>Аккаунтыңыз бар ма?</p>
+          <p>{t('auth.register.hasAccount')}</p>
           <button
             className="multi-step-form__switch-btn"
             onClick={handleSwitchToLogin}
             type="button"
           >
-            Кіру
+            {t('auth.register.signIn')}
           </button>
         </div>
       </div>

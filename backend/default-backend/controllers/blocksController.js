@@ -113,6 +113,15 @@ const blocksController = {
         deleteBlockImageFile(block.data.imagePath);
       }
 
+      // ВАЖНО: Если это image блок, удаляем все файлы изображений
+      if (block.type === 'image' && block.data?.images) {
+        for (const image of block.data.images) {
+          if (image.path) {
+            deleteBlockImageFile(image.path);
+          }
+        }
+      }
+
       // Удаляем сам блок
       await block.destroy({ transaction });
 

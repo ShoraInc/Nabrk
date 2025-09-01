@@ -80,6 +80,26 @@ const validateContactInfoBlock = (data) => {
       }
     }
   }
+
+  // Валидируем borderColor если он есть
+  if (data.borderColor !== undefined) {
+    if (typeof data.borderColor !== 'string') {
+      throw new Error('borderColor must be a string');
+    }
+    
+    // Проверяем что это hex цвет или transparent
+    if (data.borderColor !== 'transparent' && !data.borderColor.match(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/)) {
+      throw new Error('borderColor must be a valid hex color (e.g., #FF0000 or #F00) or "transparent"');
+    }
+    
+    // Проверяем что цвет из разрешенного списка (опционально)
+    if (BLOCK_OPTIONS['contact-info']?.borderColors) {
+      const allowedBorderColors = BLOCK_OPTIONS['contact-info'].borderColors;
+      if (!allowedBorderColors.includes(data.borderColor)) {
+        console.warn(`borderColor "${data.borderColor}" is not in the predefined list, but will be accepted`);
+      }
+    }
+  }
 };
 
 module.exports = {

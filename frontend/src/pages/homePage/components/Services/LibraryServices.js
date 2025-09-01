@@ -4,8 +4,11 @@ import BookOpen from './assets/icons/BookOpen.svg';
 import Laptop from './assets/icons/Laptop.svg';
 import Newspaper from './assets/icons/Newspaper.svg';
 import Question from './assets/icons/Question.svg';
+import { useTranslations } from '../../../../hooks/useTranslations';
 
 const LibraryServices = () => {
+  const { t } = useTranslations();
+  
   return (
     <section className="library-services">
       <div className="library-services__container">
@@ -19,7 +22,7 @@ const LibraryServices = () => {
               <img src={BookOpen} alt="Book Open" />
             </div>
             <h3 className="service-card__title">
-              Электронды каталог
+              {t('services.bookCatalog.title')}
             </h3>
           </div>
         </a>
@@ -29,7 +32,7 @@ const LibraryServices = () => {
           <div className="service-card__icon">
             <img src={Laptop} alt="Laptop" />
           </div>
-          <h3 className="service-card__title">Электронды кітапхана</h3>
+          <h3 className="service-card__title">{t('services.digitalResources.title')}</h3>
         </div>
 
         {/* Кітапханашыға сұрақ */}
@@ -37,7 +40,7 @@ const LibraryServices = () => {
           <div className="service-card__icon">
             <img src={Question} alt="Question" />
           </div>
-          <h3 className="service-card__title">Кітапханашыға сұрақ</h3>
+          <h3 className="service-card__title">{t('services.support.title')}</h3>
         </div>
 
         {/* Басшының жеке блогы */}
@@ -45,7 +48,7 @@ const LibraryServices = () => {
           <div className="service-card__icon">
             <img src={Newspaper} alt="Newspaper" />
           </div>
-          <h3 className="service-card__title">Басшының жеке блогы</h3>
+          <h3 className="service-card__title">{t('services.news.title')}</h3>
         </div>
 
       </div>

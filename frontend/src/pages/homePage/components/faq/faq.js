@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import "./FAQ.scss";
 import Plus from "./assets/icons/Plus.png";
 import X from "./assets/icons/X.png";
+import { useTranslations } from "../../../../hooks/useTranslations";
 
 export default function FAQ() {
+  const { t } = useTranslations();
   const [openItems, setOpenItems] = useState({});
 
   const toggleItem = (index) => {
@@ -14,41 +16,18 @@ export default function FAQ() {
     }));
   };
 
-  const faqItems = [
-    {
-      title: "Кітапханаға қалай тіркелуге болады?",
-      content:
-        "Кітапханаға тіркелу үшін жеке куәлігіңізбен келіп, тіркеу бөлімінде анкета толтырасыз. Процесс 5-10 минут алады.",
-    },
-    {
-      title: "Кітаптарды қанша уақытқа алуға болады?",
-      content:
-        "Әдеби кітаптарды 15 күнге, оқу әдебиеттерін 30 күнге алуға болады. Қажет болса, мерзімді ұзартуға мүмкіндік бар.",
-    },
-    {
-      title: "Электронды кітаптар қолжетімді ме?",
-      content:
-        "Иә, біздің электронды кітапхана базасында 10 000-нан астам кітап бар. Тіркелген оқырмандар логин/пароль арқылы кіре алады.",
-    },
-    {
-      title: "Кітапханада Wi-Fi бар ма?",
-      content:
-        "Иә, барлық оқу залдарында тегін Wi-Fi қолжетімді. Пароль тіркеу бөлімінен алуға болады.",
-    },
-    {
-      title: "Топтық сабақтарға зал брондауға бола ма?",
-      content:
-        "Әрине! Конференц-зал мен топтық жұмыс бөлмелерін алдын ала брондауға болады. +7 (XXX) XXX-XX-XX телефоны арқылы хабарласыңыз.",
-    },
-  ];
+  const faqItems = t('faq.questions').map((item, index) => ({
+    title: item.question,
+    content: item.answer
+  }));
 
   return (
     <div className="faq">
       <div className="faq__container">
         {/* Header */}
         <div className="faq__header">
-          <h2 className="faq__title">Жиі қойылатын сұрақтар</h2>
-          <button className="view-all-btn">БАРЛЫҒЫ</button>
+          <h2 className="faq__title">{t('faq.title')}</h2>
+          <button className="view-all-btn">{t('events.viewAll')}</button>
         </div>
 
         {/* FAQ Items */}

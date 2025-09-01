@@ -1,58 +1,56 @@
-// Variables
-$primary-color: #007bff;
-$border-color: #e1e5e9;
-$text-color: #495057;
-$white: #ffffff;
-$light-bg: #f8f9fa;
-$active-bg: #e3f2fd;
-$active-color: #1976d2;
-$success-color: #28a745;
-$shadow: rgba(0, 0, 0, 0.15);
-$shadow-light: rgba(0, 0, 0, 0.1);
-$focus-shadow: rgba(0, 123, 255, 0.25);
-
+// components/LanguageSelector/LanguageSelector.scss
 .language-selector {
   position: relative;
   display: inline-block;
+  font-family: 'Roboto Flex', -apple-system, BlinkMacSystemFont, sans-serif;
 
-  &__button {
-    padding: 10px 16px;
-    background-color: $white;
-    border: 1px solid $border-color;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    color: $text-color;
+  &__trigger {
     display: flex;
     align-items: center;
     gap: 8px;
-    min-width: 120px;
-    justify-content: space-between;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 1px 3px $shadow-light;
+    min-width: 100px;
+    justify-content: space-between;
 
     &:hover {
-      border-color: lighten($primary-color, 20%);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
-    &--active {
-      border-color: $primary-color;
-      box-shadow: 0 0 0 2px $focus-shadow;
+    &.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(212, 175, 55, 0.8);
     }
 
-    &--mobile {
-      padding: 8px 12px;
-      font-size: 14px;
-      min-width: 80px;
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3);
     }
+  }
+
+  &__flag {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &__text {
+    flex: 1;
+    text-align: left;
   }
 
   &__arrow {
     transition: transform 0.2s ease;
-    font-size: 12px;
+    opacity: 0.7;
 
-    &--rotated {
+    &.rotated {
       transform: rotate(180deg);
     }
   }
@@ -62,64 +60,128 @@ $focus-shadow: rgba(0, 123, 255, 0.25);
     top: 100%;
     left: 0;
     right: 0;
-    background-color: $white;
-    border: 1px solid $border-color;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px $shadow;
     z-index: 1000;
     margin-top: 4px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    animation: slideDown 0.2s ease;
   }
 
-  &__item {
-    padding: 10px 16px;
-    cursor: pointer;
-    font-size: 16px;
-    color: $text-color;
-    background-color: transparent;
-    border: none;
-    width: 100%;
-    text-align: left;
-    transition: background-color 0.2s ease;
+  &__dropdown-inner {
+    padding: 4px 0;
+  }
+
+  &__option {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 16px;
+    background: transparent;
+    border: none;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
 
     &:hover {
-      background-color: $light-bg;
+      background: #f9fafb;
     }
 
-    &--active {
-      background-color: $active-bg;
-      color: $active-color;
-      font-weight: 600;
+    &.active {
+      background: #f0f9ff;
+      color: #0369a1;
     }
 
-    &--mobile {
-      padding: 8px 12px;
-      font-size: 14px;
+    &:focus {
+      outline: none;
+      background: #f0f9ff;
     }
+  }
+
+  &__option-flag {
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  &__option-text {
+    flex: 1;
+    text-align: left;
   }
 
   &__check {
-    margin-left: 8px;
-    color: $success-color;
-    font-size: 12px;
+    color: #0369a1;
   }
-}
 
-// Responsive Design
-@media (max-width: 768px) {
-  .language-selector {
-    &__button {
-      padding: 8px 12px;
-      font-size: 14px;
+  // Варианты стилей
+  &.compact {
+    .language-selector__trigger {
+      padding: 6px 10px;
       min-width: 80px;
+      font-size: 13px;
     }
 
-    &__item {
-      padding: 8px 12px;
-      font-size: 14px;
+    .language-selector__text {
+      display: none;
+    }
+
+    .language-selector__flag {
+      font-size: 18px;
+    }
+  }
+
+  &.dark {
+    .language-selector__trigger {
+      background: rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 0, 0, 0.2);
+      color: #374151;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.15);
+      }
+
+      &.active {
+        border-color: rgba(212, 175, 55, 0.8);
+      }
+    }
+  }
+
+  // Анимации
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // Адаптивность
+  @media (max-width: 768px) {
+    &__trigger {
+      padding: 6px 10px;
+      min-width: 70px;
+      font-size: 13px;
+    }
+
+    &__text {
+      display: none;
+    }
+
+    &__flag {
+      font-size: 18px;
+    }
+
+    &__dropdown {
+      left: -50px;
+      right: -50px;
+      min-width: 150px;
     }
   }
 }

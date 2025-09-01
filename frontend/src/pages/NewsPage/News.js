@@ -60,8 +60,13 @@ export default function News() {
     }
   };
 
-  const handleNewsClick = (newsId) => {
-    navigate(generateRoute.newsDetail(newsId));
+  const handleNewsClick = (news) => {
+    // Если есть внешняя ссылка - переходим по ней, иначе на стандартную страницу
+    if (news.externalUrl) {
+      window.open(news.externalUrl, '_blank');
+    } else {
+      navigate(generateRoute.newsDetail(news.id));
+    }
   };
 
   const formatDate = (dateString) => {
@@ -70,7 +75,7 @@ export default function News() {
 
   // Компонент карточки новости
   const NewsCard = ({ news }) => (
-    <div className="news-card" onClick={() => handleNewsClick(news.id)}>
+    <div className="news-card" onClick={() => handleNewsClick(news)}>
       <div className="news-card-image-container">
         {news.imageUrl ? (
           <img 

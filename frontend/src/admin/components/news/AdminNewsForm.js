@@ -14,11 +14,13 @@ const AdminNewsForm = () => {
     title: '',
     content: '',
     shortDescription: '',
+    externalUrl: '',
     language: 'kz'
   });
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [currentImageUrl, setCurrentImageUrl] = useState(null);
+  const [originalExternalUrl, setOriginalExternalUrl] = useState('');
   const [imageChanged, setImageChanged] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -43,12 +45,14 @@ const AdminNewsForm = () => {
       const data = await NewsApi.getNewsTranslations(id);
       setTranslations(data.translations);
       setCurrentImageUrl(data.imageUrl);
+      setOriginalExternalUrl(data.externalUrl || '');
       
       if (data.translations[currentLang]) {
         setFormData({
           title: data.translations[currentLang].title || '',
           content: data.translations[currentLang].content || '',
           shortDescription: data.translations[currentLang].shortDescription || '',
+          externalUrl: data.externalUrl || '',
           language: currentLang
         });
       }
@@ -107,29 +111,12 @@ const AdminNewsForm = () => {
       title: langData.title || '',
       content: langData.content || '',
       shortDescription: langData.shortDescription || '',
+      externalUrl: formData.externalUrl, // externalUrl не зависит от языка
       language: langCode
     });
   };
 
-  const updateNewsImage = async () => {
-    if (!imageChanged) return;
 
-    const imageFormData = new FormData();
-    if (imageFile) {
-      imageFormData.append('image', imageFile);
-    }
-
-    try {
-      const result = await NewsApi.updateNews(id, imageFormData);
-      setCurrentImageUrl(result.imageUrl);
-      setImageChanged(false);
-      setImagePreview(null);
-      return result.imageUrl;
-    } catch (err) {
-      console.error('Error updating image:', err);
-      throw err;
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -144,9 +131,32 @@ const AdminNewsForm = () => {
       setError(null);
 
       if (isEdit) {
-        // Update image first if it was changed
-        if (imageChanged) {
-          await updateNewsImage();
+        // Update image and externalUrl if needed
+        const externalUrlChanged = formData.externalUrl !== originalExternalUrl;
+        console.log('Update check:', {
+          imageChanged,
+          externalUrlChanged,
+          currentExternalUrl: formData.externalUrl,
+          originalExternalUrl
+        });
+        
+        if (imageChanged || externalUrlChanged) {
+          console.log('Updating news with externalUrl:', formData.externalUrl);
+          const updateFormData = new FormData();
+          if (imageFile) {
+            updateFormData.append('image', imageFile);
+          }
+          updateFormData.append('externalUrl', formData.externalUrl || '');
+          
+          const result = await NewsApi.updateNews(id, updateFormData);
+          console.log('Update result:', result);
+          
+          if (result.imageUrl) {
+            setCurrentImageUrl(result.imageUrl);
+          }
+          setImageChanged(false);
+          setImagePreview(null);
+          setOriginalExternalUrl(formData.externalUrl || '');
         }
 
         // Update current language translation
@@ -171,6 +181,7 @@ const AdminNewsForm = () => {
           title: formData.title,
           content: formData.content,
           shortDescription: formData.shortDescription,
+          externalUrl: formData.externalUrl,
           language: formData.language,
           image: imageFile
         };
@@ -298,6 +309,24 @@ const AdminNewsForm = () => {
                   />
                   <p className="mt-2 text-sm text-gray-500">
                     Это описание будет отображаться в списке новостей (рекомендуется до 150 символов)
+                  </p>
+                </div>
+
+                {/* Внешняя ссылка */}
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                  <label className="block text-sm font-semibold text-gray-700 mb-3">
+                    Внешняя ссылка (необязательно)
+                  </label>
+                  <input
+                    type="url"
+                    name="externalUrl"
+                    value={formData.externalUrl}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="https://example.com/article"
+                  />
+                  <p className="mt-2 text-sm text-gray-500">
+                    Если указана внешняя ссылка, при клике на новость пользователь перейдет по этой ссылке вместо стандартной страницы детализации
                   </p>
                 </div>
 

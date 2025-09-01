@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Events.scss";
 import TimeIcon from "./assets/icons/clock.png";
+import AddressIcon from "./assets/icons/AddressIcon.png";
 import EventsApi from "../../../../api/eventsApi";
+import { useTranslations } from "../../../../hooks/useTranslations";
 
 export default function Events() {
   const [activeDate, setActiveDate] = useState(0);
@@ -9,10 +11,11 @@ export default function Events() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const tabsRef = useRef(null);
+  const { t, currentLanguage } = useTranslations();
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [currentLanguage]);
 
   useEffect(() => {
     const tabs = tabsRef.current;
@@ -30,7 +33,7 @@ export default function Events() {
       setError(null);
 
       const response = await EventsApi.getActiveEvents({
-        lang: "kz",
+        lang: currentLanguage,
       });
 
       let upcomingDates = [];
@@ -204,7 +207,7 @@ export default function Events() {
             fontSize: "14px",
           }}
         >
-          Қайта жүктеу
+          {t('events.retry')}
         </button>
       </div>
     </div>
@@ -227,7 +230,7 @@ export default function Events() {
           margin: "0 0 4px 0",
         }}
       >
-        Бұл күні іс-шаралар жоқ
+        {t('events.noEvents')}
       </h3>
       <p
         style={{
@@ -236,7 +239,7 @@ export default function Events() {
           margin: 0,
         }}
       >
-        Басқа күндерді таңдап көріңіз
+        {t('events.noEventsDescription')}
       </p>
     </div>
   );
@@ -248,15 +251,14 @@ export default function Events() {
 
   return (
     <div className="events-container">
-      <h1 className="events-title">Іс-шаралар күнтізбесі</h1>
+      <h1 className="events-title">{t('events.title')}</h1>
 
       <div className="date-tabs" ref={tabsRef}>
         {eventsData.map((item, index) => (
           <button
             key={index}
-            className={`date-tab ${activeDate === index ? "active" : ""} ${
-              item.hasEvents ? "has-events" : ""
-            }`}
+            className={`date-tab ${activeDate === index ? "active" : ""} ${item.hasEvents ? "has-events" : ""
+              }`}
             onClick={() => setActiveDate(index)}
           >
             <span className="date">{item.date}</span>
@@ -298,7 +300,8 @@ export default function Events() {
                 <h3 className="event-title">{event.title}</h3>
               </div>
               <div className="event-location">
-                <span className="location-icon">📍</span>
+                <span className="location-icon"><img style={{ width: "16px", height: "16px" }} src={AddressIcon} alt="address" />
+                </span>
                 <span className="location-text">{event.location}</span>
               </div>
             </div>

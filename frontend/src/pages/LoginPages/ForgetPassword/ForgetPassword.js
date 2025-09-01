@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { switchToLogin } from "../../../store/modalSlice";
 import AuthApi from "../../../api/authApi";
+import { useTranslations } from "../../../hooks/useTranslations";
 
 const ForgetPassword = ({ onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslations();
 
   const [formData, setFormData] = useState({
     inputValue: "",
@@ -34,7 +36,7 @@ const ForgetPassword = ({ onClose }) => {
     e.preventDefault();
 
     if (!formData.inputValue.trim()) {
-      alert('Электронды поштаны толтырыңыз');
+      alert(t('auth.forgotPassword.fillRequired'));
       return;
     }
 
@@ -48,11 +50,11 @@ const ForgetPassword = ({ onClose }) => {
       
       console.log("Password recovery response:", response);
       
-      alert("Сілтеме электронды поштаңызға жіберілді!");
+      alert(t('auth.forgotPassword.success'));
       onClose();
     } catch (error) {
       console.error("Reset error:", error);
-      alert(`Құпия сөзді қалпына келтіру қатесі: ${error.message}`);
+      alert(`${t('auth.forgotPassword.error')}: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -70,10 +72,10 @@ const ForgetPassword = ({ onClose }) => {
         <div className="forget-password__content">
           <div className="forget-password__header">
             <h1 className="forget-password__title">
-              Құпия сөзді қалпына келтіру
+              {t('auth.forgotPassword.title')}
             </h1>
             <p className="forget-password__description">
-              Жаңа құпия сөз сіздің электронды поштаға жөберіледі
+              {t('auth.forgotPassword.description')}
             </p>
           </div>
 
@@ -89,7 +91,7 @@ const ForgetPassword = ({ onClose }) => {
                 }`}
                 onClick={() => handleMethodChange("email")}
               >
-                Электронды пошта
+                {t('auth.forgotPassword.emailMethod')}
               </button>
               <button
                 type="button"
@@ -100,7 +102,7 @@ const ForgetPassword = ({ onClose }) => {
                 }`}
                 onClick={() => handleMethodChange("student")}
               >
-                Оқырман билеті
+                {t('auth.forgotPassword.studentMethod')}
               </button>
             </div>
 
@@ -108,8 +110,8 @@ const ForgetPassword = ({ onClose }) => {
             <div className="forget-password__field">
               <label className="forget-password__label">
                 {formData.loginMethod === "email"
-                  ? "Электрондық пошта мекенжайы"
-                  : "Оқырман билетінің нөмірі"}
+                  ? t('auth.forgotPassword.emailAddress')
+                  : t('auth.forgotPassword.readerCardNumber')}
                 <input
                   type={formData.loginMethod === "email" ? "email" : "text"}
                   className="forget-password__input"
@@ -118,8 +120,8 @@ const ForgetPassword = ({ onClose }) => {
                   onChange={handleInputChange}
                   placeholder={
                     formData.loginMethod === "email"
-                      ? "yourmail@mail.com"
-                      : "Оқырман нөміріңізді енгізіңіз"
+                      ? t('auth.forgotPassword.emailPlaceholder')
+                      : t('auth.forgotPassword.readerPlaceholder')
                   }
                   required
                   disabled={isLoading}
@@ -133,7 +135,7 @@ const ForgetPassword = ({ onClose }) => {
               className="forget-password__submit"
               disabled={!formData.inputValue.trim() || isLoading}
             >
-              {isLoading ? "Сілтеме жіберу..." : "Сілтеме жіберу"}
+              {isLoading ? t('auth.forgotPassword.loading') : t('auth.forgotPassword.submit')}
             </button>
           </form>
 
@@ -144,7 +146,7 @@ const ForgetPassword = ({ onClose }) => {
               onClick={handleBackToLogin}
               type="button"
             >
-              ← Кіруге оралу
+              {t('auth.forgotPassword.backToLogin')}
             </button>
           </div>
         </div>

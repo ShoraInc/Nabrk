@@ -37,6 +37,7 @@ const getAllNews = async (req, res) => {
           title: title?.textValue || "No translation",
           shortDescription: shortDescription?.textValue || null,
           imageUrl: item.imageUrl,
+          externalUrl: item.externalUrl,
           views: item.views,
           publishedDate: item.publishedDate,
         };
@@ -91,6 +92,7 @@ const getNewsById = async (req, res) => {
       shortDescription: shortDescription?.textValue || null,
       content: content?.textValue || "No translation",
       imageUrl: news.imageUrl,
+      externalUrl: news.externalUrl,
       views: news.views + 1,
       publishedDate: news.publishedDate,
     });
@@ -102,7 +104,7 @@ const getNewsById = async (req, res) => {
 // Create news draft
 const createNewsDraft = async (req, res) => {
   try {
-    const { title, content, shortDescription, language = "kz" } = req.body;
+    const { title, content, shortDescription, externalUrl, language = "kz" } = req.body;
     const imageUrl = req.body.imageUrl; // Set by processUploadedImage middleware
 
     if (!title || !content) {
@@ -145,6 +147,7 @@ const createNewsDraft = async (req, res) => {
       contentTextId: contentText.id,
       shortDescriptionTextId: shortDescriptionText?.id || null,
       imageUrl: imageUrl || null,
+      externalUrl: externalUrl || null,
       isPublished: false,
     });
 
@@ -172,6 +175,7 @@ const createNewsDraft = async (req, res) => {
 const updateNews = async (req, res) => {
   try {
     const { id } = req.params;
+    const { externalUrl } = req.body;
     const imageUrl = req.body.imageUrl; // Set by processUploadedImage middleware
 
     const news = await News.findByPk(id);
@@ -182,10 +186,13 @@ const updateNews = async (req, res) => {
     // Store old image URL for deletion
     const oldImageUrl = news.imageUrl;
 
-    // Update news with new image if provided
+    // Update news with new data
     const updateData = {};
     if (imageUrl) {
       updateData.imageUrl = imageUrl;
+    }
+    if (externalUrl !== undefined) {
+      updateData.externalUrl = externalUrl || null;
     }
 
     if (Object.keys(updateData).length > 0) {
@@ -280,6 +287,7 @@ const getNewsTranslations = async (req, res) => {
       newsId: news.id,
       translations,
       imageUrl: news.imageUrl,
+      externalUrl: news.externalUrl,
       isPublished: news.isPublished,
     });
   } catch (error) {

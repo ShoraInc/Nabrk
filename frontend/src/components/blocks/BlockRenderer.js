@@ -7,6 +7,8 @@ import ContactInfoBlock from './ContactInfoBlock';
 import FaqBlock from './FaqBlock';
 import TextImageBlock from './TextImageBlock';
 import ButtonBlock from './ButtonBlock';
+import TextBlock from './TextBlock';
+import ImageBlock from './ImageBlock';
 
 const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
   const renderBlock = () => {
@@ -58,6 +60,24 @@ const BlockRenderer = ({ block, currentLanguage = 'kz', isMobile = false }) => {
       case 'button':
         return (
           <ButtonBlock 
+            block={block}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'text':
+        return (
+          <TextBlock 
+            block={block}
+            currentLanguage={currentLanguage}
+            isMobile={isMobile}
+          />
+        );
+      
+      case 'image':
+        return (
+          <ImageBlock 
             block={block}
             currentLanguage={currentLanguage}
             isMobile={isMobile}

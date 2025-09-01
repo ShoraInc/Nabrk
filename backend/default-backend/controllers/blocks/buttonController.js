@@ -17,6 +17,7 @@ const buttonController = {
         width = "100%", // ширина по процентам
         backgroundColor = "#D4AF37", // золотистый цвет как на фото
         textColor = "#000000",
+        fontWeight = "600", // по умолчанию средняя жирность
         marginTop = 0,
         marginBottom = 16,
         isHidden,
@@ -63,6 +64,7 @@ const buttonController = {
         width,
         backgroundColor,
         textColor,
+        fontWeight,
         marginTop: marginTopNum,
         marginBottom: marginBottomNum,
       };
@@ -116,6 +118,7 @@ const buttonController = {
         width,
         backgroundColor,
         textColor,
+        fontWeight,
         marginTop,
         marginBottom,
       } = req.body;
@@ -144,6 +147,7 @@ const buttonController = {
       if (width !== undefined) dataUpdates.width = width;
       if (backgroundColor !== undefined) dataUpdates.backgroundColor = backgroundColor;
       if (textColor !== undefined) dataUpdates.textColor = textColor;
+      if (fontWeight !== undefined) dataUpdates.fontWeight = fontWeight;
       if (marginTopNum !== undefined) dataUpdates.marginTop = marginTopNum;
       if (marginBottomNum !== undefined) dataUpdates.marginBottom = marginBottomNum;
 

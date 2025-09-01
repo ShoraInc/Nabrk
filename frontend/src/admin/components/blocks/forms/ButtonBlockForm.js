@@ -16,6 +16,7 @@ const ButtonBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden })
     width: '100%',
     backgroundColor: '#D4AF37', // Золотистый как на фото
     textColor: '#000000',
+    fontWeight: '600', // Средняя жирность по умолчанию
     marginTop: 0,
     marginBottom: 16,
     isHidden: false,
@@ -55,6 +56,7 @@ const ButtonBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden })
       width: data.width || '100%',
       backgroundColor: data.backgroundColor || '#D4AF37',
       textColor: data.textColor || '#000000',
+      fontWeight: data.fontWeight || '600',
       marginTop: data.marginTop || 0,
       marginBottom: data.marginBottom || 16,
       isHidden: editingBlock.isHidden || false,
@@ -308,6 +310,29 @@ const ButtonBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidden })
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Толщина шрифта */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Толщина шрифта
+          </label>
+          <select
+            value={formData.fontWeight}
+            onChange={(e) => handleStyleChange('fontWeight', e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {blockOptions.button?.fontWeights?.map((weight) => (
+              <option key={weight} value={weight}>
+                {weight === '300' ? 'Тонкий (300)' :
+                 weight === '400' ? 'Обычный (400)' :
+                 weight === '500' ? 'Средний (500)' :
+                 weight === '600' ? 'Полужирный (600)' :
+                 weight === '700' ? 'Жирный (700)' :
+                 weight === '800' ? 'Очень жирный (800)' : weight}
+              </option>
+            ))}
+          </select>
         </div>
 
         {/* Отступы */}

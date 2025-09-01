@@ -7,6 +7,7 @@ const News = sequelize.define("News", {
     shortDescriptionTextId: { type: DataTypes.INTEGER, allowNull: true },
     contentTextId: { type: DataTypes.INTEGER, allowNull: false },
     imageUrl: { type: DataTypes.STRING, allowNull: true },
+    externalUrl: { type: DataTypes.STRING, allowNull: true },
     views: { type: DataTypes.INTEGER, defaultValue: 0 },
     publishedDate: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
     isPublished: { type: DataTypes.BOOLEAN, defaultValue: true }

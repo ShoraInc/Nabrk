@@ -1,7 +1,10 @@
 import React from "react";
 import BooksSection from "../BooksSection/BooksSection";
+import { useTranslations } from "../../../../hooks/useTranslations";
 
 const LatestPublicationsPage = () => {
+  const { t } = useTranslations();
+  
   const allPublications = [
     {
       id: 1,
@@ -67,7 +70,7 @@ const LatestPublicationsPage = () => {
 
   return (
     <BooksSection
-      title="Соңғы түскен кітаптар"
+      title={t('books.title')}
       books={allPublications}
       showReadCount={false}
       className="latest-publications"

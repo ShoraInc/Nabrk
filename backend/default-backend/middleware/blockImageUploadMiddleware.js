@@ -47,12 +47,15 @@ const uploadForBlockImage = multer({
     fileFilter: blockImageFilter,
     limits: {
         fileSize: 10 * 1024 * 1024, // 10MB limit for block images
-        files: 1 // Only one file at a time
+        files: 10 // Up to 10 files for image blocks
     }
 });
 
-// Single block image upload middleware
+// Single block image upload middleware (for text-image blocks)
 const uploadBlockImage = uploadForBlockImage.single('image');
+
+// Multiple block images upload middleware (for image blocks)
+const uploadMultipleBlockImages = uploadForBlockImage.array('images', 10);
 
 // Error handling middleware for block images
 const handleBlockImageUploadError = (err, req, res, next) => {
@@ -93,6 +96,17 @@ const processBlockImage = (req, res, next) => {
     next();
 };
 
+// Process multiple uploaded images
+const processMultipleBlockImages = (files, req) => {
+    if (files && files.length > 0) {
+        files.forEach(file => {
+            // Add URL to each file object
+            file.url = `/uploads/blocks/${file.filename}`;
+            console.log(`Block image uploaded: ${file.filename}`);
+        });
+    }
+};
+
 // Helper function to delete block image file
 const deleteBlockImageFile = (imagePath) => {
     if (imagePath && fs.existsSync(imagePath)) {
@@ -114,15 +128,29 @@ const cleanupPageBlockImages = async (pageId, Blocks) => {
         const blocks = await Blocks.findAll({
             where: { 
                 pageId: pageId,
-                type: 'text-image' // Only text-image blocks have images
+                type: {
+                    [require('sequelize').Op.in]: ['text-image', 'image'] // Both text-image and image blocks have images
+                }
             }
         });
 
         let deletedCount = 0;
         for (const block of blocks) {
-            if (block.data?.imagePath) {
+            // Handle text-image blocks
+            if (block.type === 'text-image' && block.data?.imagePath) {
                 if (deleteBlockImageFile(block.data.imagePath)) {
                     deletedCount++;
+                }
+            }
+            
+            // Handle image blocks (multiple images)
+            if (block.type === 'image' && block.data?.images) {
+                for (const image of block.data.images) {
+                    if (image.path) {
+                        if (deleteBlockImageFile(image.path)) {
+                            deletedCount++;
+                        }
+                    }
                 }
             }
         }
@@ -137,8 +165,10 @@ const cleanupPageBlockImages = async (pageId, Blocks) => {
 
 module.exports = {
     uploadBlockImage,
+    uploadMultipleBlockImages,
     handleBlockImageUploadError,
     processBlockImage,
+    processMultipleBlockImages,
     deleteBlockImageFile,
     cleanupPageBlockImages
 };

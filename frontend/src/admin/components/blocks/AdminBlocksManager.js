@@ -387,6 +387,7 @@ const AdminBlocksManager = () => {
               <BlockCreator
                 pageId={pageId}
                 editingBlock={editingBlock}
+                order={editingBlock ? editingBlock.order : (blocks.length > 0 ? Math.max(...blocks.map(b => b.order)) + 1 : 1)}
                 onBlockCreated={handleBlockCreated}
                 onBlockUpdated={handleBlockUpdated}
                 onCancel={() => {

@@ -3,9 +3,14 @@ import "./Hero.scss";
 // import HeroImage from "../../../../assets/images/hero-image.png";
 import { openLoginModal } from "../../../../store/modalSlice";
 import { useDispatch } from "react-redux";
+import { useTranslations } from "../../../../hooks/useTranslations";
+import LanguageSelector from "../../../../components/LanguageSelector/LanguageSelector";
+import useMobileDetection from "../../../../hooks/useMobileDetection";
 
 const Header = ({ isTransparent = false }) => {
-  const [activeNav, setActiveNav] = useState("БАСТЫ БЕТ");
+  const { t } = useTranslations();
+  const [activeNav, setActiveNav] = useState(t('header.home'));
+  const isMobile = useMobileDetection();
 
   const dispatch = useDispatch();
 
@@ -29,21 +34,21 @@ const Header = ({ isTransparent = false }) => {
           <a
             href="#"
             className={`header__nav-link ${
-              activeNav === "БАСТЫ БЕТ" ? "header__nav-link--active" : ""
+              activeNav === t('header.home') ? "header__nav-link--active" : ""
             }`}
-            onClick={() => setActiveNav("БАСТЫ БЕТ")}
+            onClick={() => setActiveNav(t('header.home'))}
           >
-            БАСТЫ БЕТ
+            {t('header.home').toUpperCase()}
           </a>
           <div className="header__nav-dropdown">
             <a
               href="#"
               className={`header__nav-link ${
-                activeNav === "КІТАПХАНА" ? "header__nav-link--active" : ""
+                activeNav === t('header.library') ? "header__nav-link--active" : ""
               }`}
-              onClick={() => setActiveNav("КІТАПХАНА")}
+              onClick={() => setActiveNav(t('header.library'))}
             >
-              КІТАПХАНА
+              {t('header.library').toUpperCase()}
               <span className="header__nav-arrow">▼</span>
             </a>
           </div>
@@ -51,11 +56,11 @@ const Header = ({ isTransparent = false }) => {
             <a
               href="#"
               className={`header__nav-link ${
-                activeNav === "ОҚЫРМАНДАРҒА" ? "header__nav-link--active" : ""
+                activeNav === t('header.readers') ? "header__nav-link--active" : ""
               }`}
-              onClick={() => setActiveNav("ОҚЫРМАНДАРҒА")}
+              onClick={() => setActiveNav(t('header.readers'))}
             >
-              ОҚЫРМАНДАРҒА
+              {t('header.readers').toUpperCase()}
               <span className="header__nav-arrow">▼</span>
             </a>
           </div>
@@ -63,19 +68,20 @@ const Header = ({ isTransparent = false }) => {
             <a
               href="#"
               className={`header__nav-link ${
-                activeNav === "РЕСУРСТАР" ? "header__nav-link--active" : ""
+                activeNav === t('header.resources') ? "header__nav-link--active" : ""
               }`}
-              onClick={() => setActiveNav("РЕСУРСТАР")}
+              onClick={() => setActiveNav(t('header.resources'))}
             >
-              РЕСУРСТАР
+              {t('header.resources').toUpperCase()}
               <span className="header__nav-arrow">▼</span>
             </a>
           </div>
         </nav>
 
         <div className="header__auth">
+          <LanguageSelector variant="default" />
           <button onClick={handleOpenModal} className="header__login-btn">
-            ЛОГИН
+            {t('header.login').toUpperCase()}
             <span className="header__login-arrow">→</span>
           </button>
           <button className="header__menu-btn">
@@ -91,6 +97,8 @@ const Header = ({ isTransparent = false }) => {
 };
 
 const Hero = () => {
+  const { t } = useTranslations();
+  
   return (
     <div className="home-page">
       <Header isTransparent={true} />
@@ -102,21 +110,20 @@ const Hero = () => {
         <div className="hero__overlay"></div>
         <div className="hero__content">
           <h1 className="hero__title">
-            Қазақстан
-            <br />
-            Республикасының
-            <br />
-            Ұлттық Академиялық
-            <br />
-            Кітапханасы
+            {t('hero.title').split(' ').map((word, index, array) => (
+              <React.Fragment key={index}>
+                {word}
+                {index < array.length - 1 && (index + 1) % 2 === 0 ? <br /> : ' '}
+              </React.Fragment>
+            ))}
           </h1>
 
           <div className="hero__buttons">
             <button className="hero__btn hero__btn--primary">
-              БАТЫРМА 1<span className="hero__btn-arrow">→</span>
+              {t('hero.button1')}<span className="hero__btn-arrow">→</span>
             </button>
             <button className="hero__btn hero__btn--secondary">
-              БАТЫРМА 2<span className="hero__btn-arrow">▷</span>
+              {t('hero.button2')}<span className="hero__btn-arrow">▷</span>
             </button>
           </div>
         </div>

@@ -32,6 +32,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
       iconSize: "medium",
     },
     backgroundColor: "#FFFFFF", // Белый по умолчанию
+    borderColor: "transparent", // Без границы по умолчанию
     isHidden: false, // <-- добавить по умолчанию
   });
 
@@ -378,6 +379,7 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
           iconSize: blockData.data?.settings?.iconSize || "medium",
         },
         backgroundColor: blockData.data?.backgroundColor || "#FFFFFF",
+        borderColor: blockData.data?.borderColor || "transparent",
         isHidden: blockData.isHidden || false, // <-- исправлено здесь
       });
 
@@ -761,6 +763,44 @@ const ContactInfoBlockForm = ({ pageId, editingBlock, onSubmit, onCancel, isHidd
                   {blockOptions['contact-info'].backgroundColors.map((color) => (
                     <option key={color} value={color}>
                       {color} {color === '#FFFFFF' ? '(белый)' : color === '#F9FAFB' ? '(светло-серый)' : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          )}
+
+          {/* Цвет границы */}
+          {blockOptions?.['contact-info']?.borderColors && (
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Цвет границы контейнера
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="color"
+                  value={formData.borderColor === 'transparent' ? '#000000' : (formData.borderColor || '#000000')}
+                  onChange={(e) => setFormData(prev => ({ ...prev, borderColor: e.target.value }))}
+                  className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                  disabled={formData.borderColor === 'transparent'}
+                />
+                <select
+                  value={formData.borderColor || "transparent"}
+                  onChange={(e) => setFormData(prev => ({ ...prev, borderColor: e.target.value }))}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  {blockOptions['contact-info'].borderColors.map((color) => (
+                    <option key={color} value={color}>
+                      {color === 'transparent' ? 'Без границы' : 
+                       color === '#D4AF37' ? 'Золотой' : 
+                       color === '#B8860B' ? 'Темно-золотой' :
+                       color === '#E5E7EB' ? 'Светло-серый' :
+                       color === '#6B7280' ? 'Серый' :
+                       color === '#374151' ? 'Темно-серый' :
+                       color === '#EF4444' ? 'Красный' :
+                       color === '#10B981' ? 'Зеленый' :
+                       color === '#3B82F6' ? 'Синий' :
+                       color === '#8B5CF6' ? 'Фиолетовый' : color}
                     </option>
                   ))}
                 </select>

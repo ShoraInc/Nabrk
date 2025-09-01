@@ -5,6 +5,8 @@ import ContactInfoBlockForm from '../admin/components/blocks/forms/ContactInfoBl
 import FaqBlockForm from '../admin/components/blocks/forms/FaqBlockForm';
 import TextImageBlockForm from '../admin/components/blocks/forms/TextImageBlockForm';
 import ButtonBlockForm from '../admin/components/blocks/forms/ButtonBlockForm';
+import TextBlockForm from '../admin/components/blocks/forms/TextBlockForm';
+import ImageBlockForm from '../admin/components/blocks/forms/ImageBlockForm';
 
 export const BLOCK_TYPES_CONFIG = {
   title: {
@@ -54,6 +56,22 @@ export const BLOCK_TYPES_CONFIG = {
     category: 'interactive',
     hasTranslations: true,
     FormComponent: ButtonBlockForm,
+  },
+  text: {
+    name: 'Текст',
+    description: 'Простой текстовый блок с настройками стилей',
+    icon: '📄',
+    category: 'content',
+    hasTranslations: true,
+    FormComponent: TextBlockForm,
+  },
+  image: {
+    name: 'Изображения',
+    description: 'Одно изображение, галерея или слайдер',
+    icon: '🖼️',
+    category: 'media',
+    hasTranslations: false,
+    FormComponent: ImageBlockForm,
   },
 };
 

@@ -586,6 +586,272 @@ const blocksApi = {
       throw error;
     }
   },
+
+  // =============================================================================
+  // TEXT BLOCK API METHODS
+  // =============================================================================
+
+  // Создать text блок
+  createTextBlock: async (blockData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blockData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error creating text block:", error);
+      throw error;
+    }
+  },
+
+  // Получить text блок по ID
+  getTextBlock: async (blockId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text/${blockId}`);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching text block:", error);
+      throw error;
+    }
+  },
+
+  // Обновить text блок
+  updateTextBlock: async (blockId, blockData) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text/${blockId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(blockData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error updating text block:", error);
+      throw error;
+    }
+  },
+
+  // Удалить text блок
+  deleteTextBlock: async (blockId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text/${blockId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting text block:", error);
+      throw error;
+    }
+  },
+
+  // Добавить/обновить перевод text блока
+  upsertTextTranslation: async (blockId, language, text) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text/${blockId}/translations/${language}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error upserting text translation:", error);
+      throw error;
+    }
+  },
+
+  // Получить все переводы text блока
+  getTextTranslations: async (blockId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text/${blockId}/translations`);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching text translations:", error);
+      throw error;
+    }
+  },
+
+  // Удалить перевод text блока
+  deleteTextTranslation: async (blockId, language) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/blocks/text/${blockId}/translations/${language}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error deleting text translation:", error);
+      throw error;
+    }
+  },
+  // ========================
+  // Image Block API Methods  
+  // ========================
+
+  // Создание image блока
+  createImageBlock: async (blockData) => {
+    const formData = new FormData();
+    
+    // Добавляем основные поля
+    formData.append('pageId', blockData.pageId);
+    formData.append('order', blockData.order);
+    formData.append('displayMode', blockData.displayMode || 'single');
+    formData.append('aspectRatio', blockData.aspectRatio || 'auto');
+    formData.append('alignment', blockData.alignment || 'center');
+    formData.append('marginTop', blockData.marginTop || 0);
+    formData.append('marginBottom', blockData.marginBottom || 16);
+    formData.append('autoPlay', blockData.autoPlay || false);
+    formData.append('showDots', blockData.showDots !== undefined ? blockData.showDots : true);
+    formData.append('showArrows', blockData.showArrows !== undefined ? blockData.showArrows : true);
+    formData.append('slideSpeed', blockData.slideSpeed || 5000);
+    formData.append('isHidden', blockData.isHidden || false);
+    
+    // Добавляем изображения
+    if (blockData.images && blockData.images.length > 0) {
+      blockData.images.forEach((imageData, index) => {
+        if (imageData.file) {
+          formData.append('images', imageData.file);
+        }
+        if (imageData.alt) {
+          formData.append(`alt_${index}`, imageData.alt);
+        }
+        if (imageData.caption) {
+          formData.append(`caption_${index}`, imageData.caption);
+        }
+      });
+    }
+
+    const response = await fetch(`${API_BASE_URL}/blocks/image`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to create image block');
+    }
+
+    return await response.json();
+  },
+
+  // Получение image блока
+  getImageBlock: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/blocks/image/${id}`);
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to get image block');
+    }
+
+    return await response.json();
+  },
+
+  // Обновление image блока
+  updateImageBlock: async (id, blockData) => {
+    const formData = new FormData();
+    
+    // Добавляем основные поля
+    formData.append('displayMode', blockData.displayMode || 'single');
+    formData.append('aspectRatio', blockData.aspectRatio || 'auto');
+    formData.append('alignment', blockData.alignment || 'center');
+    formData.append('marginTop', blockData.marginTop || 0);
+    formData.append('marginBottom', blockData.marginBottom || 16);
+    formData.append('autoPlay', blockData.autoPlay || false);
+    formData.append('showDots', blockData.showDots !== undefined ? blockData.showDots : true);
+    formData.append('showArrows', blockData.showArrows !== undefined ? blockData.showArrows : true);
+    formData.append('slideSpeed', blockData.slideSpeed || 5000);
+    formData.append('isHidden', blockData.isHidden || false);
+    formData.append('keepExistingImages', blockData.keepExistingImages || false);
+    
+    // Добавляем новые изображения
+    if (blockData.images && blockData.images.length > 0) {
+      blockData.images.forEach((imageData, index) => {
+        if (imageData.file) {
+          formData.append('images', imageData.file);
+        }
+        if (imageData.alt) {
+          formData.append(`alt_${index}`, imageData.alt);
+        }
+        if (imageData.caption) {
+          formData.append(`caption_${index}`, imageData.caption);
+        }
+      });
+    }
+
+    const response = await fetch(`${API_BASE_URL}/blocks/image/${id}`, {
+      method: 'PUT',
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to update image block');
+    }
+
+    return await response.json();
+  },
+
+  // Удаление image блока
+  deleteImageBlock: async (id) => {
+    const response = await fetch(`${API_BASE_URL}/blocks/image/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to delete image block');
+    }
+
+    return await response.json();
+  },
+
 };
 
 export default blocksApi;

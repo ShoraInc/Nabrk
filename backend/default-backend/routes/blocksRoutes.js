@@ -8,6 +8,8 @@ const lineRoutes = require("./blocks/lineRoutes");
 const contactInfoRoutes = require("./blocks/contactInfoRoutes");
 const textImageRoutes = require("./blocks/textImageRoutes");
 const buttonRoutes = require("./blocks/buttonRoutes");
+const textRoutes = require("./blocks/textRoutes");
+const imageRoutes = require("./blocks/imageRoutes");
 
 // ВАЖНО: /options должен быть ПЕРЕД /:id чтобы избежать конфликта роутов
 /**
@@ -117,8 +119,11 @@ router.post("/faq", blocksController.createFaqBlock);
 router.post("/faq", blocksController.createFaqBlock);
 router.put("/faq/:id", blocksController.updateFaqBlock);
 
-// Здесь будем добавлять новые типы блоков:
+// Роуты для новых типов блоков
+router.use("/text-image", textImageRoutes);
+router.use("/button", buttonRoutes);
+router.use("/text", textRoutes);
+router.use("/image", imageRoutes);
 // router.use("/card", cardRoutes);
-// router.use("/image", imageRoutes);
 
 module.exports = router;

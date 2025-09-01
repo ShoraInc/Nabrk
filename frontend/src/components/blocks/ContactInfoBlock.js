@@ -163,7 +163,9 @@ const ContactInfoBlock = ({
   // CSS стили для мобильных устройств
   const mobileStyles = {
     container: {
-      border: "1px solid #d1d5db",
+      border: data?.borderColor && data.borderColor !== 'transparent' 
+        ? `1px solid ${data.borderColor}` 
+        : "1px solid #d1d5db",
       borderRadius: "8px",
       padding: "20px",
       backgroundColor: data?.backgroundColor || "#ffffff",
@@ -213,7 +215,9 @@ const ContactInfoBlock = ({
   // CSS стили для десктопа
   const desktopStyles = {
     container: {
-      border: "1px solid #d1d5db",
+      border: data?.borderColor && data.borderColor !== 'transparent' 
+        ? `1px solid ${data.borderColor}` 
+        : "1px solid #d1d5db",
       borderRadius: "8px",
       padding: "24px",
       backgroundColor: data?.backgroundColor || "#ffffff",

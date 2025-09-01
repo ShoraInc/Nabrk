@@ -105,6 +105,10 @@ class NewsApi {
         formData.append('shortDescription', newsData.shortDescription);
       }
       
+      if (newsData.externalUrl) {
+        formData.append('externalUrl', newsData.externalUrl);
+      }
+      
       if (newsData.image) {
         formData.append('image', newsData.image);
       }

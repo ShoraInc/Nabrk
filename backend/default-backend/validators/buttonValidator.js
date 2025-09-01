@@ -77,6 +77,18 @@ const validateButtonBlock = (data) => {
   // Валидация URL
   validateUrl(data.url, 'url');
   
+  // Валидация fontWeight (если передан)
+  if (data.fontWeight !== undefined) {
+    if (typeof data.fontWeight !== 'string') {
+      throw new Error('fontWeight must be a string');
+    }
+    
+    const allowedFontWeights = BLOCK_OPTIONS.button?.fontWeights;
+    if (allowedFontWeights && !allowedFontWeights.includes(data.fontWeight)) {
+      throw new Error(`fontWeight must be one of: ${allowedFontWeights.join(', ')}`);
+    }
+  }
+
   // Валидация переводов (если переданы)
   if (data.translations) {
     if (typeof data.translations !== 'object') {

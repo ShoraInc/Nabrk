@@ -14,7 +14,7 @@ const contactInfoController = {
     const transaction = await sequelize.transaction();
 
     try {
-      const { pageId, title, items = [], settings = {}, backgroundColor, isHidden = false } = req.body;
+      const { pageId, title, items = [], settings = {}, backgroundColor, borderColor, isHidden = false } = req.body;
       
       // Отладка: проверяем что backgroundColor приходит
       console.log('Creating contact-info block, backgroundColor:', backgroundColor);
@@ -51,6 +51,7 @@ const contactInfoController = {
               ...settings,
             },
             ...(backgroundColor !== undefined && { backgroundColor }),
+            ...(borderColor !== undefined && { borderColor }),
           },
         },
         { transaction }
@@ -125,7 +126,7 @@ const contactInfoController = {
     const transaction = await sequelize.transaction();
 
     try {
-      const { title, settings, backgroundColor } = req.body;
+      const { title, settings, backgroundColor, borderColor } = req.body;
       
       // Отладка: проверяем что backgroundColor приходит при обновлении
       console.log('Updating contact-info block, backgroundColor:', backgroundColor);
@@ -142,6 +143,7 @@ const contactInfoController = {
       if (settings !== undefined)
         updatedData.settings = { ...updatedData.settings, ...settings };
       if (backgroundColor !== undefined) updatedData.backgroundColor = backgroundColor;
+      if (borderColor !== undefined) updatedData.borderColor = borderColor;
 
       await block.update(
         {
