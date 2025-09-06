@@ -18,6 +18,7 @@ import AdminQuestions from "../admin/components/questions/AdminQuestions";
 import AdminAnswersDrafts from "../admin/components/questions/AdminAnswersDrafts";
 import AdminAnswers from "../admin/components/questions/AdminAnswers";
 import AdminTypes from "../admin/components/questions/AdminTypes";
+import AdminMenu from "../admin/components/menu/AdminMenu";
 
 const AdminRoutes = () => {
   return (
@@ -59,6 +60,11 @@ const AdminRoutes = () => {
       <Route path="/answers" element={<AdminAnswers />} />
       <Route path="/answers/drafts" element={<AdminAnswersDrafts />} />
       <Route path="/types" element={<AdminTypes />} />
+
+      {/* ==========================================
+          МЕНЮ (MENU)
+          ========================================== */}
+      <Route path="/menu" element={<AdminMenu />} />
 
       {/* 404 для админки */}
       <Route path="*" element={<AdminNotFound />} />

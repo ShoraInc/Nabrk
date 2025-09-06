@@ -56,6 +56,15 @@ const AdminSidebar = ({ onToggle }) => {
         { id: "types", label: "Типы ответов", path: "/admin/types" },
       ],
     },
+    {
+      id: "menu",
+      label: "Меню",
+      icon: "📋",
+      path: "/admin/menu",
+      subItems: [
+        { id: "menu-management", label: "Управление меню", path: "/admin/menu" },
+      ],
+    },
   ];
 
   // track open/closed sections (initialize from localStorage synchronously to avoid flash)

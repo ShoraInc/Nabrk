@@ -10,6 +10,7 @@ const Types = require("./Types");
 const sequelize = require("../db");
 const ContactInfoItems = require("./ContactInfoItems");
 const BlockRelations = require("./BlockRelations");
+const Menu = require("./Menu");
 
 // Связи News с Texts
 News.belongsTo(Texts, {
@@ -150,5 +151,6 @@ module.exports = {
   BlockRelations,
   Question,
   Answers,
-  Types
+  Types,
+  Menu
 };
