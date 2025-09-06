@@ -7,6 +7,9 @@ import NewsDetail from "../pages/NewsDetailPage/NewsDetail";
 import Page from "../pages/Page/Page";
 import Cabinet from "../pages/homePage/components/Cabinet/Cabinet";
 import BookSearchPage from "../pages/BookSearchPage/BookSearchPage";
+import DirectorBlog from "../pages/homePage/components/DirectorBlog/DirectorBlog";
+import Questions from "../pages/homePage/components/Questions/Questions";
+
 
 const PublicRoutes = () => {
   return (
@@ -25,8 +28,14 @@ const PublicRoutes = () => {
       {/* Динамические страницы */}
       <Route path="/page/:slug" element={<Page />} />
 
+      {/* Динамические страницы */}
+      <Route path="/director-blog" element={<DirectorBlog />} />
+
       {/* Поиск книг */}
       <Route path="/book-search" element={<BookSearchPage />} />
+
+      {/* Вопросы библиотекарю */}
+      <Route path="/questions" element={<Questions />} />
 
       {/* 404 для публичных страниц */}
       <Route path="*" element={<NotFoundPage />} />

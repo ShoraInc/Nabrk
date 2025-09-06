@@ -4,6 +4,9 @@ const Blocks = require("./Blocks");
 const Pages = require("./Pages");
 const TextTranslations = require("./TextTranslations");
 const Texts = require("./Texts");
+const Question = require("./Question");
+const Answers = require("./Answers");
+const Types = require("./Types");
 const sequelize = require("../db");
 const ContactInfoItems = require("./ContactInfoItems");
 const BlockRelations = require("./BlockRelations");
@@ -122,6 +125,19 @@ ContactInfoItems.belongsTo(Blocks, {
   as: 'block'
 });
 
+// ===== Q&A associations =====
+// Types -> Texts (title)
+Types.belongsTo(Texts, { foreignKey: 'titleId', as: 'text' });
+Texts.hasMany(Types, { foreignKey: 'titleId', as: 'types' });
+
+// Question -> Answers (1:1 or 1:M depending; we'll use 1:1 latest answer)
+Question.hasOne(Answers, { foreignKey: 'questionId', as: 'Answer', onDelete: 'CASCADE' });
+Answers.belongsTo(Question, { foreignKey: 'questionId', as: 'Question' });
+
+// Answers -> Types
+Answers.belongsTo(Types, { foreignKey: 'typeId', as: 'Type' });
+Types.hasMany(Answers, { foreignKey: 'typeId', as: 'answers' });
+
 module.exports = {
   News,
   Events,
@@ -131,5 +147,8 @@ module.exports = {
   TextTranslations,
   sequelize,
   ContactInfoItems,
-  BlockRelations
+  BlockRelations,
+  Question,
+  Answers,
+  Types
 };

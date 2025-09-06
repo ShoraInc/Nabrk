@@ -14,6 +14,10 @@ import AdminPagesDrafts from "../admin/components/pages/AdminPagesDrafts";
 import AdminPagesForm from "../admin/components/pages/AdminPagesForm";
 
 import AdminBlocksManager from "../admin/components/blocks/AdminBlocksManager";
+import AdminQuestions from "../admin/components/questions/AdminQuestions";
+import AdminAnswersDrafts from "../admin/components/questions/AdminAnswersDrafts";
+import AdminAnswers from "../admin/components/questions/AdminAnswers";
+import AdminTypes from "../admin/components/questions/AdminTypes";
 
 const AdminRoutes = () => {
   return (
@@ -47,6 +51,14 @@ const AdminRoutes = () => {
       <Route path="/events/drafts" element={<AdminEventsDrafts />} />
       <Route path="/events/create" element={<AdminEventsForm />} />
       <Route path="/events/edit/:id" element={<AdminEventsForm />} />
+
+      {/* ==========================================
+          ВОПРОСЫ/ОТВЕТЫ (Q&A)
+          ========================================== */}
+      <Route path="/questions" element={<AdminQuestions />} />
+      <Route path="/answers" element={<AdminAnswers />} />
+      <Route path="/answers/drafts" element={<AdminAnswersDrafts />} />
+      <Route path="/types" element={<AdminTypes />} />
 
       {/* 404 для админки */}
       <Route path="*" element={<AdminNotFound />} />

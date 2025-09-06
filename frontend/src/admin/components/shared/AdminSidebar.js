@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 const AdminSidebar = ({ onToggle }) => {
@@ -44,7 +44,66 @@ const AdminSidebar = ({ onToggle }) => {
         { id: "create-page", label: "Создать", path: "/admin/pages/create" },
       ],
     },
+    {
+      id: "qa",
+      label: "Вопросы/Ответы",
+      icon: "❓",
+      path: "/admin/questions",
+      subItems: [
+        { id: "all-questions", label: "Все вопросы", path: "/admin/questions" },
+        { id: "answers-drafts", label: "Черновики", path: "/admin/answers/drafts" },
+        { id: "answers", label: "Все ответы", path: "/admin/answers" },
+        { id: "types", label: "Типы ответов", path: "/admin/types" },
+      ],
+    },
   ];
+
+  // track open/closed sections (initialize from localStorage synchronously to avoid flash)
+  const [openSections, setOpenSections] = useState(() => {
+    const state = {};
+    menuItems.forEach((m) => { state[m.id] = true; });
+    try {
+      const saved = localStorage.getItem('adminSidebarOpen');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          return { ...state, ...parsed };
+        }
+      }
+    } catch {}
+    return state;
+  });
+
+  const toggleSection = (id) => {
+    setOpenSections((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('adminSidebarOpen', JSON.stringify(openSections));
+    } catch {}
+  }, [openSections]);
+
+  // preserve scroll position within sidebar
+  const scrollRef = useRef(null);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    try {
+      const saved = Number(localStorage.getItem('adminSidebarScrollTop') || 0);
+      if (!Number.isNaN(saved)) {
+        el.scrollTop = saved;
+      }
+    } catch {}
+
+    const onScroll = () => {
+      try {
+        localStorage.setItem('adminSidebarScrollTop', String(el.scrollTop));
+      } catch {}
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
   const isActiveRoute = (path) => {
     return location.pathname === path;
@@ -119,7 +178,7 @@ const AdminSidebar = ({ onToggle }) => {
       {/* Sidebar */}
       <div
         className={`
-        fixed left-0 top-0 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out z-40
+        fixed left-0 top-0 h-full bg-gray-900 text-white transition-all duration-300 ease-in-out z-40 flex flex-col
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         ${isExpanded ? "w-64" : "w-16"}
       `}
@@ -135,20 +194,40 @@ const AdminSidebar = ({ onToggle }) => {
           )}
         </div>
 
-        {/* Menu Items */}
-        <nav className="mt-4">
+        {/* Menu Items - scrollable area */}
+        <nav ref={scrollRef} className="mt-4 flex-1 overflow-y-auto pb-24 pr-1">
           {menuItems.map((item) => (
             <div key={item.id} className="mb-2">
               {/* Main menu item */}
               <Link
                 to={item.path}
-                className={`group relative flex items-center px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors ${
+                className={`group relative flex items-center justify-between px-4 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors ${
                   isActiveRoute(item.path) ? "bg-gray-700 text-white" : ""
                 }`}
                 title={!isExpanded ? item.label : ""}
               >
-                <span className="text-xl flex-shrink-0">{item.icon}</span>
-                {isExpanded && <span className="ml-3">{item.label}</span>}
+                <div className="flex items-center min-w-0">
+                  <span className="text-xl flex-shrink-0">{item.icon}</span>
+                  {isExpanded && <span className="ml-3 truncate">{item.label}</span>}
+                </div>
+                {isExpanded && (
+                  <button
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleSection(item.id); }}
+                    className="p-1 rounded hover:bg-gray-800"
+                    aria-label="Toggle section"
+                  >
+                    <svg
+                      className={`w-4 h-4 transform transition-transform duration-200 ${
+                        openSections[item.id] ? "rotate-0" : "-rotate-90"
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                )}
 
                 {/* Tooltip for collapsed state */}
                 {!isExpanded && (
@@ -159,7 +238,7 @@ const AdminSidebar = ({ onToggle }) => {
               </Link>
 
               {/* Sub menu items - only show when expanded */}
-              {isExpanded && item.subItems.length > 0 && (
+              {isExpanded && item.subItems.length > 0 && openSections[item.id] && (
                 <div className="ml-4 border-l border-gray-600">
                   {item.subItems.map((subItem) => (
                     <Link
@@ -182,7 +261,7 @@ const AdminSidebar = ({ onToggle }) => {
         </nav>
 
         {/* Footer */}
-        <div className="absolute bottom-0 w-full p-4 border-t border-gray-700">
+        <div className="absolute bottom-0 w-full p-4 border-t border-gray-700 bg-gray-900">
           <Link
             to="/"
             className="group relative flex items-center text-gray-400 hover:text-white transition-colors"

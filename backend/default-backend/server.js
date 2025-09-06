@@ -29,6 +29,9 @@ app.use("/api/events", eventsRoutes);
 app.use("/api/pages", pagesRoutes);
 app.use("/api/blocks", blocksRoutes);
 app.use("/api/blocks", blockRelationsRoutes);
+app.use("/api/questions", require('./routes/questionsRoutes'));
+app.use("/api/answers", require('./routes/answersRoutes'));
+app.use("/api/types", require('./routes/typesRoutes'));
 
 // Health check
 app.get("/", (req, res) => {
