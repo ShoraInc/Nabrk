@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import menuApi from "../../../api/menuApi";
 
 const AddParentModal = ({ onSuccess, onClose }) => {
-  const [label, setLabel] = useState("");
+  const [titleKz, setTitleKz] = useState("");
+  const [titleRu, setTitleRu] = useState("");
+  const [titleEn, setTitleEn] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -12,14 +14,16 @@ const AddParentModal = ({ onSuccess, onClose }) => {
     setError(null);
 
     try {
-      if (!label.trim()) {
-        throw new Error("Название обязательно");
+      if (!titleKz.trim() || !titleRu.trim() || !titleEn.trim()) {
+        throw new Error("Названия на всех языках обязательны");
       }
 
       await menuApi.createMenuItem({
         parentId: null,
         type: "title",
-        label: label.trim(),
+        titleKz: titleKz.trim(),
+        titleRu: titleRu.trim(),
+        titleEn: titleEn.trim(),
       });
 
       onSuccess();
@@ -48,20 +52,52 @@ const AddParentModal = ({ onSuccess, onClose }) => {
 
         {/* Форма */}
         <form onSubmit={handleSubmit}>
-          {/* Название */}
+          {/* Название на казахском */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Название *
+              Название (казахский) *
             </label>
             <input
               type="text"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
+              value={titleKz}
+              onChange={(e) => setTitleKz(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Введите название пункта"
+              placeholder="Введите название на казахском"
               disabled={loading}
               required
               autoFocus
+            />
+          </div>
+
+          {/* Название на русском */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Название (русский) *
+            </label>
+            <input
+              type="text"
+              value={titleRu}
+              onChange={(e) => setTitleRu(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Введите название на русском"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          {/* Название на английском */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Название (английский) *
+            </label>
+            <input
+              type="text"
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Введите название на английском"
+              disabled={loading}
+              required
             />
           </div>
 

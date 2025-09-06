@@ -110,10 +110,66 @@ body {
       font-size: 10px;
       transform: rotate(0deg);
       transition: transform 0.3s ease;
+
+      &--expanded {
+        transform: rotate(180deg);
+      }
     }
 
     &-dropdown:hover &-arrow {
       transform: rotate(180deg);
+    }
+
+    &-dropdown {
+      position: relative;
+    }
+  }
+
+  &__dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #444444;
+    border-radius: 8px;
+    padding: 10px 0;
+    min-width: 200px;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  &__dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+
+    // Цвет для типа "title" (названия) - серый
+    &[data-type="title"] {
+      color: #AAAAAA;
+      cursor: default;
+    }
+
+    // Цвет для типов "link" и "page" - основной цвет (золотой)
+    &[data-type="link"],
+    &[data-type="page"] {
+      color: var(--main-color);
+    }
+
+    // Hover только для ссылок и страниц, не для названий
+    &[data-type="link"]:hover,
+    &[data-type="page"]:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $text-white;
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Hero.scss";
 // import HeroImage from "../../../../assets/images/hero-image.png";
 import { openLoginModal } from "../../../../store/modalSlice";
@@ -6,13 +6,78 @@ import { useDispatch } from "react-redux";
 import { useTranslations } from "../../../../hooks/useTranslations";
 import LanguageSelector from "../../../../components/LanguageSelector/LanguageSelector";
 import useMobileDetection from "../../../../hooks/useMobileDetection";
+import { useLanguage } from "../../../../context/LanguageContext";
+import menuApi from "../../../../api/menuApi";
+import MobileMenu from "../../../../components/layout/header/MobileMenu";
 
 const Header = ({ isTransparent = false }) => {
   const { t } = useTranslations();
+  const { currentLanguage } = useLanguage();
   const [activeNav, setActiveNav] = useState(t('header.home'));
   const isMobile = useMobileDetection();
+  const [menuItems, setMenuItems] = useState([]);
+  const [expandedItems, setExpandedItems] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const dispatch = useDispatch();
+
+  // Загрузка меню при монтировании компонента
+  useEffect(() => {
+    const loadMenu = async () => {
+      try {
+        const menu = await menuApi.getMenu();
+        setMenuItems(menu);
+      } catch (error) {
+        console.error("Ошибка загрузки меню:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMenu();
+  }, []);
+
+  // Функция для получения названия пункта меню на текущем языке
+  const getMenuItemTitle = (item) => {
+    switch (currentLanguage) {
+      case 'kz':
+        return item.titleKz || item.titleRu || item.titleEn;
+      case 'ru':
+        return item.titleRu || item.titleKz || item.titleEn;
+      case 'en':
+        return item.titleEn || item.titleRu || item.titleKz;
+      default:
+        return item.titleRu || item.titleKz || item.titleEn;
+    }
+  };
+
+  // Функция для обработки клика по пункту меню
+  const handleMenuItemClick = (item) => {
+    if (item.children && item.children.length > 0) {
+      // Закрываем все другие открытые пункты
+      const newExpandedItems = {};
+      // Открываем только текущий пункт
+      newExpandedItems[item.id] = !expandedItems[item.id];
+      setExpandedItems(newExpandedItems);
+    } else {
+      // Если нет подпунктов, переходим по ссылке
+      if (item.type === 'link' && item.url) {
+        window.open(item.url, '_blank');
+      } else if (item.type === 'page' && item.pageSlug) {
+        window.location.href = `/${item.pageSlug}`;
+      }
+    }
+  };
+
+  // Функция для обработки клика по подпункту
+  const handleSubItemClick = (subItem) => {
+    if (subItem.type === 'link' && subItem.url) {
+      window.open(subItem.url, '_blank');
+    } else if (subItem.type === 'page' && subItem.pageSlug) {
+      window.location.href = `/${subItem.pageSlug}`;
+    }
+  };
 
   const handleOpenModal = () => {
     dispatch(openLoginModal()); // Отправляем действие openModal в store
@@ -30,68 +95,78 @@ const Header = ({ isTransparent = false }) => {
           />
         </div>
 
-        <nav className="header__nav">
-          <a
-            href="#"
-            className={`header__nav-link ${
-              activeNav === t('header.home') ? "header__nav-link--active" : ""
-            }`}
-            onClick={() => setActiveNav(t('header.home'))}
-          >
-            {t('header.home').toUpperCase()}
-          </a>
-          <div className="header__nav-dropdown">
-            <a
-              href="#"
-              className={`header__nav-link ${
-                activeNav === t('header.library') ? "header__nav-link--active" : ""
-              }`}
-              onClick={() => setActiveNav(t('header.library'))}
-            >
-              {t('header.library').toUpperCase()}
-              <span className="header__nav-arrow">▼</span>
-            </a>
-          </div>
-          <div className="header__nav-dropdown">
-            <a
-              href="#"
-              className={`header__nav-link ${
-                activeNav === t('header.readers') ? "header__nav-link--active" : ""
-              }`}
-              onClick={() => setActiveNav(t('header.readers'))}
-            >
-              {t('header.readers').toUpperCase()}
-              <span className="header__nav-arrow">▼</span>
-            </a>
-          </div>
-          <div className="header__nav-dropdown">
-            <a
-              href="#"
-              className={`header__nav-link ${
-                activeNav === t('header.resources') ? "header__nav-link--active" : ""
-              }`}
-              onClick={() => setActiveNav(t('header.resources'))}
-            >
-              {t('header.resources').toUpperCase()}
-              <span className="header__nav-arrow">▼</span>
-            </a>
-          </div>
-        </nav>
+        {!isMobile && (
+          <nav className="header__nav">
+            {loading ? (
+              <div className="flex items-center space-x-4">
+                <div className="animate-pulse bg-gray-200 h-4 w-20 rounded"></div>
+                <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
+                <div className="animate-pulse bg-gray-200 h-4 w-16 rounded"></div>
+              </div>
+            ) : (
+              menuItems.map((item) => (
+                <div key={item.id} className="header__nav-dropdown">
+                  <button
+                    onClick={() => handleMenuItemClick(item)}
+                    className={`header__nav-link ${
+                      expandedItems[item.id] ? "header__nav-link--active" : ""
+                    }`}
+                  >
+                    {getMenuItemTitle(item).toUpperCase()}
+                    {item.children && item.children.length > 0 && (
+                      <span className={`header__nav-arrow ${expandedItems[item.id] ? 'header__nav-arrow--expanded' : ''}`}>
+                        ▼
+                      </span>
+                    )}
+                  </button>
+                  
+                  {/* Выпадающее меню */}
+                  {item.children && item.children.length > 0 && expandedItems[item.id] && (
+                    <div className="header__dropdown-menu">
+                      {item.children.map((subItem) => (
+                        <button
+                          key={subItem.id}
+                          onClick={() => handleSubItemClick(subItem)}
+                          className="header__dropdown-item"
+                          data-type={subItem.type}
+                        >
+                          {getMenuItemTitle(subItem)}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </nav>
+        )}
 
         <div className="header__auth">
-          <LanguageSelector variant="default" />
+          {!isMobile && <LanguageSelector variant="default" />}
           <button onClick={handleOpenModal} className="header__login-btn">
             {t('header.login').toUpperCase()}
             <span className="header__login-arrow">→</span>
           </button>
-          <button className="header__menu-btn">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          {isMobile && (
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="header__menu-btn"
+              aria-label="Открыть меню"
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          )}
         </div>
       </div>
       <div className="header__border"></div>
+
+      {/* Мобильное меню */}
+      <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={() => setIsMobileMenuOpen(false)} 
+      />
     </header>
   );
 };

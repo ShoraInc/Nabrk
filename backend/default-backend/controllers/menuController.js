@@ -32,13 +32,13 @@ const menuController = {
     const transaction = await sequelize.transaction();
     
     try {
-      const { parentId, type, label, url, pageSlug, order } = req.body;
+      const { parentId, type, titleKz, titleRu, titleEn, url, pageSlug, order } = req.body;
 
       // Валидация
-      if (!type || !label) {
+      if (!type || !titleKz || !titleRu || !titleEn) {
         await transaction.rollback();
         return res.status(400).json({
-          error: "Тип и название обязательны",
+          error: "Тип и названия на всех языках обязательны",
         });
       }
 
@@ -95,7 +95,9 @@ const menuController = {
         {
           parentId,
           type,
-          label,
+          titleKz,
+          titleRu,
+          titleEn,
           url: type === "link" ? url : null,
           pageSlug: type === "page" ? pageSlug : null,
           order: finalOrder,
@@ -143,7 +145,7 @@ const menuController = {
     
     try {
       const { id } = req.params;
-      const { type, label, url, pageSlug, order } = req.body;
+      const { type, titleKz, titleRu, titleEn, url, pageSlug, order } = req.body;
 
       const menuItem = await Menu.findByPk(id, { transaction });
       if (!menuItem) {
@@ -154,10 +156,12 @@ const menuController = {
       }
 
       // Валидация
-      if (type && !label) {
+      if ((titleKz !== undefined && !titleKz) || 
+          (titleRu !== undefined && !titleRu) || 
+          (titleEn !== undefined && !titleEn)) {
         await transaction.rollback();
         return res.status(400).json({
-          error: "Название обязательно",
+          error: "Названия на всех языках обязательны",
         });
       }
 
@@ -192,7 +196,9 @@ const menuController = {
       // Обновляем данные
       const updateData = {};
       if (type !== undefined) updateData.type = type;
-      if (label !== undefined) updateData.label = label;
+      if (titleKz !== undefined) updateData.titleKz = titleKz;
+      if (titleRu !== undefined) updateData.titleRu = titleRu;
+      if (titleEn !== undefined) updateData.titleEn = titleEn;
       if (order !== undefined) updateData.order = order;
       
       if (type === "link") {
@@ -293,8 +299,17 @@ const menuController = {
     try {
       const { query } = req.query;
 
-      if (!query || query.trim().length < 2) {
-        return res.json([]);
+      if (!query || query.trim().length === 0) {
+        // Возвращаем все опубликованные страницы
+        const allPages = await Pages.findAll({
+          where: {
+            status: "published",
+          },
+          attributes: ["id", "title", "slug"],
+          limit: 50,
+          order: [["title", "ASC"]],
+        });
+        return res.json(allPages);
       }
 
       const pages = await Pages.findAll({

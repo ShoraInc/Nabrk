@@ -64,10 +64,90 @@ $shadow-light: rgba(0, 0, 0, 0.1);
     padding: 8px 12px;
     border-radius: 6px;
     transition: all 0.2s ease;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 
     &:hover {
       background-color: #f8f9fa;
       color: $primary-color;
+    }
+
+    &--dropdown {
+      position: relative;
+    }
+  }
+
+  &__nav-item-container {
+    position: relative;
+  }
+
+  &__dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #F5F5F5;
+    border-radius: 8px;
+    padding: 10px 0;
+    min-width: 200px;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  &__dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    position: relative;
+
+    // Цвет для типа "title" (названия) - серый
+    &[data-type="title"] {
+      color: #AAAAAA;
+      cursor: default;
+    }
+
+    // Цвет для типов "link" и "page" - основной цвет (золотой)
+    &[data-type="link"],
+    &[data-type="page"] {
+      color: var(--main-color);
+    }
+
+    // Hover только для ссылок и страниц, не для названий
+    &[data-type="link"]:hover,
+    &[data-type="page"]:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: $white;
+    }
+  }
+
+  &__mobile-menu-button {
+    background: none;
+    border: none;
+    color: $text-color;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+
+    &:focus {
+      outline: none;
+      background-color: #f8f9fa;
     }
   }
 }

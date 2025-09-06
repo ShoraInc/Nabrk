@@ -92,11 +92,8 @@ const menuApi = {
   // Поиск страниц
   searchPages: async (query) => {
     try {
-      if (!query || query.trim().length < 2) {
-        return [];
-      }
-
-      const response = await fetch(`${API_BASE_URL}/menu/search-pages?query=${encodeURIComponent(query)}`);
+      const url = query ? `${API_BASE_URL}/menu/search-pages?query=${encodeURIComponent(query)}` : `${API_BASE_URL}/menu/search-pages`;
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -136,21 +133,25 @@ const menuApi = {
   },
 
   // Создать родительский пункт меню
-  createParentMenuItem: async (label, order = null) => {
+  createParentMenuItem: async (titleKz, titleRu, titleEn, order = null) => {
     return await menuApi.createMenuItem({
       parentId: null,
       type: "title",
-      label,
+      titleKz,
+      titleRu,
+      titleEn,
       order,
     });
   },
 
   // Создать дочерний пункт меню
-  createChildMenuItem: async (parentId, type, label, url = null, pageSlug = null, order = null) => {
+  createChildMenuItem: async (parentId, type, titleKz, titleRu, titleEn, url = null, pageSlug = null, order = null) => {
     const menuData = {
       parentId,
       type,
-      label,
+      titleKz,
+      titleRu,
+      titleEn,
       order,
     };
 
@@ -163,9 +164,9 @@ const menuApi = {
     return await menuApi.createMenuItem(menuData);
   },
 
-  // Обновить только название пункта
-  updateMenuItemLabel: async (id, label) => {
-    return await menuApi.updateMenuItem(id, { label });
+  // Обновить только названия пункта
+  updateMenuItemTitles: async (id, titleKz, titleRu, titleEn) => {
+    return await menuApi.updateMenuItem(id, { titleKz, titleRu, titleEn });
   },
 
   // Обновить только URL пункта

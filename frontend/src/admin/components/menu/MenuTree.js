@@ -57,7 +57,7 @@ const MenuTree = ({ menuItems, onAddParent, onAddChild, onEdit, onDelete }) => {
                       </svg>
                     </button>
                   )}
-                  <span className="text-lg font-medium">{item.label}</span>
+                  <span className="text-lg font-medium">{item.titleRu || item.titleKz || item.titleEn}</span>
                   {hasChildren && (
                     <span className="ml-2 text-sm text-blue-200">
                       ({item.children.length} подпункт{item.children.length !== 1 ? 'ов' : ''})
@@ -111,7 +111,7 @@ const MenuTree = ({ menuItems, onAddParent, onAddChild, onEdit, onDelete }) => {
                       {/* Подпункт */}
                       <div className="flex items-center justify-between bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg ml-4">
                         <div className="flex items-center">
-                          <span className="text-sm font-medium text-gray-700">{child.label}</span>
+                          <span className="text-sm font-medium text-gray-700">{child.titleRu || child.titleKz || child.titleEn}</span>
                           <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-200 text-gray-700">
                             {getTypeLabel(child.type)}
                           </span>

@@ -4,7 +4,9 @@ import pagesApi from "../../../api/pagesApi";
 
 const AddChildModal = ({ parentItem, onSuccess, onClose }) => {
   const [type, setType] = useState("title");
-  const [label, setLabel] = useState("");
+  const [titleKz, setTitleKz] = useState("");
+  const [titleRu, setTitleRu] = useState("");
+  const [titleEn, setTitleEn] = useState("");
   const [url, setUrl] = useState("");
   const [pageSlug, setPageSlug] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,6 +60,9 @@ const AddChildModal = ({ parentItem, onSuccess, onClose }) => {
 
   // Сброс формы при изменении типа
   useEffect(() => {
+    setTitleKz("");
+    setTitleRu("");
+    setTitleEn("");
     setUrl("");
     setPageSlug("");
     setSearchQuery("");
@@ -121,8 +126,8 @@ const AddChildModal = ({ parentItem, onSuccess, onClose }) => {
 
     try {
       // Валидация
-      if (!label.trim()) {
-        throw new Error("Название обязательно");
+      if (!titleKz.trim() || !titleRu.trim() || !titleEn.trim()) {
+        throw new Error("Названия на всех языках обязательны");
       }
 
       if (type === "link" && !url.trim()) {
@@ -141,7 +146,9 @@ const AddChildModal = ({ parentItem, onSuccess, onClose }) => {
       const menuData = {
         parentId: parentItem.id,
         type,
-        label: label.trim(),
+        titleKz: titleKz.trim(),
+        titleRu: titleRu.trim(),
+        titleEn: titleEn.trim(),
       };
 
       if (type === "link") {
@@ -175,7 +182,7 @@ const AddChildModal = ({ parentItem, onSuccess, onClose }) => {
             Добавить подпункт
           </h3>
           <p className="text-sm text-gray-500 mb-4">
-            К пункту: <span className="font-medium">{parentItem.label}</span>
+            К пункту: <span className="font-medium">{parentItem.titleRu || parentItem.titleKz || parentItem.titleEn}</span>
           </p>
         </div>
 
@@ -198,20 +205,52 @@ const AddChildModal = ({ parentItem, onSuccess, onClose }) => {
             </select>
           </div>
 
-          {/* Название */}
+          {/* Название на казахском */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Название *
+              Название (казахский) *
             </label>
             <input
               type="text"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
+              value={titleKz}
+              onChange={(e) => setTitleKz(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Введите название подпункта"
+              placeholder="Введите название на казахском"
               disabled={loading}
               required
               autoFocus
+            />
+          </div>
+
+          {/* Название на русском */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Название (русский) *
+            </label>
+            <input
+              type="text"
+              value={titleRu}
+              onChange={(e) => setTitleRu(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Введите название на русском"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          {/* Название на английском */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Название (английский) *
+            </label>
+            <input
+              type="text"
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Введите название на английском"
+              disabled={loading}
+              required
             />
           </div>
 

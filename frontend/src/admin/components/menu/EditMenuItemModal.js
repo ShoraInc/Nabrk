@@ -4,7 +4,9 @@ import pagesApi from "../../../api/pagesApi";
 
 const EditMenuItemModal = ({ item, onSuccess, onClose }) => {
   const [type, setType] = useState(item.type);
-  const [label, setLabel] = useState(item.label);
+  const [titleKz, setTitleKz] = useState(item.titleKz || "");
+  const [titleRu, setTitleRu] = useState(item.titleRu || "");
+  const [titleEn, setTitleEn] = useState(item.titleEn || "");
   const [url, setUrl] = useState(item.url || "");
   const [pageSlug, setPageSlug] = useState(item.pageSlug || "");
   const [loading, setLoading] = useState(false);
@@ -127,8 +129,8 @@ const EditMenuItemModal = ({ item, onSuccess, onClose }) => {
 
     try {
       // Валидация
-      if (!label.trim()) {
-        throw new Error("Название обязательно");
+      if (!titleKz.trim() || !titleRu.trim() || !titleEn.trim()) {
+        throw new Error("Названия на всех языках обязательны");
       }
 
       // Дополнительная валидация только для подпунктов
@@ -148,7 +150,9 @@ const EditMenuItemModal = ({ item, onSuccess, onClose }) => {
 
       // Подготовка данных
       const updateData = {
-        label: label.trim(),
+        titleKz: titleKz.trim(),
+        titleRu: titleRu.trim(),
+        titleEn: titleEn.trim(),
       };
 
       // Для подпунктов добавляем тип и соответствующие поля
@@ -198,7 +202,7 @@ const EditMenuItemModal = ({ item, onSuccess, onClose }) => {
           </h3>
           {item.parentId && (
             <p className="text-sm text-gray-500 mb-4">
-              Родительский пункт: <span className="font-medium">{item.parent?.label || "Неизвестно"}</span>
+              Родительский пункт: <span className="font-medium">{item.parent?.titleRu || item.parent?.titleKz || item.parent?.titleEn || "Неизвестно"}</span>
             </p>
           )}
         </div>
@@ -224,17 +228,49 @@ const EditMenuItemModal = ({ item, onSuccess, onClose }) => {
             </div>
           )}
 
-          {/* Название */}
+          {/* Название на казахском */}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Название *
+              Название (казахский) *
             </label>
             <input
               type="text"
-              value={label}
-              onChange={(e) => setLabel(e.target.value)}
+              value={titleKz}
+              onChange={(e) => setTitleKz(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Введите название пункта"
+              placeholder="Введите название на казахском"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          {/* Название на русском */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Название (русский) *
+            </label>
+            <input
+              type="text"
+              value={titleRu}
+              onChange={(e) => setTitleRu(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Введите название на русском"
+              disabled={loading}
+              required
+            />
+          </div>
+
+          {/* Название на английском */}
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Название (английский) *
+            </label>
+            <input
+              type="text"
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Введите название на английском"
               disabled={loading}
               required
             />

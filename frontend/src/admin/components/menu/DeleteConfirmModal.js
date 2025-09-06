@@ -75,7 +75,7 @@ const DeleteConfirmModal = ({ item, onSuccess, onClose }) => {
                     </h3>
                     <div className="mt-2 text-sm text-yellow-700">
                       <p>
-                        У пункта "{item.label}" есть {item.children.length} подпункт(ов). 
+                        У пункта "{item.titleRu || item.titleKz || item.titleEn}" есть {item.children.length} подпункт(ов). 
                         Удалите их перед удалением основного пункта.
                       </p>
                     </div>
@@ -90,7 +90,7 @@ const DeleteConfirmModal = ({ item, onSuccess, onClose }) => {
               </p>
               <div className="bg-gray-50 border border-gray-200 rounded-md p-4">
                 <div className="text-sm">
-                  <p className="font-medium text-gray-900">{item.label}</p>
+                  <p className="font-medium text-gray-900">{item.titleRu || item.titleKz || item.titleEn}</p>
                   <p className="text-gray-500">
                     Тип: {getTypeLabel(item.type)}
                   </p>

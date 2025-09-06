@@ -20,7 +20,15 @@ const Menu = sequelize.define("Menu", {
     allowNull: false,
     defaultValue: "title",
   },
-  label: {
+  titleKz: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  titleRu: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  titleEn: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -28,8 +36,13 @@ const Menu = sequelize.define("Menu", {
     type: DataTypes.STRING,
     allowNull: true,
     validate: {
-      isUrl: {
-        msg: "URL должен быть валидным",
+      isUrl: function (value) {
+        if (this.type === "link" && !value) {
+          throw new Error("URL is required for 'link' type.");
+        }
+        if (value && !/^https?:\/\//i.test(value)) {
+          throw new Error("URL must start with http:// or https://");
+        }
       },
     },
   },
