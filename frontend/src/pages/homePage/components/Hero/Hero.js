@@ -65,7 +65,7 @@ const Header = ({ isTransparent = false }) => {
       if (item.type === 'link' && item.url) {
         window.open(item.url, '_blank');
       } else if (item.type === 'page' && item.pageSlug) {
-        window.location.href = `/${item.pageSlug}`;
+        window.location.href = `/page/${item.pageSlug}`;
       }
     }
   };
@@ -75,7 +75,7 @@ const Header = ({ isTransparent = false }) => {
     if (subItem.type === 'link' && subItem.url) {
       window.open(subItem.url, '_blank');
     } else if (subItem.type === 'page' && subItem.pageSlug) {
-      window.location.href = `/${subItem.pageSlug}`;
+      window.location.href = `/page/${subItem.pageSlug}`;
     }
   };
 
@@ -99,18 +99,16 @@ const Header = ({ isTransparent = false }) => {
           <nav className="header__nav">
             {loading ? (
               <div className="flex items-center space-x-4">
-                <div className="animate-pulse bg-gray-200 h-4 w-20 rounded"></div>
-                <div className="animate-pulse bg-gray-200 h-4 w-24 rounded"></div>
-                <div className="animate-pulse bg-gray-200 h-4 w-16 rounded"></div>
+                <div className="animate-pulse h-4 w-20 rounded" style={{backgroundColor: '#d2ac2d'}}></div>
+                <div className="animate-pulse h-4 w-24 rounded" style={{backgroundColor: '#d2ac2d'}}></div>
+                <div className="animate-pulse h-4 w-16 rounded" style={{backgroundColor: '#d2ac2d'}}></div>
               </div>
             ) : (
               menuItems.map((item) => (
                 <div key={item.id} className="header__nav-dropdown">
                   <button
                     onClick={() => handleMenuItemClick(item)}
-                    className={`header__nav-link ${
-                      expandedItems[item.id] ? "header__nav-link--active" : ""
-                    }`}
+                    className="header__nav-item"
                   >
                     {getMenuItemTitle(item).toUpperCase()}
                     {item.children && item.children.length > 0 && (

@@ -1,0 +1,379 @@
+// Director Blog SCSS Styles
+
+// Variables
+$primary-color: var(--main-color);
+$primary-dark: var(--main-color);
+$secondary-color: #f5f5f5;
+$white: #ffffff;
+$text-dark: #374151;
+$text-gray: #666;
+$text-light: #9ca3af;
+$border-color: #e5e7eb;
+$success-color: #10b981;
+$success-dark: #059669;
+$error-color: #ef4444;
+$error-dark: #dc2626;
+$shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 4px 15px rgba(0, 0, 0, 0.1);
+$shadow-strong: 0 6px 20px rgba(34, 96, 62, 0.4);
+
+// Mixins
+@mixin transition($properties: all, $duration: 0.3s, $easing: ease) {
+  transition: $properties $duration $easing;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin gradient-bg($color1, $color2) {
+  background: linear-gradient(135deg, $color1 0%, $color2 100%);
+}
+
+@mixin button-hover-effect {
+  transform: translateY(-2px);
+  box-shadow: $shadow-strong;
+}
+
+@mixin card-style {
+  background: $white;
+  border-radius: 15px;
+  box-shadow: $shadow-medium;
+}
+
+// Main Container
+.director-blog-container {
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: $secondary-color;
+  min-height: 100vh;
+}
+
+
+
+
+// Main Content
+.director-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+}
+
+// Sidebar
+.director-sidebar {
+  position: static;
+  height: 100%;
+}
+
+.director-avatar-section {
+  text-align: center;
+  @include card-style;
+  padding: 30px 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.director-avatar {
+  width: 200px;
+  height: 240px;
+  border-radius: 15px;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  box-shadow: $shadow-light;
+
+  &-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.director-name-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: $primary-color;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.director-position-text {
+  font-size: 14px;
+  color: $text-gray;
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.director-social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.director-social-link {
+  @include transition(opacity);
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.director-social-icon {
+  width: 24px;
+  height: 24px;
+  filter: grayscale(100%);
+  @include transition(filter);
+
+  .director-social-link:hover & {
+    filter: grayscale(0%);
+  }
+}
+
+// Content Area
+.director-content {
+  @include card-style;
+  padding: 40px;
+}
+
+.director-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: $primary-color;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+.director-paragraphs {
+  line-height: 1.7;
+  color: $text-dark;
+}
+
+.director-paragraph {
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: justify;
+}
+
+// Contact Form
+.director-contact-section {
+  background: $white;
+  padding: 60px 0;
+  margin-top: 40px;
+}
+
+.director-contact-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.director-contact-form {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: $shadow-medium;
+}
+
+.director-contact-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $primary-color;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.director-form-group {
+  margin-bottom: 25px;
+}
+
+.director-form-input,
+.director-form-textarea {
+  width: 100%;
+  padding: 15px 20px;
+  border: 2px solid $border-color;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: inherit;
+  @include transition();
+  background: $white;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+
+  &::placeholder {
+    color: $text-light;
+  }
+}
+
+.director-form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.director-submit-btn {
+  width: 100%;
+  @include gradient-bg($primary-color, $primary-dark);
+  color: $white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  @include transition();
+  box-shadow: 0 4px 15px rgba($primary-color, 0.3);
+
+  &:hover:not(:disabled) {
+    @include button-hover-effect;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.director-loading {
+  @include flex-center;
+  gap: 10px;
+}
+
+.director-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba($white, 0.3);
+  border-radius: 50%;
+  border-top-color: $white;
+  animation: director-spin 1s linear infinite;
+}
+
+@keyframes director-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Notifications
+.director-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 10px;
+  color: $white;
+  font-weight: 500;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  transform: translateX(100%);
+  opacity: 0;
+  @include transition();
+
+  &.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  &-success {
+    @include gradient-bg($success-color, $success-dark);
+  }
+
+  &-error {
+    @include gradient-bg($error-color, $error-dark);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .director-main {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .director-sidebar {
+    position: static;
+    order: -1;
+  }
+  
+  .director-avatar-section {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .director-main {
+    padding: 30px 15px;
+  }
+  
+  .director-content {
+    padding: 25px 20px;
+  }
+  
+  .director-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .director-paragraph {
+    font-size: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .director-contact-form {
+    padding: 25px 20px;
+  }
+  
+  .director-contact-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+  
+  .director-avatar {
+    width: 150px;
+    height: 180px;
+  }
+  
+  .director-name-text {
+    font-size: 16px;
+  }
+  
+  .director-position-text {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  
+  .director-contact-container {
+    padding: 0 15px;
+  }
+  
+  .director-form-input,
+  .director-form-textarea {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+  
+  .director-submit-btn {
+    padding: 12px 25px;
+    font-size: 15px;
+  }
+  
+  .director-notification {
+    right: 15px;
+    left: 15px;
+    width: auto;
+  }
+}

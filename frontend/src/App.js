@@ -34,13 +34,14 @@ function AppContent() {
   // Определяем типы страниц
   const isLoginPage = location.pathname.startsWith("/auth");
   const isHomePage = location.pathname === "/";
-  const isAdminPage = location.pathname.startsWith("/admin");
+  const isAdminPage = location.pathname.startsWith("/admin") || location.pathname.startsWith("/cabinet");
+  const isQuestionsPage = location.pathname.startsWith("/questions");
   
   // Определяем, показывать ли Header
   const showHeader = !isLoginPage && !isHomePage && !isAdminPage;
   
   // Определяем, показывать ли Footer и VerticalLines
-  const showFooterAndLines = !isLoginPage && !isAdminPage;
+  const showFooterAndLines = !isLoginPage && !isAdminPage && !isQuestionsPage;
 
   return (
     <div className="App">
@@ -52,7 +53,7 @@ function AppContent() {
       
       <div className="main-content">
         {/* Вертикальные линии только на публичных страницах */}
-        {showFooterAndLines && <VerticalLines />}
+        {showFooterAndLines && <VerticalLines isHomePage={isHomePage} />}
         
         {/* Все роуты */}
         <AppRoutes />

@@ -7,8 +7,7 @@ $shadow-light: rgba(0, 0, 0, 0.1);
 
 .main-header {
   background-color: $white;
-  border-bottom: 1px solid $border-color;
-  box-shadow: 0 1px 3px $shadow-light;
+  border-bottom: 1px solid var(--main-color);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -20,6 +19,13 @@ $shadow-light: rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+  }
+
+  &__border {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
   }
 
   &__logo {
@@ -89,6 +95,7 @@ $shadow-light: rgba(0, 0, 0, 0.1);
     top: 100%;
     left: 0;
     background: #F5F5F5;
+    border: 1px solid var(--main-color);
     border-radius: 8px;
     padding: 10px 0;
     min-width: 200px;
@@ -112,23 +119,23 @@ $shadow-light: rgba(0, 0, 0, 0.1);
     cursor: pointer;
     position: relative;
 
-    // Цвет для типа "title" (названия) - серый
+    // Цвет для типа "title" (названия) - основной цвет (желтый)
     &[data-type="title"] {
-      color: #AAAAAA;
+      color: var(--main-color);
       cursor: default;
     }
 
-    // Цвет для типов "link" и "page" - основной цвет (золотой)
+    // Цвет для типов "link" и "page" - темный
     &[data-type="link"],
     &[data-type="page"] {
-      color: var(--main-color);
+      color: #1E1E1E;
     }
 
     // Hover только для ссылок и страниц, не для названий
     &[data-type="link"]:hover,
     &[data-type="page"]:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: $white;
+      background: rgba(0, 0, 0, 0.05);
+      color: #000000;
     }
   }
 

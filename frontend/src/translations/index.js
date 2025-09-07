@@ -258,6 +258,28 @@ export const translations = {
       }
     },
 
+    // Director Blog
+    directorBlog: {
+      title: "Dear readers,",
+      paragraphs: [
+        "It is important for me to hear your voice — your thoughts, ideas, suggestions, and questions. Every message is valuable to me, as it is your support that inspires us to grow and improve.",
+        "You now have the opportunity to contact me directly and share anything that concerns you as a reader. I will personally read all your messages and do my best to respond.",
+        "I believe that open and trustful dialogue will make our library even closer to each of you.",
+        "With respect,",
+        "Kumis Karsakbaevna Seitova",
+        "Director of the National Academic Library of the Republic of Kazakhstan"
+      ],
+      name: "Kumis Karsakbaevna Seitova",
+      position: "Director of the National Academic Library of the Republic of Kazakhstan",
+      contactTitle: "Contact Me",
+      namePlaceholder: "Your Name",
+      emailPlaceholder: "Your Email",
+      messagePlaceholder: "Your Message",
+      submitBtn: "Send",
+      successMessage: "Message sent successfully!",
+      errorMessage: "Error sending message"
+    },
+
     // Common
     common: {
       loading: "Loading...",
@@ -533,6 +555,28 @@ export const translations = {
       }
     },
 
+    // Director Blog
+    directorBlog: {
+      title: "Дорогие читатели!",
+      paragraphs: [
+        "Мне важно слышать ваш голос — ваши мысли, идеи, предложения и вопросы. Каждое обращение для меня ценно, ведь именно вы вдохновляете нас развиваться и становиться лучше.",
+        "Теперь у вас есть возможность напрямую делиться со мной тем, что волнует вас как читателя. Я буду лично читать все ваши сообщения и стараться отвечать на них.",
+        "Верю, что открытый и доверительный диалог сделает нашу библиотеку ещё ближе к каждому из вас.",
+        "С уважением,",
+        "Сеитова Күмис Карсакбаевна",
+        "Директор Национальной академической библиотеки Республики Казахстан"
+      ],
+      name: "Сеитова Күмис Карсакбаевна",
+      position: "Директор Национальной академической библиотеки Республики Казахстан",
+      contactTitle: "Связаться со мной",
+      namePlaceholder: "Ваше имя",
+      emailPlaceholder: "Ваша почта",
+      messagePlaceholder: "Ваше сообщение",
+      submitBtn: "Отправить",
+      successMessage: "Сообщение успешно отправлено!",
+      errorMessage: "Ошибка при отправке сообщения"
+    },
+
     // Common
     common: {
       loading: "Загрузка...",
@@ -616,11 +660,11 @@ export const translations = {
         description: "Электронды кітаптар, журналдар және дерекқорларға қол жеткізу"
       },
       news: {
-        title: "Кітапханашыға сұрақ",
+        title: "Басшының жеке блогы",
         description: "Кітапхана жаңалықтары мен хабарландыруларынан хабардар болыңыз"
       },
       support: {
-        title: "Басшының жеке блогы",
+        title: "Кітапханашыға сұрақ",
         description: "Кітапхана қызметтері мен ресурстары бойынша көмек алыңыз",
       }
     },
@@ -806,6 +850,28 @@ export const translations = {
         error: "Құпия сөзді қалпына келтіру қатесі",
         fillRequired: "Электронды поштаны толтырыңыз"
       }
+    },
+
+    // Director Blog
+    directorBlog: {
+      title: "Құрметті оқырмандар!",
+      paragraphs: [
+        "Сіздердің ойларыңызды, идеяларыңызды, ұсыныстарыңызды және сұрақтарыңызды есту – мен үшін өте маңызды. Әрбір жолданған пікір мен үшін құнды, себебі дәл сіздердің қолдауларыңыз бізді дамуға, жақсара түсуге шабыттандырады.",
+        "Енді менімен тікелей байланысып, сізді толғандыратын мәселелермен бөлісуге мүмкіндік бар. Жазған барлық хабарламаларыңызды өзім оқып, қолымнан келгенше жауап беруге тырысамын.",
+        "Ашық әрі сенімді диалог кітапханамызды әрқайсыңызға жақындай түседі деп сенемін.",
+        "Ізгі ниетпен,",
+        "Сеитова Күміс Қарсақбайқызы",
+        "Қазақстан Республикасының Ұлттық академиялық кітапханасының директоры"
+      ],
+      name: "Сеитова Күміс Қарсақбайқызы",
+      position: "Қазақстан Республикасының Ұлттық академиялық кітапханасының директоры",
+      contactTitle: "Маған хабарласу",
+      namePlaceholder: "Аты-жөніңіз",
+      emailPlaceholder: "Сіздің поштаңыз",
+      messagePlaceholder: "Хабарламаңыз",
+      submitBtn: "Жіберу",
+      successMessage: "Хабарлама сәтті жіберілді!",
+      errorMessage: "Хабарламаны жіберу кезінде қате пайда болды"
     },
 
     // Common

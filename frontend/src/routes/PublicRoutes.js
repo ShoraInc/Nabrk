@@ -5,10 +5,10 @@ import Home from "../pages/homePage/home";
 import News from "../pages/NewsPage/News";
 import NewsDetail from "../pages/NewsDetailPage/NewsDetail";
 import Page from "../pages/Page/Page";
-import Cabinet from "../pages/homePage/components/Cabinet/Cabinet";
+import Cabinet from "../pages/CabinetPage/Cabinet";
 import BookSearchPage from "../pages/BookSearchPage/BookSearchPage";
-import DirectorBlog from "../pages/homePage/components/DirectorBlog/DirectorBlog";
-import Questions from "../pages/homePage/components/Questions/Questions";
+import DirectorBlog from "../pages/DirectorBlogPage/DirectorBlog";
+import Questions from "../pages/QuestionsPage/Questions";
 
 
 const PublicRoutes = () => {

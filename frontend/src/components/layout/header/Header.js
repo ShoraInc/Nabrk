@@ -61,7 +61,7 @@ const Header = () => {
       if (item.type === 'link' && item.url) {
         window.open(item.url, '_blank');
       } else if (item.type === 'page' && item.pageSlug) {
-        window.location.href = `/${item.pageSlug}`;
+        window.location.href = `/page/${item.pageSlug}`;
       }
     }
   };
@@ -71,7 +71,7 @@ const Header = () => {
     if (subItem.type === 'link' && subItem.url) {
       window.open(subItem.url, '_blank');
     } else if (subItem.type === 'page' && subItem.pageSlug) {
-      window.location.href = `/${subItem.pageSlug}`;
+      window.location.href = `/page/${subItem.pageSlug}`;
     }
   };
 
@@ -150,6 +150,7 @@ const Header = () => {
 
         {!isMobile && <LanguageSelector isMobile={isMobile} />}
       </div>
+      <div className="main-header__border"></div>
 
       {/* Мобильное меню */}
       <MobileMenu 

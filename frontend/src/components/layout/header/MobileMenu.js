@@ -63,7 +63,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
       if (item.type === 'link' && item.url) {
         window.open(item.url, '_blank');
       } else if (item.type === 'page' && item.pageSlug) {
-        window.location.href = `/${item.pageSlug}`;
+        window.location.href = `/page/${item.pageSlug}`;
       }
       onClose();
     }
@@ -74,7 +74,7 @@ const MobileMenu = ({ isOpen, onClose }) => {
     if (subItem.type === 'link' && subItem.url) {
       window.open(subItem.url, '_blank');
     } else if (subItem.type === 'page' && subItem.pageSlug) {
-      window.location.href = `/${subItem.pageSlug}`;
+      window.location.href = `/page/${subItem.pageSlug}`;
     }
     onClose();
   };

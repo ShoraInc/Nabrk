@@ -12,6 +12,7 @@ const pagesRoutes = require("./routes/pagesRoutes");
 const blocksRoutes = require("./routes/blocksRoutes");
 const blockRelationsRoutes = require("./routes/blockRelationsRoutes");
 const menuRoutes = require("./routes/menuRoutes");
+const emailRoutes = require("./routes/emailRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -34,6 +35,7 @@ app.use("/api/questions", require('./routes/questionsRoutes'));
 app.use("/api/answers", require('./routes/answersRoutes'));
 app.use("/api/types", require('./routes/typesRoutes'));
 app.use("/api/menu", menuRoutes);
+app.use("/api", emailRoutes);
 
 // Health check
 app.get("/", (req, res) => {

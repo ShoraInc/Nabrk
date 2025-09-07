@@ -31,12 +31,9 @@ body {
   }
 
   &__border {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     height: 1px;
     background: rgba(255, 255, 255, 0.2);
+    margin-top: 20px;
   }
 
   &__container {
@@ -68,6 +65,7 @@ body {
     display: flex;
     align-items: center;
     gap: 40px;
+    color: var(--main-color);
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -130,6 +128,7 @@ body {
     top: 100%;
     left: 0;
     background: #444444;
+    border: 1px solid var(--main-color);
     border-radius: 8px;
     padding: 10px 0;
     min-width: 200px;
@@ -153,13 +152,13 @@ body {
     cursor: pointer;
     position: relative;
 
-    // Цвет для типа "title" (названия) - серый
+    // Цвет для типа "title" (названия) - светло-серый
     &[data-type="title"] {
-      color: #AAAAAA;
+      color: #CCCCCC;
       cursor: default;
     }
 
-    // Цвет для типов "link" и "page" - основной цвет (золотой)
+    // Цвет для типов "link" и "page" - основной цвет (желтый)
     &[data-type="link"],
     &[data-type="page"] {
       color: var(--main-color);

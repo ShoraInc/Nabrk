@@ -9,6 +9,8 @@ $footer-hover: #f4d03f;
   background-color: $footer-bg;
   color: $footer-text-light;
   padding: 96px 0;
+  position: relative;
+  z-index: 10;
 
   &__container {
     max-width: 1200px;
